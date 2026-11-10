@@ -2,7 +2,7 @@
 
 日期：2026-11-10（Asia/Shanghai）。本说明适用于以 release-files.json 和发布脚本生成的源码 ZIP。
 
-0.4.1 修复换码页面更新、取消与成功竞态、关闭后的初始化、结果过期复查、授权握手超时和登录错误诊断；补齐 MCP 取消及 macOS 系统工具回退。详见 LOGIN-TROUBLESHOOTING.md 和 VALIDATION.md。
+0.4.1 修复换码页面更新、取消与成功竞态、关闭后的初始化、结果过期复查、授权握手超时和登录错误诊断；补齐 MCP 取消及 macOS 系统工具回退。详见 [登录故障与解决方案](plugins/dingtalk-codex-bridge/LOGIN-TROUBLESHOOTING.md) 和 [验收记录](VALIDATION.md)。
 
 0.4.0 新增聊天内连接、进度和取消工具。官方 CLI 缺失时按固定 SHA-256 安装；本机设备授权由 MCP 持续维护。授权 URL 的原生安全上下文仅在内存中交给本机浏览器，MCP 结果和源码不包含它，也没有第二套 Token 存储。显式连接可执行官方普通状态初始化/刷新；普通状态与进度查询保持只读。
 
