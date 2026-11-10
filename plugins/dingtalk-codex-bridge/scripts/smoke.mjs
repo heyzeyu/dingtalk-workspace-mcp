@@ -39,10 +39,10 @@ async function call(name, args = {}) {
 function payload(value) { for (let i = 0; i < 6 && value && typeof value === "object"; i++) { if (value.sheets || value.cells || value.csv !== undefined) break; value = value.result ?? value.data ?? value; } return value; }
 try {
   console.error("Checking MCP initialization...");
-  const initialized = await request("initialize", { protocolVersion: "2025-11-25", capabilities: {}, clientInfo: { name: "dingtalk-bridge-smoke", version: "0.3.3" } });
+  const initialized = await request("initialize", { protocolVersion: "2025-11-25", capabilities: {}, clientInfo: { name: "dingtalk-bridge-smoke", version: "0.4.0" } });
   child.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n");
   const listed = await request("tools/list");
-  if (listed.tools.length !== 17) throw new Error("Expected seventeen tools");
+  if (listed.tools.length !== 20) throw new Error("Expected twenty tools");
   const status = await call("get_dingtalk_status", options["--profile"] ? { profile: options["--profile"] } : {});
   const report = { protocol: initialized.protocolVersion, plugin_version: initialized.serverInfo.version, tool_count: listed.tools.length, cli_version: status.cli_version, local_authenticated: status.auth.authenticated ?? false, live_access_verified: false };
   if (options["--url"]) {

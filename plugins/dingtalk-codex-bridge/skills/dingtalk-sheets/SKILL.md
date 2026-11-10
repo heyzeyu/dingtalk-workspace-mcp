@@ -5,7 +5,7 @@ description: 读写钉钉原生在线电子表格，包括创建表格、编辑�
 
 # 钉钉在线表格
 
-使用本插件的 `dingtalk_sheets` MCP 工具。0.3.3 保留固定官方 DWS 1.0.67 的 99 项 Sheet 操作；登录由官方 CLI 管理。AI 多维表和其他业务使用同插件的 dingtalk-workspace Skill。
+使用本插件的 `dingtalk_sheets` MCP 工具。0.4.0 保留固定官方 DWS 1.0.67 的 99 项 Sheet 操作；登录由官方 CLI 管理。AI 多维表和其他业务使用同插件的 dingtalk-workspace Skill。
 
 ## 写入和完整能力
 
@@ -29,7 +29,7 @@ description: 读写钉钉原生在线电子表格，包括创建表格、编辑�
 
 ## 身份与目标
 
-- 首次使用、身份不明或遇到认证问题时，用 `get_dingtalk_status` 查看本地登录快照；它不证明线上访问成功。
+- 桌面首次连接、CLI 缺失或未登录时，调用 `connect_dingtalk` 并每 2–5 秒用 `get_dingtalk_connection(session_id)` 等待 `ready` 后继续当前请求；用户仅需在本机浏览器扫码授权，不要求手动敲命令。已有授权会复用。身份不明时，用 `get_dingtalk_status` 查看本地登录快照；它不证明线上访问成功。
 - 从返回的 `profile` 或 `list_dingtalk_profiles` 选择明确的 `corpId:userId`。用户指定账号优先；当前账号明确且符合任务时可使用，多个候选无法确定时再澄清。所有业务工具必须显式传这个 profile，同一次读取保持一致。
 - 用户给出的 `/i/nodes/` 链接可能是在线表格、上传文件、多维表或快捷方式。工具会检查类型并解析最多五跳快捷方式，不能仅凭名称猜类型。`spreadsheetv2` 完整直链也支持。
 - `/i/p/` 是另一种分享短链，本插件不能读取。若资源已保存到用户文档空间，可从该处定位；不要尝试从短链猜造节点 ID。
@@ -55,7 +55,7 @@ description: 读写钉钉原生在线电子表格，包括创建表格、编辑�
 
 ## 安装和认证
 
-仅在缺 CLI 或认证需要修复时，定位本插件根目录并执行：
+桌面优先用 `connect_dingtalk` 自动安装固定 CLI 并保持设备授权；`get_dingtalk_connection` 查询进度；`cancel_dingtalk_connection` 只停止本次等待，不重置凭据。仅手动/离线安装或无桌面环境，定位本插件根目录并执行：
 
 ```bash
 node /absolute/path/to/dingtalk-codex-bridge/scripts/setup.mjs install-cli
@@ -65,7 +65,7 @@ node /absolute/path/to/dingtalk-codex-bridge/scripts/setup.mjs login
 
 依赖锁定官方 DWS `1.0.67`，安装器校验下载包 SHA-256，不安装其他钉钉技能、不更改全局 CLI。
 
-已有有效登录时直接复用，不重新登录。确需登录时，本机默认浏览器回调；无头环境用 `login --device`。官方设备流是持续轮询命令，不支持飞书 CLI 的 `--no-wait`/`--device-code` 参数。使用可返回进程会话的执行工具启动，及时展示官方授权页面，让用户完成授权，再继续检查同一进程。
+已有有效登录时直接复用，不重新登录。`login` 默认设备授权，`login --device` 显式使用相同流程；传统本机回调只在明确需要时使用 `login --browser`。官方设备流是持续轮询命令，不支持飞书 CLI 的 `--no-wait`/`--device-code` 参数。使用可返回进程会话的执行工具启动，及时展示官方授权页面，让用户完成授权，再继续检查同一进程。
 
 企业未允许 CLI 访问时，由管理员开通；组织错误或文档无权限时解释具体错误，不重新授权其他组织。不要运行 `dws auth reset`，也不要移除已有凭据来修复沙箱或钥匙串权限问题。`dek_missing` 在受限沙箱中也可能由无法访问系统钥匙串引起。
 

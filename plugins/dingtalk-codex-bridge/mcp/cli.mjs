@@ -52,7 +52,7 @@ export function redact(value) {
 export function execCli(executable, argv, { env = process.env, timeout = CLI_TIMEOUT_MS, cwd, input } = {}) {
   return new Promise((resolve, reject) => {
     const child = execFile(executable, argv, { env, cwd, encoding: "utf8", timeout, killSignal: "SIGKILL", maxBuffer: 2 * 1024 * 1024, windowsHide: true, shell: false }, (error, stdout, stderr) => {
-      if (error?.code === "ENOENT") return reject(new BridgeError("CLI_MISSING", "Official DWS CLI is missing. Run: node scripts/setup.mjs install-cli"));
+      if (error?.code === "ENOENT") return reject(new BridgeError("CLI_MISSING", "Official DWS CLI is missing. In the plugin call connect_dingtalk for guided installation and authorization. Terminal fallback: node scripts/setup.mjs install-cli"));
       if (error?.killed || error?.code === "ETIMEDOUT") return reject(new BridgeError("CLI_TIMEOUT", "DWS timed out. The result is unknown; retry only a bounded read."));
       if (error?.code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") return reject(new BridgeError("OUTPUT_LIMIT", "DWS output exceeded the buffer limit. Read a smaller range."));
       resolve({ code: error ? (typeof error.code === "number" ? error.code : 1) : 0, stdout, stderr });

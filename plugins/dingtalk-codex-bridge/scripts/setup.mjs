@@ -67,16 +67,16 @@ async function main() {
     return;
   }
   if (command === "login") {
-    if (args.length && !(args.length === 1 && args[0] === "--device")) throw new Error("Usage: setup.mjs login [--device]");
+    if (args.length && !(args.length === 1 && ["--device", "--browser"].includes(args[0]))) throw new Error("Usage: setup.mjs login [--device|--browser]");
     // Authentication is an explicit setup action, outside the read-only MCP surface.
     // DWS owns the OAuth flow, Keychain, polling and refresh. Never implement a second token store.
     const { executable } = await createRunner().runtime();
-    const child = spawn(executable, ["auth", "login", ...args], { stdio: "inherit", shell: false });
+    const child = spawn(executable, ["auth", "login", ...(args[0] === "--browser" ? [] : ["--device"])], { stdio: "inherit", shell: false });
     child.on("error", () => { console.error("Unable to start DWS login."); process.exitCode = 1; });
     child.on("exit", code => { process.exitCode = code ?? 1; });
     return;
   }
-  console.log("Usage: node scripts/setup.mjs install-cli [--archive PATH] | status | login [--device]");
+  console.log("Usage: node scripts/setup.mjs install-cli [--archive PATH] | status | login [--device|--browser]");
   if (command) process.exitCode = 2;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main().catch(error => { console.error(JSON.stringify({ error: error.code || "SETUP_FAILED", message: error instanceof BridgeError ? error.message : "Setup failed; check arguments and filesystem permissions." })); process.exitCode = 1; });

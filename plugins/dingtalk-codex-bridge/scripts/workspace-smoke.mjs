@@ -13,7 +13,7 @@ validateProfile(options.profile);
 if (!options.report) throw Error("New report path required.");
 if (options.write !== undefined && options.write !== "own-fixtures") throw Error("Only --write own-fixtures is supported.");
 try { await access(options.report); throw Error("Existing live report; audit previous operations rather than replaying."); } catch (error) { if (error.code !== "ENOENT") throw error; }
-const client = new McpClient(), report = { version: "0.3.3", reads: [], writes: [], resources: {}, complete: false };
+const client = new McpClient(), report = { version: "0.4.0", reads: [], writes: [], resources: {}, complete: false };
 let saving = Promise.resolve();
 const save = () => { const snapshot = JSON.stringify(report, null, 2) + "\n"; saving = saving.then(() => writeFile(options.report, snapshot, { mode: 0o600 })); return saving; };
 function find(value, predicate) { if (!value || typeof value !== "object") return null; if (predicate(value)) return value; for (const child of Object.values(value)) { const found = find(child, predicate); if (found) return found; } return null; }
@@ -25,8 +25,8 @@ async function stage(label, action) {
   try { await action(); item.status = "verified"; } catch (error) { item.status = "needs_audit"; item.error = facts(error); throw error; } finally { await save(); }
 }
 try {
-  const init = await client.initialize(); assert.equal(init.serverInfo.version, "0.3.3");
-  const list = await client.request("tools/list"); assert.equal(list.tools.length, 17);
+  const init = await client.initialize(); assert.equal(init.serverInfo.version, "0.4.0");
+  const list = await client.request("tools/list"); assert.equal(list.tools.length, 20);
   const cases = [
     ["contact user get-self", {}], ["calendar book list", {}], ["todo task list", { page: "1", size: "3", "query-all": false }],
     ["wiki space list", { limit: "3", type: "myWikiSpace" }], ["drive list-spaces", { "space-type": "mySpace" }],

@@ -38,6 +38,6 @@
 
 ## 本机工作流程
 
-`describe_dingtalk_command` 会对本机命令返回原生 Help 或参数及不可直接调用原因。安装/升级 DWS 使用本插件 setup，保持固定版本。auth login、profile/config 修改、应用凭据及 webhook/Agent 通道生命周期需要用户相应任务意图，由本机官方 CLI 完成；不要将 Token、AppSecret、配置导出或设备凭据复制到聊天。
+`describe_dingtalk_command` 会对本机命令返回原生 Help 或参数及不可直接调用原因。安装/升级 DWS 使用本插件 setup，保持固定版本。首次桌面连接用专用 connect_dingtalk / get_dingtalk_connection 流程；目录中的 auth login、profile/config 修改、应用凭据及 webhook/Agent 通道生命周期需要用户相应任务意图，由本机官方 CLI 完成；不要将 Token、AppSecret、配置导出或设备凭据复制到聊天。
 
 官方不提供的能力保持 unavailable。不要把其他版本/产品的命令猜加到当前 CLI。升级依赖时重新采集 schema 和所有 leaf Help，构建目录并重新验证，不直接放开任意 shell/API 地址。

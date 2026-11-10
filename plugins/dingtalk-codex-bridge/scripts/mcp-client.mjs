@@ -29,7 +29,7 @@ export class McpClient {
     });
   }
   async initialize() {
-    const initialized = await this.request("initialize", { protocolVersion: "2025-11-25", capabilities: {}, clientInfo: { name: "dingtalk-full-validation", version: "0.3.3" } });
+    const initialized = await this.request("initialize", { protocolVersion: "2025-11-25", capabilities: {}, clientInfo: { name: "dingtalk-full-validation", version: "0.4.0" } });
     this.child.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n");
     return initialized;
   }

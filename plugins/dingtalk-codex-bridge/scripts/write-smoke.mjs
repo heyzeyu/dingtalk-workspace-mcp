@@ -20,7 +20,7 @@ try {
   if (previous.workbook_url !== flags.url || previous.name !== flags.name || previous.steps.some(step => step.status !== "passed")) throw new Error("Resume needs a matching report whose previous writes have ALL been independently read back and marked passed.");
 } catch (error) { if (error.code !== "ENOENT") throw error; }
 const client = new McpClient(), common = { url: flags.url, profile: flags.profile };
-const report = previous || { version: "0.3.3", name: flags.name, workbook_url: flags.url, sheet_id: null, complete: false, steps: [] };
+const report = previous || { version: "0.4.0", name: flags.name, workbook_url: flags.url, sheet_id: null, complete: false, steps: [] };
 delete report.error; delete report.next_action;
 const save = () => writeFile(flags.report, JSON.stringify(report, null, 2) + "\n", { mode: 0o600 });
 async function stage(label, action) {
@@ -42,7 +42,7 @@ const cell = text => ({ type: "text", text: String(text) });
 try {
   const initialized = await client.initialize();
   await stage("Initialize MCP and discover writes", async () => {
-    assert.equal(initialized.serverInfo.version, "0.3.3");
+    assert.equal(initialized.serverInfo.version, "0.4.0");
     const catalog = await client.call("describe_dingtalk_sheet_operation");
     assert.equal(catalog.count, 99);
   });

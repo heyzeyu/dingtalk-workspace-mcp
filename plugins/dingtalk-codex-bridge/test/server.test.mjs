@@ -27,8 +27,8 @@ test("MCP handshake, tool discovery, tool results and notifications use valid JS
     await tick();
     assert.equal(h.messages.length, 3);
     assert.equal(h.messages[0].result.protocolVersion, "2025-06-18");
-    assert.equal(h.messages[1].result.tools.length, 17);
-    for (const tool of h.messages[1].result.tools) assert.equal(tool.annotations.readOnlyHint, !["write_dingtalk_sheet_operation", "write_dingtalk_command", "call_dingtalk_openapi", "listen_dingtalk_events", "invoke_dingtalk_published_mcp"].includes(tool.name));
+    assert.equal(h.messages[1].result.tools.length, 20);
+    for (const tool of h.messages[1].result.tools) assert.equal(tool.annotations.readOnlyHint, !["write_dingtalk_sheet_operation", "write_dingtalk_command", "call_dingtalk_openapi", "listen_dingtalk_events", "invoke_dingtalk_published_mcp", "connect_dingtalk", "cancel_dingtalk_connection"].includes(tool.name));
     assert.deepEqual(h.messages[2].result.structuredContent, { sample: true });
   } finally { h.close(); }
 });

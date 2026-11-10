@@ -1,5 +1,7 @@
 # 钉钉 Workspace Codex MCP 0.3.1
 
+0.4.0 新增聊天内首次连接：自动准备官方 CLI、本机打开设备授权页、保持轮询并确认登录结果。
+
 0.3.3 使用钉钉官网公开 Logo，同时配置插件页与聊天输入框图标，图片随包分发。
 
 0.3.2 修复 macOS 运行时警告夹在原生错误 JSON 前时的解析，保留官方业务错误码，避免把权限不足误报为响应格式异常。
@@ -14,7 +16,7 @@
 
 目录接入与本地参数编译不等于所有 API 已在真实账号验收。安装包根目录 CLI-COVERAGE.md/CSV 是逐项清单，VALIDATION.md 区分机械检查、模拟测试和真实业务验证。
 
-## 17 个 MCP 工具
+## 20 个 MCP 工具
 
 | 工具 | 用途 |
 |---|---|
@@ -25,6 +27,7 @@
 | listen_dingtalk_events | 1–30 秒、最多 20 条的事件接收，温和关闭 |
 | call_dingtalk_openapi | 官方域名 Raw API，自建应用认证，默认本地预览 |
 | invoke_dingtalk_published_mcp | 按真实服务/工具 Schema 调用已发布 MCP，默认本地预览 |
+| connect_dingtalk / get_dingtalk_connection / cancel_dingtalk_connection | 首次连接、查询授权进度和停止本次等待 |
 | get_dingtalk_status / list_dingtalk_profiles | 查看登录快照与候选账号 |
 | inspect_dingtalk_resource | 识别资源类型及快捷方式目标 |
 | get_dingtalk_workbook / get_dingtalk_sheet_info | 识别原生表格资源、工作表和结构 |
@@ -56,15 +59,29 @@ CLI 保存在 `~/.local/share/dingtalk-codex-bridge/dws/1.0.67/<platform>-<arch>
 node plugins/dingtalk-codex-bridge/scripts/setup.mjs install-cli --archive /path/to/official-archive.tar.gz
 ```
 
-## 登录与配置
+## 聊天内首次连接
+
+安装插件后新开聊天，说“连接钉钉”。助手调用 `connect_dingtalk`：有有效本机授权就复用；缺少官方 CLI 时先安装固定版本并校验 SHA-256；需要授权时，MCP 持有官方设备登录子进程，在本机浏览器打开通过域名、路径和本次设备码绑定校验的官方页面。
+
+只读快照明确提示本地状态需要初始化时，只有显式连接操作会运行一次官方普通 `auth status` 来初始化/刷新；普通状态与进度查询保持只读。不运行 auth reset、logout 或钥匙串迁移命令。
+
+用户亲自扫码、选择组织并确认。助手每 2–5 秒调用 `get_dingtalk_connection(session_id)` 等待 `status=ready`，然后用返回的 profile 继续原请求。首个工具调用返回后，原登录进程仍持续等待，避免普通终端工具超时和本机回调失联。取消等待只终止本次子进程，不退出、重置或撤销已有凭据。
+
+原生授权链接含运行时安全上下文，仅交给本机浏览器，不返回给模型、不写日志或源码。需要重新打开页面时用 `connect_dingtalk(reopen_browser=true)`。只有用户明确要求重新授权时才设置 `reauthorize=true`；权限不足不能据此反复登录。MCP 重启后先查本机登录状态，不自动重放业务写入。
+
+本机需要 Node.js 20+，并能运行 curl、tar 和本机浏览器。macOS 为本次真实设备授权启动/取消验收平台；Windows/Linux 浏览器启动参数已做本地替身测试，真实平台仍需验收。无桌面/SSH 环境使用下方终端流程。
+
+## 手动登录与配置
 
 已有 DWS 登录直接复用；凭据由官方 CLI/系统钥匙串管理。实际组织、账号和资源必须有相应权限；本地登录快照不能证明线上访问。
 
 ```bash
 node plugins/dingtalk-codex-bridge/scripts/setup.mjs status
 node plugins/dingtalk-codex-bridge/scripts/setup.mjs login
-# 无头终端使用设备流，保持该进程轮询：
+# login 默认使用设备流；保持该进程轮询。也可显式指定：
 node plugins/dingtalk-codex-bridge/scripts/setup.mjs login --device
+# 仅明确需要传统浏览器 loopback 回调时：
+node plugins/dingtalk-codex-bridge/scripts/setup.mjs login --browser
 ```
 
 不要通过重置授权解决沙箱/钥匙串限制，也不要在聊天中粘贴凭据。

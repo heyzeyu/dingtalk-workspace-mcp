@@ -2,6 +2,7 @@ import { BridgeError, DWS_VERSION, createRunner, redact } from "./cli.mjs";
 import { createOperations, OPERATION_TOOL_DEFINITIONS } from "./operations.mjs";
 import { createWorkspace, WORKSPACE_TOOL_DEFINITIONS } from "./workspace.mjs";
 import { createAdapters, ADAPTER_TOOL_DEFINITIONS } from "./adapters.mjs";
+import { createConnection, CONNECTION_TOOL_DEFINITIONS } from "./connection.mjs";
 
 const text = (description) => ({ type: "string", description });
 const url = text("Full HTTPS alidocs.dingtalk.com online spreadsheet URL; node links are type-checked before reading.");
@@ -23,7 +24,8 @@ export const TOOL_DEFINITIONS = [
   tool("read_dingtalk_sheet_cells", "Read precise cells", "Read bounded per-cell JSON, including available hyperlink/validation information; choose raw_value or formula explicitly when needed. Keep coordinate mappings. No writes.", schema({ ...common, sheet_id: sheetId, range, value_render_option: render }, ["url", "profile", "sheet_id", "range"])),
   ...OPERATION_TOOL_DEFINITIONS,
   ...WORKSPACE_TOOL_DEFINITIONS,
-  ...ADAPTER_TOOL_DEFINITIONS
+  ...ADAPTER_TOOL_DEFINITIONS,
+  ...CONNECTION_TOOL_DEFINITIONS
 ];
 
 function bad(message) { throw new BridgeError("INVALID_ARGUMENT", message); }
@@ -98,12 +100,22 @@ function resourceType(extension) {
   return "unsupported";
 }
 
-export function createBridge(runner = createRunner(), { env = process.env } = {}) {
+export function createBridge(runner = createRunner(), { env = process.env, connectionDependencies = {} } = {}) {
   const cli = (argv, account, options = {}) => runner.run([...argv, ...(account ? ["--profile", account] : []), "--format", "json", "--timeout", "30"], { timeout: options.longRunning ? 330000 : 40000, allowPrimitive: options.mutation ?? false, cwd: options.cwd });
   const full = createOperations({ cli, spreadsheet, validateId, validateProfile, validateUrl, parseRange, env });
   const workspace = createWorkspace({ runner, sheetCall: full.call, validateProfile, validateId, env });
   const adapters = createAdapters({ runner, workspace, validateProfile, env });
+  const connection = createConnection({ runner, env, readStatus: localStatus, prepareStatus: account => localStatus(account, false), ...connectionDependencies });
   const verifiedResources = new Map();
+  async function localStatus(account, readonly = true) {
+    const runtime = await runner.runtime();
+    const snapshot = await cli(["auth", "status", ...(readonly ? ["--readonly"] : [])], account);
+    const data = unwrap(snapshot, v => "authenticated" in v || "reason" in v);
+    const fields = ["authenticated", "refresh_token_valid", "expires_at", "refresh_expires_at", "corp_id", "corp_name", "user_id", "user_name", "reason", "hint", "message"];
+    const state = Object.fromEntries(fields.filter(k => data?.[k] !== undefined).map(k => [k, data[k]]));
+    const suggested = data?.corp_id && data?.user_id ? `${data.corp_id}:${data.user_id}` : null;
+    return { cli_version: runtime.version, required_cli_version: DWS_VERSION, local_snapshot: readonly, live_access_verified: false, profile: suggested, auth: redact(state), ...(state.authenticated === false ? { next_action: { tool: "connect_dingtalk", message: "在当前聊天连接钉钉，插件会安装依赖并保持设备授权。" } } : {}) };
+  }
   async function inspect(link, account) {
     if (link.kind === "legacy_sheet") return { type: "online_spreadsheet", extension: "axls", node: link.node, url: link.url, evidence: "spreadsheetv2_url", shortcuts: [] };
     let response = await cli(["drive", "info", "--node", link.node], account);
@@ -144,15 +156,10 @@ export function createBridge(runner = createRunner(), { env = process.env } = {}
     if (OPERATION_TOOL_DEFINITIONS.some(tool => tool.name === name)) return full.call(name, args);
     if (WORKSPACE_TOOL_DEFINITIONS.some(tool => tool.name === name)) return workspace.call(name, args);
     if (ADAPTER_TOOL_DEFINITIONS.some(tool => tool.name === name)) return adapters.call(name, args);
+    if (CONNECTION_TOOL_DEFINITIONS.some(tool => tool.name === name)) return connection.call(name, args);
     if (name === "get_dingtalk_status") {
       const account = args.profile === undefined ? undefined : validateProfile(args.profile);
-      const runtime = await runner.runtime();
-      const snapshot = await cli(["auth", "status", "--readonly"], account);
-      const data = unwrap(snapshot, v => "authenticated" in v || "reason" in v);
-      const fields = ["authenticated", "refresh_token_valid", "expires_at", "refresh_expires_at", "corp_id", "corp_name", "user_id", "user_name", "reason", "hint", "message"];
-      const state = Object.fromEntries(fields.filter(k => data?.[k] !== undefined).map(k => [k, data[k]]));
-      const suggested = data?.corp_id && data?.user_id ? `${data.corp_id}:${data.user_id}` : null;
-      return { cli_version: runtime.version, required_cli_version: DWS_VERSION, local_snapshot: true, live_access_verified: false, profile: suggested, auth: redact(state) };
+      return localStatus(account);
     }
     if (name === "list_dingtalk_profiles") return { local_snapshot: true, profiles: redact(await cli(["profile", "list"])) };
     const account = validateProfile(args.profile);
@@ -182,5 +189,5 @@ export function createBridge(runner = createRunner(), { env = process.env } = {}
     if (JSON.stringify(output).length > 200000) throw new BridgeError("OUTPUT_LIMIT", "Result is too large to return intact. Read a smaller range; no partial JSON was returned.");
     return output;
   }
-  return { call };
+  return { call, close: () => connection.close() };
 }

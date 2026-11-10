@@ -9,7 +9,7 @@ description: 通过本插件 MCP 操作钉钉文档、AI 多维表、待办、�
 
 ## 从目录选择工具
 
-1. 用 `get_dingtalk_status` / `list_dingtalk_profiles` 识别已有账号，所有业务请求显式传 `corpId:userId`。同一流程保持身份一致。身份已明确时直接复用，多个候选无法判断才澄清。登录快照不能代替目标资源的真实读取。
+1. 桌面首次连接、缺 CLI 或未登录时，用 `connect_dingtalk` 自动准备固定 CLI 并保持官方设备授权。提示用户在本机浏览器扫码；每 2–5 秒用 `get_dingtalk_connection(session_id)` 等待 `ready`，然后继续原请求，不停在“请自行运行登录命令”。已有可读取的授权会复用；用户明确要求重新授权才用 `reauthorize=true`。登录缺失、CLI_MISSING 是连接问题，业务权限不足不能通过反复授权处理。也可用 `get_dingtalk_status` / `list_dingtalk_profiles` 识别已有账号，所有业务请求显式传 `corpId:userId`。同一流程保持身份一致。身份已明确时直接复用，多个候选无法判断才澄清。登录快照不能代替目标资源的真实读取。
 2. 用 `discover_dingtalk_commands(product, query, limit, offset)` 按域/关键词分页寻找命令。AI 多维表用 `aitable`；原生在线电子表格用 dingtalk-sheets。只取任务需要的页，不把整个目录塞入上下文。
 3. 用 `describe_dingtalk_command(command)` 查看精确路径、参数、必填项、原生 Usage、类型、效果及接入模式。陌生命令必须先查 leaf，不能凭记忆造 flag 或资源 ID。
 4. `mode=mcp` 的 `effect=read` 调用 `read_dingtalk_command`；其他效果调用 `write_dingtalk_command`。`parameters` 使用描述返回的原生 flag 名（无 `--`），值遵守类型。JSON 字段直接传对象/数组。原生 Usage 声明的位置参数放 `positionals`，不能混入 flag。
@@ -43,4 +43,6 @@ description: 通过本插件 MCP 操作钉钉文档、AI 多维表、待办、�
 
 ## 安装和登录
 
-需要安装时定位本插件根目录，运行 `node scripts/setup.mjs install-cli`；状态用 `status`，确需登录用 `login`，无头环境用 `login --device`。安装器锁定版本和官方 SHA-256，不覆盖全局 CLI。已有有效授权直接复用，不运行 auth reset，不通过清除钥匙串修复沙箱限制。设备流应保持原进程轮询并向用户展示官方授权入口，不能索要凭据。
+桌面优先调用 `connect_dingtalk`，不要求用户复制授权链接、Token 或设备码。页面未打开且用户要求重开时，用 `reopen_browser=true`；取消时用精确 `session_id` 调用 `cancel_dingtalk_connection`。MCP 进程重启后先查本机登录状态，不能假设旧 session 仍存在。
+
+终端/无桌面环境：定位本插件根目录，安装用 `node scripts/setup.mjs install-cli`；状态用 `status`，登录用 `login --device` 并保持进程。`login` 默认设备流；传统本机回调须明确使用 `login --browser`。安装器锁定版本和官方 SHA-256，不覆盖全局 CLI。已有有效授权直接复用，不运行 auth reset，不通过清除钥匙串修复沙箱限制。设备流应保持原进程轮询并向用户展示官方授权入口，不能索要凭据。

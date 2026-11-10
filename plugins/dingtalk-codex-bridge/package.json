@@ -1,6 +1,6 @@
 {
   "name": "dingtalk-codex-bridge",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "Structured MCP access to the pinned official DingTalk Workspace CLI.",

@@ -1,6 +1,6 @@
 {
   "name": "dingtalk-codex-bridge",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "钉钉 Workspace 全业务 MCP：按产品发现、查询和调用官方 CLI，保留在线表格兼容工具。",
   "author": {
     "name": "DingTalk Bridge Contributors"
@@ -24,6 +24,7 @@
       "Write"
     ],
     "defaultPrompt": [
+      "连接钉钉，帮我完成首次授权。",
       "按业务域查看钉钉 CLI 的完整 MCP 能力。",
       "读取钉钉文档或表格并完成我指定的修改。",
       "创建一个只分配给我的待办并回读确认。"

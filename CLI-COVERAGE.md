@@ -1,4 +1,4 @@
-# 官方 CLI 功能接入清单 0.3.3
+# 官方 CLI 功能接入清单 0.4.0
 
 基准：DWS 1.0.67。1,559 条官方运行时 Schema 命令 + 37 条公开本机工具 leaf，共 1,596 条唯一命令。分组父命令、help 别名及全局 flag 不另计为业务能力。公开 Help 未暴露的内部/隐藏命令不在支持契约内。
 
@@ -73,6 +73,6 @@ npm test
 
 只使用 1.0.67 executable；换版本需要同步固定版本检查、安装器 SHA-256、目录与回归验证。完整原始 Schema/Help 不随包重复分发，派生目录、构建脚本和许可随包提供。真实验收范围见 [VALIDATION.md](VALIDATION.md)。
 
-## 0.3.3 的本地 I/O 约束
+## 0.4.0 的本地 I/O 约束
 
 在原生参数契约之上，下载/落盘必须指定允许目录内的新目的地，url-only/inline 模式无需落盘路径；不启用 overwrite。JSON 或文件、检查点/基线、文件数组及原生 @文件别名都采用共同路径检查。正文图片只使用已上传的 mediaid: 或显式受控文件上传，避免正文隐式读取文件。describe 返回 bridge_required_destinations 和 local_io_policy；这些是本插件的额外边界，CSV 保留原生目录状态。
