@@ -1,0 +1,5 @@
+# Preserve the exact reviewed bytes across clones and source-release checksums.
+* -text
+*.png binary
+# CSV is generated with standard CRLF records; CR is part of its line ending.
+*.csv whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

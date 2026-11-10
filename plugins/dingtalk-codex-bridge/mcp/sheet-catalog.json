@@ -1,0 +1,3615 @@
+{
+  "version": "1.0.67",
+  "source": "official DWS v1.0.67 runtime schema; no network discovery",
+  "operations": [
+    {
+      "operation": "add-dimension",
+      "description": "在钉钉表格的指定工作表末尾追加空行或空列。\n\n参数说明：\n  --dimension  维度类型，ROWS 表示追加行，COLUMNS 表示追加列\n  --length     追加数量，正整数（>= 1），最多 5000",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "dimension": {
+          "description": "维度类型: ROWS 或 COLUMNS (必填)",
+          "enum": [
+            "ROWS",
+            "COLUMNS"
+          ],
+          "required": true,
+          "type": "string"
+        },
+        "length": {
+          "description": "追加数量，正整数 (必填)",
+          "required": true,
+          "type": "integer"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet add-dimension --node <NODE_ID> --sheet-id <SHEET_ID> --dimension ROWS --length 5"
+      ]
+    },
+    {
+      "operation": "append",
+      "description": "在钉钉电子表格的指定工作表末尾追加若干行数据。\n\n系统会自动定位到工作表中最后一行有数据的位置，在其下方插入新行数据。\n如果工作表为空，数据将从第一行开始写入。\n\n--values 为二维 JSON 数组，外层数组的每个元素代表一行，内层数组的每个元素代表该行中的一个单元格值。\n追加的数据列数应与工作表已有数据的列数保持一致，以确保数据对齐。\n\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "values": {
+          "description": "追加数据，二维 JSON 数组 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet append --node <NODE_ID> --sheet-id <SHEET_ID> --values '[[\"张三\",\"销售部\",50000]]'"
+      ]
+    },
+    {
+      "operation": "comment batch-query",
+      "description": "批量查询同一文档或表格中的评论详情，单次最多 100 条。\n\n--comment-ref 可重复传入，格式为 topicId:commentKey。topicId 和 commentKey\n均可从 comment list 的返回结果中获得。结果严格保持输入顺序；不存在的评论\n会返回 found=false 的占位项。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "comment-ref": {
+          "description": "评论引用 topicId:commentKey，可重复；最多 100 条 (必填)",
+          "required": true,
+          "type": "array"
+        },
+        "node": {
+          "description": "文档或表格 ID / URL (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet comment batch-query --node <NODE_ID> --comment-ref <TOPIC_ID>:<COMMENT_KEY> --format json"
+      ]
+    },
+    {
+      "operation": "batch-update",
+      "description": "将多个写操作打包为一次原子请求执行。\n\n默认严格事务模式：任一子操作失败则整批回滚。\n传 --continue-on-error 切换为宽松模式（遇失败继续执行）。\n由于子操作可包含清除、删除等破坏性操作，真实执行必须获得用户确认后加 --yes。\n使用 --dry-run 可预览翻译后的完整请求，不需要 --yes，也不会调用远程接口。\n\ntoolName 使用 CLI 命令名（与原子命令一致），input 的键用 CLI flag 名去掉 --。\nCLI 层自动翻译为 MCP toolName + 参数名，无需记忆 MCP 参数名。\nsource-range 的语义按 toolName 隔离：set-dropdown 中表示下拉候选项来源，\nrange fill/copy-to/move-to 中表示待填充、复制或移动的数据源区域。\n\n支持的 CLI 命令名:\n  range clear / range update / merge-cells / unmerge-cells / update-dimension\n  range fill / range copy-to / add-dimension / delete-dimension / move-dimension\n  group-dimension / ungroup-dimension\n  set-dropdown / delete-dropdown / csv-put / delete-float-image\n  range set-style / replace / insert-dimension / range move-to / range sort\n  new / delete-sheet / update / show-gridline / hide-gridline\n  chart delete / pivot-table delete\n  cond-format create / cond-format update / cond-format delete\n  filter create / filter update / filter delete\n  filter-view create / filter-view update / filter-view delete\n  create-float-image / update-float-image\n其中 csv-put 与独立命令语义一致：input 可传 \"auto-convert\":false，关闭非公式\n字段的自动类型转换；CSV 字段值以 = 开头时仍按公式解析，其他字段按普通文本\n原样写入（例如 \"'=1+1\" 会保留前置单引号）。缺省或 true 保持现有自动转换行为。\nset-dropdown 不接受顶层 colors/source-colors；Inline 颜色应写在 options[].color，\nSourceRange 颜色写入暂不支持。\n\n新增子操作执行严格本地校验：未知字段、错误 JSON 类型、把整数或布尔值写成\n字符串，以及 float-image 的 file 本地上传模式都会在发请求前拒绝。\n批内不支持 $ref 或引用前序结果；create 返回的服务端原始 data（含 ID 时）只能\n供调用方在下一次请求使用。update 改名或 delete-sheet 后，后续操作若仍按旧名\n定位会失败：严格模式整批回滚，宽松模式则保留此前已成功的操作。跨操作关联时\n优先使用稳定的 sheet ID。\n\n注意：batch-update 中 group-dimension 适合默认展开分组；需要 --group-state fold 时请使用独立\ndws sheet group-dimension 命令。\n\n--operations 是 JSON 数组，每项包含:\n  toolName  CLI 命令名（如 \"range clear\", \"range update\"）\n  input     该命令的入参（不含 --node），键用 flag 名去掉 --\n\nCLI 会在本地完成翻译后把最终数组编码到 MCP operationsJson 字符串中，以保持\nnumber/boolean 类型；--dry-run 展示的是这个带转义的实际远端参数。写失败时不会\n切换到旧 operations 入口重试。\n\n完整映射表见:\n  dingtalk-workspace/references/products/sheet/sheet-batch-operations.md",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "continue-on-error": {
+          "description": "遇失败继续执行后续操作（默认 false，严格事务）",
+          "required": false,
+          "type": "boolean"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "operations": {
+          "description": "操作数组 JSON (必填，每项 {toolName, input})",
+          "example": "[{\"toolName\":\"range clear\",\"input\":{\"sheet-id\":\"Sheet1\",\"range\":\"A1:B2\",\"type\":\"content\"}}]",
+          "format": "json",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet batch-update --node <NODE_ID> --operations '[{\"toolName\":\"range clear\",\"input\":{\"sheet-id\":\"Sheet1\",\"range\":\"A1:B3\",\"type\":\"content\"}}]'"
+      ]
+    },
+    {
+      "operation": "chart create",
+      "description": "在钉钉电子表格的指定工作表中创建一个浮动图表。\n\n--properties 为 JSON 格式，包含 position（锚点位置）、dimensions（尺寸）、chart（图表配置）三个必填字段，\n以及可选的 offset（偏移量）。支持 stdin heredoc 和 @file 两种传入方式。\n\nchart.type 支持: column（柱形图）、bar（条形图）、columnStacked（堆积柱形图）、barStacked（堆积条形图）、\nline（折线图）、lineStacked（堆积折线图）、area（面积图）、areaStacked（堆积面积图）、\nareaPercentStacked（百分比堆积面积图）、pie（饼图）、doughnut（环形图）、scatter（散点图）、\nradar（雷达图）。\nchart.series[].value / chart.series[].name / chart.category 使用 A1 区域表示法（如 \"A2:B10\"），\n不指定 sheet 前缀时默认使用 --sheet-id 的值。\nposition.col 使用列字母表示法（如 \"A\"、\"AA\"），不支持数字形式。\n\n创建成功后返回新图表的完整信息，包含系统分配的 chart-id。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "properties": {
+          "description": "图表完整配置 JSON (必填，含 position/dimensions/chart)",
+          "example": "{\"position\":{\"row\":0,\"col\":\"A\"},\"dimensions\":{\"width\":600,\"height\":400},\"chart\":{\"type\":\"column\",\"series\":[{\"value\":[\"B2:B10\"]}],\"category\":[\"A2:A10\"]}}",
+          "format": "json",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "properties={\"position\":{\"row\":8,\"col\":\"A\"},\"dimensions\":{\"width\":600,\"height\":400},\"chart\":{\"type\":\"column\",\"series\":[{\"name\":\"D1\",\"value\":[\"D2:D4\"]}],\"category\":[\"A2:A4\"],\"title\":{\"show\":true,\"text\":\"金额对比\"}}}"
+      ],
+      "review_note": "Replaced stale flat chartType/range example with the v1.0.67 official sheet-chart reference format."
+    },
+    {
+      "operation": "chart delete",
+      "description": "删除钉钉电子表格中指定的浮动图表。\n\n注意: 这是一个危险操作，删除后图表不可恢复。执行前需要确认，或传入 --yes 跳过确认。\nchart-id 可通过 chart list 获取。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "chart-id": {
+          "description": "浮动图表 ID (必填，可通过 chart list 获取)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet chart delete --node NODE_ID --sheet-id SHEET_ID --chart-id CHART_ID"
+      ]
+    },
+    {
+      "operation": "chart list",
+      "description": "获取钉钉电子表格指定工作表中的浮动图表。\n\n支持两种模式：\n1. 列出全部图表：不传 --chart-id，返回该工作表中所有浮动图表的列表。\n2. 获取单个图表：传入 --chart-id，返回该图表的详细信息。\n\n返回内容包含每个图表的 ID、锚点位置、尺寸坐标以及完整图表配置（类型、数据系列、分类轴、标题、图例、坐标轴等）。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "chart-id": {
+          "description": "浮动图表 ID (可选，不传则返回全部)",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet chart list --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "chart update",
+      "description": "更新钉钉电子表格中指定浮动图表的配置。\n\n注意：本接口采用 PUT 语义（完整覆盖），非增量更新。\n建议先通过 chart list（传入 --chart-id）获取当前配置，修改后整体传入。\n如果只需修改部分字段（如仅修改标题），仍需传入完整的 chart 配置以避免其他字段被清空。\n\n--properties 结构与 chart create 完全相同。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "chart-id": {
+          "description": "浮动图表 ID (必填，可通过 chart list 获取)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "properties": {
+          "description": "图表完整配置 JSON (必填，PUT 语义整体覆盖)",
+          "example": "{\"position\":{\"row\":0,\"col\":\"A\"},\"dimensions\":{\"width\":600,\"height\":400},\"chart\":{\"type\":\"column\",\"series\":[{\"value\":[\"B2:B10\"]}],\"category\":[\"A2:A10\"]}}",
+          "format": "json",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet chart update --node <NODE_ID> --sheet-id <SHEET_ID> --chart-id <CHART_ID> --properties '{\"title\":\"新标题\"}'"
+      ]
+    },
+    {
+      "operation": "range clear",
+      "description": "清除钉钉电子表格中指定工作表指定范围的单元格内容、格式或全部。\n\n清除类型 (--type):\n  content  仅清除单元格的值，保留格式（默认）\n  format   仅清除格式，保留值\n  all      清除值和格式\n\n范围格式使用 A1 表示法：\n  --range A1:B3   清除 A1 到 B3 的矩形区域\n  --range A1      清除单个单元格\n  --range A:C     清除整列范围\n\n该操作会删除内容或格式；必须先获得用户确认，再追加 --yes 执行。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "清除范围，A1 表示法 (必填，如 A1:B3)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "type": {
+          "description": "清除类型: content(仅值,默认) / format(仅格式) / all(全部)",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet range clear --node <NODE_ID> --sheet-id <SHEET_ID> --range \"A1:B3\" --type content"
+      ]
+    },
+    {
+      "operation": "copy",
+      "description": "复制指定工作表，在同一表格中创建一个副本。\n\n复制操作会将源工作表的所有内容（包括数据、格式、公式等）完整复制到新工作表中。\n\n可选参数：\n  --name   指定副本名称；不传时系统自动生成（通常为\"源名称 副本\"）。\n           名称与已有工作表重复时系统会自动重命名。\n  --index  指定副本位置（0-based）；不传时放在源工作表之后。\n           传 --index 时，CLI 会先复制，再追加一次位置更新，把副本移动到目标索引。\n\nname 不能包含 / \\ ? * [ ] : 等特殊字符，最长 100 字符。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "index": {
+          "description": "副本位置索引，0-based (不传则放在源工作表之后)",
+          "required": false,
+          "type": "integer"
+        },
+        "name": {
+          "description": "副本名称，最长 100 字符 (不传则系统自动生成)",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "源工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "title": {
+          "description": "--name 的别名（兼容）",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet copy --node <NODE_ID> --sheet-id <SHEET_ID> --title \"销售副本\""
+      ]
+    },
+    {
+      "operation": "cond-format create",
+      "description": "在钉钉电子表格的指定工作表中创建一条条件格式规则。\n\n条件格式规则定义了当单元格满足特定条件时自动应用的样式。\n每条规则需要指定：应用范围（--ranges）、条件类型及参数（--condition）、命中时的单元格样式（--cell-style）。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\n\n--ranges 为 JSON 数组，A1 表示法，如 '[\"A1:E10\"]'。\n--condition 为 JSON 对象，包含条件类型及参数。每条规则只能选择一种条件类型。\n--cell-style 为 JSON 对象，指定条件命中时的样式。\n--data-bar-style 为 JSON 对象，仅数据条类型时使用。\n\n支持的条件类型（condition JSON 的 key，每次只能选一种）：\n  numberCondition     数值比较\n    operator: equal/not-equal/greater/greater-equal/less/less-equal/between/not-between\n    value1: 比较值（字符串，必填）\n    value2: 第二比较值（字符串，仅 between/not-between 时必填）\n  textCondition       文本匹配\n    operator: contains/not-contains/starts-with/ends-with\n    value: 匹配文本\n  emptyCondition      空值判断（operator: is-empty/is-not-empty）\n  errorCondition      错误值判断（operator: error/no-error）\n  duplicateCondition  重复/唯一值（operator: duplicate/unique）\n  formulaCondition    自定义公式（formula: \"=A1>100\"）\n  rankCondition       排名（value: 数量, isPercent: 是否百分比, isBottom: 是否倒数）\n  averageCondition    高于/低于平均值（isAbove: 是否高于, andEqual: 是否含等于）\n  stdevCondition      标准差（value: 倍数, isAbove: 方向, andEqual: 是否含等于）\n  dataBarCondition    数据条\n    minPoint/maxPoint: { type: auto/maxmin/number/percent/percentile/formula, value: 端点值 }\n  iconSetCondition    图标集\n    iconSet: 数组，每项含 criteria({ type, value, gtOrEqual }) 和 icon({ type: \"id\", value: 图标ID })\n    showIconOnly: 是否仅显示图标\n  colorScaleCondition 色阶\n    criterias: 数组（2或3项），每项含 { type: maxmin/number/percent/percentile/formula, value, color }\n\n--cell-style JSON 字段：\n  backgroundColor  背景色（十六进制如 #FFCDD2）\n  fontColor        字体颜色（十六进制如 #B71C1C）\n  bold             是否加粗（布尔）\n  italic           是否斜体（布尔）\n  strikethrough    是否删除线（布尔）\n\n--data-bar-style JSON 字段（仅 dataBarCondition 时使用）：\n  fill         填充颜色数组 [正数颜色, 负数颜色]，如 [\"#4CAF50\",\"#F44336\"]\n  isGradient   是否渐变填充（布尔，默认 false）\n\n注意事项：\n  - 创建后必须用 cond-format list 验证规则是否生效\n  - 中文\"标红/高亮/染色\"默认指 backgroundColor，\"字体红\"才是 fontColor\n  - 日期/空值公式必须防空：=AND(E1<>\"\", E1<=TODAY()) 而非 =E1<=TODAY()\n  - 公式中用相对引用（如 =E1<=TODAY()）使公式随行变化，绝对引用只比较一个格\n  - 创建前建议先 range read 读 3-5 行数据确认列对应关系",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "cell-style": {
+          "description": "单元格样式 JSON 对象 (可选)，如 '{\"backgroundColor\":\"#FF0000\",\"bold\":true}'",
+          "example": "{\"backgroundColor\":\"#FFCDD2\",\"bold\":true}",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "condition": {
+          "description": "条件类型及参数 JSON 对象 (必填)，如 '{\"numberCondition\":{\"operator\":\"greater\",\"value1\":\"80\"}}'",
+          "example": "{\"numberCondition\":{\"operator\":\"greater\",\"value1\":\"80\"}}",
+          "format": "json",
+          "required": true,
+          "type": "string"
+        },
+        "data-bar-style": {
+          "description": "数据条样式 JSON 对象 (可选，仅数据条类型)，如 '{\"fill\":[\"#4CAF50\",\"#F44336\"],\"isGradient\":true}'",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "ranges": {
+          "description": "应用范围 JSON 数组 (必填)，如 '[\"A1:E10\"]'",
+          "example": "[\"A1:B2\"]",
+          "format": "json",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet cond-format create --node NODE_ID --sheet-id SHEET_ID --ranges '[\"A1:E10\"]' --condition '{\"numberCondition\":{\"operator\":\"greater\",\"value1\":\"80\"}}' --cell-style '{\"backgroundColor\":\"#FFEB3B\"}'"
+      ]
+    },
+    {
+      "operation": "filter create",
+      "description": "在工作表中创建全局筛选。\n\n每个工作表只能有一个全局筛选，已存在时会报错。\n--range 必须包含表头行（如 A1:E100），不能只包含数据行。\n--criteria 可选，不传则仅创建空筛选框架，后续可通过 filter update 设置条件。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "criteria": {
+          "description": "筛选条件 JSON 数组 (可选)",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "筛选范围，A1 表示法，须包含表头行 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter create --node <NODE_ID> --sheet-id <SHEET_ID> --range \"A1:E100\""
+      ]
+    },
+    {
+      "operation": "filter-view create",
+      "description": "在钉钉电子表格的指定工作表中创建一个筛选视图。\n\n用途：为指定数据区域创建一个可命名的个人化筛选视图，可选同时设置筛选条件。\n场景：用户需要针对某个数据区域建立固定的筛选视角（如\"高绩效员工\"\"研发部数据\"），方便反复查看。\n区分：\n  - 与全局筛选不同，筛选视图是个人化的，不影响其他用户看到的数据。\n  - 如果只需创建视图不设条件，后续可通过 update-criteria 单独设置。\n  - 如果要一步到位，可通过 --criteria 在创建时直接设置筛选条件。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\n同一工作表可以创建多个筛选视图。\n\n--criteria 为可选的 JSON 数组，每个元素包含 column（列偏移量，从 0 开始）和筛选条件字段。\n筛选条件支持三种类型：\n  values    按值筛选，通过 visibleValues 指定允许显示的值列表\n  condition 按条件筛选，通过 conditions 指定条件运算符和比较值\n  color     按颜色筛选，通过 backgroundColor 或 fontColor 指定颜色",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "criteria": {
+          "description": "筛选条件，JSON 数组 (可选)",
+          "required": false,
+          "type": "string"
+        },
+        "name": {
+          "description": "筛选视图名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "筛选视图范围，A1 表示法，如 A1:E10 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter-view create --node <NODE_ID> --sheet-id <SHEET_ID> --name \"销售筛选\" --range \"A1:E10\""
+      ]
+    },
+    {
+      "operation": "create-float-image",
+      "description": "在钉钉表格的指定工作表上创建一个浮动图片。\n\n浮动图片悬浮于单元格之上，不占用单元格内容，可自由定位和调整大小。\n\n直接传 --file 可在一个命令中上传本地图片并创建浮动图片。\n已经通过 media-upload 获得 resourceUrl 时，也可以改传 --src；--file 与 --src 二选一。\n\n--range 指定浮动图片锚定的单元格位置，使用 A1 表示法（如 A1、B3）。\n--width / --height 为必填，单位像素，必须为正整数。\n--offset-x / --offset-y 可选，表示相对锚点单元格左上角的偏移量（像素），默认 0。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "file": {
+          "description": "本地图片文件路径，与 --src 二选一",
+          "required": false,
+          "required_when": "exactly one of --file or --src must be provided",
+          "type": "string"
+        },
+        "height": {
+          "description": "图片高度，像素 (必填)",
+          "required": true,
+          "type": "integer"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "offset-x": {
+          "description": "水平偏移量，像素 (默认 0)",
+          "required": false,
+          "type": "integer"
+        },
+        "offset-y": {
+          "description": "垂直偏移量，像素 (默认 0)",
+          "required": false,
+          "type": "integer"
+        },
+        "range": {
+          "description": "锚点单元格，A1 表示法，如 A1、B3 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "src": {
+          "description": "通过 media-upload 获取的 resourceUrl，与 --file 二选一",
+          "required": false,
+          "type": "string"
+        },
+        "width": {
+          "description": "图片宽度，像素 (必填)",
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "examples": [
+        "dws sheet create-float-image --node <NODE_ID> --sheet-id <SHEET_ID> --src \"/core/api/resources/img/...\" --range A1 --width 400 --height 300"
+      ]
+    },
+    {
+      "operation": "pivot-table create",
+      "description": "在指定数据源区域上创建原生透视表。\n\n--source 必须使用带工作表前缀的 A1 范围，例如 \"'Sheet1'!A1:D100\"。\n--properties 为 JSON 对象或 @file，values 至少一项；可包含 rows、columns、filters、collapse 和总计显示选项。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "non_idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "properties": {
+          "description": "透视表配置 JSON 或 @文件路径 (必填)",
+          "example": "{\"values\":[{\"field\":\"Amount\",\"summarize_by\":\"sum\"}]}",
+          "format": "json",
+          "required": true,
+          "type": "string"
+        },
+        "source": {
+          "description": "数据源区域，A1 表示法且包含工作表前缀 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "target-position": {
+          "description": "透视表放置位置，A1 单元格地址 (可选)",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "target-sheet-id": {
+          "description": "目标工作表 ID 或名称 (可选，不传则自动新建)",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "source=\"'REAL_SHEET_NAME'!A1:D4\"; properties={\"rows\":[{\"field\":\"项目\"}],\"values\":[{\"field\":\"金额\",\"summarize_by\":\"sum\"}]}"
+      ],
+      "review_note": "Example uses exact header text and summarize_by from the v1.0.67 official pivot reference, not stale column letters/aggregation."
+    },
+    {
+      "operation": "new",
+      "description": "在指定钉钉表格中新建一个工作表。\n当指定名称与已有工作表重复时，系统会自动重命名为合法值。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "name": {
+          "description": "工作表名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet new --node <NODE_ID> --name \"Sheet2\""
+      ]
+    },
+    {
+      "operation": "comment create",
+      "description": "在指定单元格上创建评论，可 @ 用户",
+      "effect": "write",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "non_idempotent",
+      "parameters": {
+        "content": {
+          "description": "评论内容 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "mention": {
+          "description": "被 @ 的用户 uid 列表，逗号分隔",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "单元格位置 A1 表示法 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet comment create --node <SHEET_ID> --sheet-id Sheet1 --range A2 --content \"这个数字有问题\" --format json"
+      ]
+    },
+    {
+      "operation": "create-with-data",
+      "description": "创建一篇新的钉钉在线电子表格，并在创建后写入初始数据、可选地应用样式。\n\n创建空表格请用 dws sheet create（单次调用）；本命令是多步编排：\n  create_workspace_sheet → 等待文档就绪 → 定位默认工作表 → 写入数据 → 回读校验 → 应用样式\ncreate / write / style 是多个远程步骤，不是原子事务。创建后的失败会返回已创建的\nnodeId、已探活的 sheetId（若有）、失败阶段和提交状态；先读回确认现状并只补失败步骤，\n不要整体重跑 create-with-data，以免生成重复工作簿。\n\n创建位置优先级: --folder > --workspace > 默认 (我的文档根目录)\n\n初始数据（--values 与 --sheets 二选一，必须给一个）：\n  --values   二维 JSON 数组，裸值写入默认工作表 A1 起（单表快速建表，无表头/类型语义，\n             复用 csv-put 通道，自动识别数字/布尔）。单元格只能是字符串/数字/布尔/null；\n             上限 30000 单元格、编码为 CSV 后 2000000 字符\n  --sheets   typed table 数组，多工作表一次写入（复用 table-put 通道）。每个条目形如\n             {\"name\":\"表名\",\"columns\":[\"列1\",\"列2\"],\"data\":[[...]],\"dtypes\":{...},\"formats\":{...},\"cellStyles\":[...]}\n             name、columns 必填；第一个条目写入默认工作表（自动重命名为其 name），其余按 name 自动新建。\n             字段名为 camelCase，只接受 name / columns / data / dtypes / formats / cellStyles /\n             startCell / mode / header / allowOverwrite（写错的键会被服务端静默丢弃，故一律拒绝；\n             不接受 sheetId：文档尚未创建）。data 每行长度须等于 columns，单元格只能是\n             字符串/数字/布尔/null；dtypes、formats 的键须是 columns 里的列名（按 trim 后比较）。\n             单表写入上限 30000 单元格（含表头行）。\n\n样式配置（--styles，可选；顶层键对齐飞书 snake_case，列表项内字段兼容 camelCase；\n两级都拒绝未知键，避免写错的键被静默丢弃导致样式只应用一半）：\n  {\"styles\":[{\"name\":\"表名\",\n    \"cell_styles\":[{\"range\":\"A1:D1\",\"font_weight\":\"bold\",\"background_color\":\"#FFF2CC\",\n                    \"font_family\":\"微软雅黑\",\"number_format\":\"@\",\n                    \"border_styles\":{\"bottom\":{\"style\":\"medium\"}}}],\n    \"row_sizes\":[{\"range\":\"1:1\",\"type\":\"pixel\",\"size\":28}],\n    \"col_sizes\":[{\"range\":\"A:D\",\"type\":\"pixel\",\"size\":120}],\n    \"cell_merges\":[{\"range\":\"A1:B1\",\"merge_type\":\"all\"}]}]}\n  - 每项至少给 cell_styles / row_sizes / col_sizes / cell_merges 之一\n  - 配 --sheets 时 styles 的项数/顺序/name 必须与 --sheets 子表一一对应；配 --values 时只给 1 项（name 忽略）\n  - 数据写入后按 cell_styles → row_sizes → col_sizes → cell_merges 顺序执行（非原子）\n  - row_sizes 的 type：pixel（需 size）/ standard（恢复默认行高）/ auto（按内容自适应）\n  - col_sizes 的 type：pixel（需 size）/ standard（恢复默认列宽）——与飞书一致，列宽不提供 auto\n  - merge_type 取 all/rows/columns",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "folder": {
+          "description": "目标文件夹 ID 或 URL",
+          "required": false,
+          "type": "string"
+        },
+        "name": {
+          "description": "表格名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheets": {
+          "description": "多工作表 typed table JSON，如 '[{\"name\":\"表名\",\"columns\":[...],\"data\":[[...]]}]' (与 --values 二选一)",
+          "required": false,
+          "type": "string"
+        },
+        "styles": {
+          "description": "写入数据后一并应用的视觉处理 JSON（对齐飞书）：{\"styles\":[{\"name\":\"表名\",\"cell_styles\":[{\"range\":\"A1:D1\",\"font_weight\":\"bold\"}],\"row_sizes\":[{\"range\":\"1:1\",\"type\":\"pixel\",\"size\":28}],\"col_sizes\":[{\"range\":\"A:D\",\"type\":\"pixel\",\"size\":120}],\"cell_merges\":[{\"range\":\"A1:B1\",\"merge_type\":\"all\"}]}]}",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "values": {
+          "description": "初始数据，二维 JSON 数组，写入默认工作表 (与 --sheets 二选一)",
+          "required": false,
+          "type": "string"
+        },
+        "workspace": {
+          "description": "目标知识库 ID",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet create-with-data --name \"名单\" --values '[[\"姓名\",\"分数\"],[\"张三\",90]]'",
+        "dws sheet create-with-data --name \"报表\" --sheets '[{\"name\":\"一月\",\"columns\":[\"项目\",\"金额\"],\"data\":[[\"房租\",5000]]}]'"
+      ]
+    },
+    {
+      "operation": "create",
+      "description": "创建一篇新的钉钉在线电子表格，支持创建空表格。\n\n创建位置优先级: --folder > --workspace > 默认 (我的文档根目录)",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "folder": {
+          "description": "目标文件夹 ID 或 URL",
+          "required": false,
+          "type": "string"
+        },
+        "name": {
+          "description": "表格名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "workspace": {
+          "description": "目标知识库 ID",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet create --name \"销售数据\"",
+        "dws sheet create --name \"Q1 数据\" --folder <FOLDER_ID>"
+      ]
+    },
+    {
+      "operation": "cond-format delete",
+      "description": "删除钉钉电子表格中指定工作表的一条条件格式规则。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表，通过 --rule-id 定位要删除的规则。\n删除成功后该规则将从工作表中移除，被该规则影响的单元格将不再应用对应的条件格式样式。\n如果规则已不存在，操作仍然返回成功。\n\n⚠️ 危险操作：删除不可恢复。必须先向用户确认，用户同意后才加 --yes 执行。\n\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\nruleId 可通过 cond-format list 获取。",
+      "effect": "destructive",
+      "risk": "high",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "rule-id": {
+          "description": "条件格式规则 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "yes": {
+          "description": "确认删除（危险操作，必须用户同意后才加此标志）",
+          "required": false,
+          "type": "boolean"
+        }
+      },
+      "examples": [
+        "dws sheet cond-format delete --node NODE_ID --sheet-id SHEET_ID --rule-id RULE_ID"
+      ]
+    },
+    {
+      "operation": "delete-dimension",
+      "description": "在钉钉表格指定工作表中，从指定位置起删除若干连续的行或列。\n\n位置参数使用 A1 表示法：\n  --dimension ROWS 时，--position 为 1-based 行号字符串，如 \"3\" 表示从第 3 行开始删除\n  --dimension COLUMNS 时，--position 为列字母，如 \"A\" 表示从 A 列开始删除、\"AB\" 表示从 AB 列开始删除\n\n支持在 --position 中携带工作表前缀（如 \"Sheet1!3\" / \"Sheet1!A\"），此时将忽略 --sheet-id。\n删除后后续的行/列会向前移动填补空位；若需要仅清空内容但保留行/列占位，请使用 clear_range 工具。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "dimension": {
+          "description": "删除维度: ROWS 或 COLUMNS (必填)",
+          "enum": [
+            "ROWS",
+            "COLUMNS"
+          ],
+          "required": true,
+          "type": "string"
+        },
+        "length": {
+          "description": "删除数量，正整数 (必填)，最大 5000",
+          "format": "positive-integer",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "position": {
+          "description": "删除起始位置，A1 表示法 (必填)。ROWS 时为行号如 \"3\"；COLUMNS 时为列字母如 \"A\"",
+          "example": "1",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet delete-dimension --node <NODE_ID> --sheet-id <SHEET_ID> --dimension ROWS --position \"3\" --length 2"
+      ]
+    },
+    {
+      "operation": "delete-dropdown",
+      "description": "删除钉钉表格指定单元格范围内的下拉列表配置。\n\n删除后，单元格将恢复为普通文本格式，已填写的单元格值不会被清除。\n如果目标范围不存在下拉列表，操作仍然返回成功。\n\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "要删除下拉列表的范围，A1 表示法，如 A2:A100 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet delete-dropdown --node <NODE_ID> --sheet-id <SHEET_ID> --range \"A2:A100\""
+      ]
+    },
+    {
+      "operation": "filter delete",
+      "description": "删除工作表的全局筛选。\n\n删除后所有筛选条件丢失，所有被隐藏的行将重新显示。此操作不可恢复。\n工作表没有筛选时调用会报错。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter delete --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "filter-view delete",
+      "description": "删除钉钉电子表格中指定工作表的筛选视图。\n\n用途：永久删除一个不再需要的筛选视图及其所有筛选条件。\n场景：筛选视图已过时或不再需要时，清理无用的视图。\n区分：\n  - delete 删除整个筛选视图（包括所有列的条件），操作不可恢复\n  - delete-criteria 只删除某一列的筛选条件，视图本身保留\n  - 此操作不影响全局筛选或其他筛选视图，也不影响原始数据\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表，通过 --filter-view-id 定位筛选视图。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\nfilterViewId 可通过 filter-view list 获取。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "filter-view-id": {
+          "description": "筛选视图 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter-view delete --node <NODE_ID> --sheet-id <SHEET_ID> --filter-view-id <FV_ID>"
+      ]
+    },
+    {
+      "operation": "delete-float-image",
+      "description": "删除钉钉表格指定工作表中的浮动图片。\n\n操作不可恢复，删除后图片将从工作表中移除。\nfloatImageId 可通过 list-float-images 获取。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "float-image-id": {
+          "description": "浮动图片 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet delete-float-image --node <NODE_ID> --sheet-id <SHEET_ID> --float-image-id <FI_ID>"
+      ]
+    },
+    {
+      "operation": "pivot-table delete",
+      "description": "删除透视表（需确认后加 --yes）。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "pivot-table-id": {
+          "description": "透视表 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet pivot-table delete --node NODE_ID --sheet-id SHEET_ID --pivot-table-id PT_ID"
+      ]
+    },
+    {
+      "operation": "delete-sheet",
+      "description": "删除指定的工作表。此操作不可逆，删除后工作表及其所有数据将无法恢复。\n\n约束：\n  - 不能删除隐藏的工作表（需先取消隐藏再删除）\n  - 不能删除最后一个可见工作表（至少保留一个可见工作表）",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "要删除的工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet delete-sheet --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "comment delete",
+      "description": "删除单元格评论（不可恢复）",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "non_idempotent",
+      "parameters": {
+        "comment-key": {
+          "description": "待删除评论的 commentKey (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet comment delete --node <SHEET_ID> --comment-key <COMMENT_KEY> --format json"
+      ]
+    },
+    {
+      "operation": "export-csv",
+      "description": "将钉钉在线电子表格的单个工作表同步导出为纯 RFC4180 CSV。\n\n整篇表格导出为 xlsx 请用 dws sheet export（异步任务：提交→轮询→可选下载）。\n\n参数说明:\n  --node                  表格文档 ID 或链接 URL，系统自动识别（必填）\n  --sheet-id              要导出的工作表 ID 或名称（不传则第一个工作表）\n  --range                 导出范围，A1 表示法（不传则整表；大表可用此分块导出）\n  --value-render-option   取值模式: formatted_value(默认) / raw_value / formula\n  --output                本地保存路径（可选）。可为文件路径或目录（目录时存为\n                          sheet-export.csv）；不传则把 CSV 打到 stdout\n  --allow-truncated       允许数据被截断时仍然导出\n\n截断行为:\n  表格超出单次读取上限时默认直接报错并且不写文件，避免不完整数据被当成完整导出、\n  或覆盖掉已有的完整文件。要接受不完整结果须显式加 --allow-truncated。\n\n落盘保证:\n  写文件走同目录临时文件 + rename 原子替换，写入中途失败（磁盘满、配额、I/O 错误）\n  不会破坏已存在的目标文件。父目录不存在时报错，不会替你创建。\n\n权限要求:\n  当前用户对目标表格具备可查看权限。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "allow-truncated": {
+          "description": "允许数据被截断时仍然导出。默认截断即报错并不写文件，避免不完整数据被当成完整导出",
+          "required": false,
+          "type": "boolean"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "output": {
+          "description": "本地保存路径（可选，支持文件路径或目录）；不传则输出到 stdout",
+          "required": false,
+          "type": "string"
+        },
+        "range": {
+          "description": "导出范围，A1 表示法（不传则整表；大表可用此分块导出）",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称（不传则第一个工作表）",
+          "required": false,
+          "type": "string"
+        },
+        "value-render-option": {
+          "description": "取值模式: formatted_value(默认) / raw_value / formula",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet export-csv --node <NODE_ID> --sheet-id <SHEET_ID> --output ./data.csv",
+        "dws sheet export-csv --node <NODE_ID> --range A1:Z1000"
+      ]
+    },
+    {
+      "operation": "range fill",
+      "description": "基于源数据范围自动填充到目标范围。\n\n目标范围须与源范围在行或列维度对齐（不支持对角填充）。\n\n填充类型 (--fill-type):\n  不传          自动检测（根据源数据智能判断：数值序列递增、日期递增、文本复制等）\n  copy          复制内容和格式\n  onlystyle     仅格式\n  withoutstyle  仅值无格式",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "fill-type": {
+          "description": "填充类型: 不传则自动检测 / copy(复制) / onlystyle(仅格式) / withoutstyle(仅值)",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "source-range": {
+          "description": "源数据范围，A1 表示法 (必填，如 A1:A5)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "target-range": {
+          "description": "目标填充范围，A1 表示法 (必填，如 A6:A20)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet range fill --node <NODE_ID> --sheet-id <SHEET_ID> --source-range \"A1:A5\" --target-range \"A6:A20\""
+      ]
+    },
+    {
+      "operation": "filter clear-criteria",
+      "description": "清除筛选中某一列的筛选条件。\n\n清除后该列不再参与筛选计算，之前被该列条件隐藏的行将重新显示。\n仅清除指定列的条件，不删除整个筛选。如需删除整个筛选，使用 filter delete。\n指定列没有设置筛选条件时调用不会报错（幂等）。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "column": {
+          "description": "列偏移量，从 0 开始 (必填)",
+          "required": true,
+          "type": "integer"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter clear-criteria --node <NODE_ID> --sheet-id <SHEET_ID> --column 1"
+      ]
+    },
+    {
+      "operation": "filter-view delete-criteria",
+      "description": "删除钉钉电子表格中指定工作表筛选视图的某一列的筛选条件。\n\n用途：移除筛选视图中指定列的筛选条件，使该列不再参与过滤。\n场景：之前通过 update-criteria 设置了某列的筛选条件，现在需要取消该列的筛选以显示全部数据。\n区分：\n  - delete-criteria 只删除指定列的条件，筛选视图本身和其他列的条件保持不变\n  - filter-view delete 会删除整个筛选视图（包括所有列的条件）\n  - 如果指定列没有设置筛选条件，调用此命令不会报错（幂等操作）\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表，通过 --filter-view-id 定位筛选视图，通过 --column 指定目标列。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\nfilterViewId 可通过 filter-view list 获取。\n\n--column 为列偏移量（从 0 开始），相对于筛选视图范围首列。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "column": {
+          "description": "列偏移量，从 0 开始 (必填)",
+          "required": true,
+          "type": "integer"
+        },
+        "filter-view-id": {
+          "description": "筛选视图 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter-view delete-criteria --node <NODE_ID> --sheet-id <SHEET_ID> --filter-view-id <FV_ID> --column 0"
+      ]
+    },
+    {
+      "operation": "filter-view get-criteria",
+      "description": "获取钉钉电子表格中指定筛选视图某一列的筛选条件详情。\n\n用途：查看某个筛选视图中指定列当前设置的筛选条件。\n场景：在修改某列条件前，先查看其当前配置是否符合预期。\n实现：内部调用 get_filter_views 获取视图详情，提取指定列的条件返回。\n\n--column 为列偏移量（从 0 开始），相对于筛选视图范围首列。\n例如筛选视图范围为 B1:E10，则 --column 0 代表 B 列，--column 1 代表 C 列。\n\n如果该列没有设置筛选条件，返回错误提示。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表，通过 --filter-view-id 定位筛选视图。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\nfilterViewId 可通过 filter-view list 获取。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "column": {
+          "description": "列偏移量，从 0 开始 (必填)",
+          "required": true,
+          "type": "integer"
+        },
+        "filter-view-id": {
+          "description": "筛选视图 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter-view get-criteria --node <NODE_ID> --sheet-id <SHEET_ID> --filter-view-id <FV_ID> --column 0"
+      ]
+    },
+    {
+      "operation": "filter-view info",
+      "description": "获取钉钉电子表格中指定工作表的某一个筛选视图的详细信息。\n\n用途：查看指定筛选视图的名称、范围和筛选条件等完整信息。\n场景：在修改或删除筛选视图前，先查看其当前配置；或确认 update-criteria 后条件是否生效。\n实现：内部调用 get_filter_views 获取全部列表，按 --filter-view-id 过滤出目标视图返回。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表，通过 --filter-view-id 定位筛选视图。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\nfilterViewId 可通过 filter-view list 获取。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "filter-view-id": {
+          "description": "筛选视图 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter-view info --node <NODE_ID> --sheet-id <SHEET_ID> --filter-view-id <FV_ID>"
+      ]
+    },
+    {
+      "operation": "filter-view list-criteria",
+      "description": "列出钉钉电子表格中指定筛选视图的所有列筛选条件。\n\n用途：查看某个筛选视图当前已设置了哪些列的筛选条件，包括每列的条件类型和具体规则。\n场景：在管理筛选条件（修改/删除特定列条件）前，先了解当前视图设置了哪些条件。\n实现：内部调用 get_filter_views 获取视图详情，提取其中的 criteria 字段返回。\n\n如果该视图没有设置任何筛选条件，返回空对象 {}。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表，通过 --filter-view-id 定位筛选视图。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\nfilterViewId 可通过 filter-view list 获取。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "filter-view-id": {
+          "description": "筛选视图 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter-view list-criteria --node <NODE_ID> --sheet-id <SHEET_ID> --filter-view-id <FV_ID>"
+      ]
+    },
+    {
+      "operation": "filter-view update-criteria",
+      "description": "更新钉钉电子表格中指定工作表筛选视图的某一列的筛选条件。\n\n用途：为筛选视图的指定列创建或更新筛选条件，控制该列哪些数据行可见。\n场景：\n  - 只显示某些特定值的行（如\"只看研发部\"）→ 使用 filterType: values\n  - 按数值条件筛选（如\"绩效 ≥ 85\"）→ 使用 filterType: condition + operator: greater-equal\n  - 按文本条件筛选（如\"名称包含关键字\"）→ 使用 filterType: condition + operator: contains\n区分：\n  - update-criteria 精确控制单列条件，适合逐列设置不同的筛选逻辑\n  - filter-view update --criteria 可以批量更新多列条件，适合一次性设置多列\n  - delete-criteria 是 update-criteria 的逆操作，删除指定列的条件\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表，通过 --filter-view-id 定位筛选视图，通过 --column 指定目标列。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\nfilterViewId 可通过 filter-view list 获取。\n\n--column 为列偏移量（从 0 开始），相对于筛选视图范围首列。\n例如筛选视图范围为 B1:E10，则 --column 0 代表 B 列，--column 1 代表 C 列。\n\n--filter-criteria 为该列的筛选条件 JSON 对象，支持三种筛选类型：\n  values    按值筛选，通过 visibleValues 指定允许显示的值列表\n  condition 按条件筛选，通过 conditions 指定条件运算符和比较值（最多 2 个）\n  color     按颜色筛选，通过 backgroundColor 或 fontColor 指定颜色\n\ncondition 类型支持的 operator（必须使用 kebab-case 格式）：\n  equal, not-equal, contains, not-contains,\n  starts-with, not-starts-with, ends-with, not-ends-with,\n  greater, greater-equal, less, less-equal\n\n多条件之间通过 conditionOperator 指定逻辑关系：\"and\"（且，默认）或 \"or\"（或）。\n\n更新条件后会立即在该筛选视图中生效。筛选视图的条件仅影响当前视图，不影响全局筛选或其他筛选视图。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "column": {
+          "description": "列偏移量，从 0 开始 (必填)",
+          "required": true,
+          "type": "integer"
+        },
+        "filter-criteria": {
+          "description": "筛选条件，JSON 对象 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "filter-view-id": {
+          "description": "筛选视图 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter-view update-criteria --node <NODE_ID> --sheet-id <SHEET_ID> --filter-view-id <FV_ID> --column 0 --filter-criteria '{\"filterType\":\"values\",\"visibleValues\":[\"销售部\"]}'"
+      ]
+    },
+    {
+      "operation": "find",
+      "description": "在钉钉电子表格的指定工作表中查找匹配指定文本的所有单元格，返回匹配的单元格地址和值。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表，通过 --query 指定查找内容（--find 为其别名）。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\n\n支持多种查找模式：\n  默认模式         在单元格值中进行子字符串匹配（区分大小写）\n  忽略大小写       通过 --match-case=false 实现\n  完整单元格匹配   通过 --match-entire-cell 实现\n  正则表达式       通过 --use-regexp 实现，--query 作为正则表达式匹配\n  搜索公式文本     通过 --match-formula 实现，在公式文本中查找而非计算结果\n  包含隐藏单元格   通过 --include-hidden 实现\n\n可通过 --range 限定搜索范围（A1 表示法），不传时搜索整个工作表。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "include-hidden": {
+          "description": "包含隐藏单元格",
+          "required": false,
+          "type": "boolean"
+        },
+        "match-case": {
+          "default": "true",
+          "description": "区分大小写 (默认 true)",
+          "required": false,
+          "type": "boolean"
+        },
+        "match-entire-cell": {
+          "description": "精确匹配整个单元格内容",
+          "required": false,
+          "type": "boolean"
+        },
+        "match-formula": {
+          "description": "搜索公式文本而非显示值",
+          "required": false,
+          "type": "boolean"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "query": {
+          "description": "搜索文本 (必填，别名: --find)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "搜索范围，A1 表示法 (如 A1:D10)",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "use-regexp": {
+          "description": "启用正则表达式搜索",
+          "required": false,
+          "type": "boolean"
+        }
+      },
+      "examples": [
+        "dws sheet find --node <NODE_ID> --sheet-id <SHEET_ID> --find \"销售额\""
+      ]
+    },
+    {
+      "operation": "formula-verify",
+      "description": "扫描钉钉电子表格中已落表的公式单元格，按计算结果错误类型聚合返回错误数量、位置和样本。\n\n不指定 --sheet-id / --range / --targets 时默认扫描整本表格的全部工作表。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "exit-on-error": {
+          "description": "发现公式错误时返回非 0 退出码，便于 CI/自动化使用",
+          "required": false,
+          "type": "boolean"
+        },
+        "max-cells": {
+          "description": "最多扫描的单元格数",
+          "required": false,
+          "type": "integer"
+        },
+        "max-locations-per-error": {
+          "description": "每种错误类型最多返回的位置数",
+          "required": false,
+          "type": "integer"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "A1 范围；需与 --sheet-id 配合使用",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称；与 --range 组成单个扫描目标",
+          "required": false,
+          "type": "string"
+        },
+        "targets": {
+          "description": "扫描目标 JSON 数组、@文件路径 或 - 表示 stdin；每项 {\"sheetId\":\"Sheet1\",\"range\":\"A1:D100\"}",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet formula-verify --node <NODE_ID> --format json"
+      ]
+    },
+    {
+      "operation": "list",
+      "description": "获取钉钉电子表格中所有工作表的 ID 和名称。\n返回的 sheetId 可用于 info / range read (别名 get) / range update 等后续操作。\n\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\n文档链接格式：https://alidocs.dingtalk.com/i/nodes/{dentryUuid}",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet list --node <NODE_ID>"
+      ]
+    },
+    {
+      "operation": "cond-format list",
+      "description": "获取钉钉电子表格中指定工作表的所有条件格式规则，或通过 --rule-id 获取单个规则的详情。\n\n条件格式规则定义了当单元格满足特定条件时自动应用的样式（如背景色、字体颜色等）。\n返回的每条规则包含：规则 ID、应用范围、条件类型及参数、命中时的单元格样式。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "rule-id": {
+          "description": "条件格式规则 ID (可选，不传则返回全部)",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet cond-format list --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "get-dropdown",
+      "description": "查询钉钉表格指定范围内的下拉列表配置。\n\nInline 配置返回 conditionValues 和 options；SourceRange 配置返回\nsourceType/sourceRangeStatus/enableMultiSelect，且仅在 sourceRangeStatus=\"valid\" 时返回\nsourceRange。invalid 结果仍保留配置组，但省略 sourceRange；两种状态都不展开来源区域的候选值或颜色。\n如果范围内存在多个不同的下拉列表配置，会分别返回每组配置及其覆盖的单元格列表。\n如果范围内没有设置下拉列表，返回空。\n\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "查询范围，A1 表示法，如 A1:A100 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet get-dropdown --node <NODE_ID> --sheet-id <SHEET_ID> --range \"A2:A100\""
+      ]
+    },
+    {
+      "operation": "filter get",
+      "description": "获取指定工作表的全局筛选信息，返回筛选范围和各列的筛选条件详情。\n\n如果工作表未设置筛选，返回结果中筛选信息为空。\n全局筛选影响所有协作者看到的数据展示，每个工作表最多一个。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter get --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "filter-view list",
+      "description": "获取钉钉电子表格中指定工作表的所有筛选视图列表。\n\n用途：查看当前工作表上已创建的所有筛选视图，获取视图 ID、名称和范围信息。\n场景：在对筛选视图进行 update / delete / update-criteria 等操作前，先用 list 获取可用的 filterViewId。\n区分：筛选视图（filter-view）是个人化的数据过滤方式，与全局筛选（filter）不同。每个用户可以创建自己的筛选视图，互不影响原始数据。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\n\n返回该工作表下所有筛选视图的 ID、名称和范围信息。如果没有筛选视图，返回空列表。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter-view list --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "get-float-image",
+      "description": "获取钉钉表格指定工作表中某个浮动图片的详细信息。\n\n返回浮动图片的 ID、图片 URL、锚点位置、尺寸和偏移量等信息。\nfloatImageId 可通过 list-float-images 获取。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "float-image-id": {
+          "description": "浮动图片 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet get-float-image --node <NODE_ID> --sheet-id <SHEET_ID> --float-image-id <FI_ID>"
+      ]
+    },
+    {
+      "operation": "csv-get",
+      "description": "以 RFC 4180 CSV 格式读取钉钉电子表格数据。\n\n返回内容：\n  csv            带 [row=N] 行号前缀的 CSV 文本\n  colIndices     列字母映射数组（定位列用 colIndices[j]，禁止手数逗号）\n  rowIndices     行号映射数组\n  hasMore        目标范围是否还有未返回数据\n  truncationReasons  部分返回原因：max_cells / max_chars\n  resolvedRange  未传 --range 时底层解析出的完整目标范围\n  returnedRange  本次实际完整返回的范围\n\n取值模式（--value-render-option）：\n  formatted_value  格式化后的展示值（默认），如 ¥1,000.00、2025-06-01\n  raw_value        原始值，如 1000、45808\n  formula          公式文本，如 =SUM(A1:A10)，无公式时回退原始值\n\n与 range read 的区别：\n  - CSV 格式 token 消耗约为 JSON 的 1/3\n  - 支持选择取值模式\n  - 自动防爆（30,000 单元格 / max-chars 上限 + hasMore 标志）\n  - [row=N] 前缀防止行号计算错误\n\n当 hasMore=true 时本命令不会自动续读；请结合目标范围和\nreturnedRange 从下一行显式传 --range。max_cells 不能通过增大\n--max-chars 解决。收到 forbidden.document.sizeOverLimit 表示工作簿整体\n无法装载，应创建更小副本或拆分工作簿，缩小 --range 不能解决。\n\n注意：csv-get 不返回合并单元格结构。查看合并范围请使用\ndws sheet info --node NODE_ID --sheet-id SHEET_ID --format json，并读取 mergedRanges。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "max-chars": {
+          "description": "CSV 最大字符数 (默认 200000)",
+          "required": false,
+          "type": "integer"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "读取范围，A1 表示法 (不传则读取全部非空数据)",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称",
+          "required": false,
+          "type": "string"
+        },
+        "value-render-option": {
+          "description": "取值模式: formatted_value | raw_value | formula",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet csv-get --node <NODE_ID> --sheet-id <SHEET_ID> --range \"A1:D20\""
+      ]
+    },
+    {
+      "operation": "changeset-get",
+      "description": "获取在线电子表格工作簿在 (startRevision, endRevision] 区间内的连续、Agent 可解释的前向 changeset。\n\n该能力是工作簿级的，不接收 --sheet-id。--end-revision 省略时由服务端在请求开始时固定为 latestRevision；单次区间最多 20 个 revision。统一输出 data.changesets 始终是可直接遍历的 JSON 数组；CLI 只解码服务端传输格式，不改写语义化 change。changeset 只描述当时提交的前向变更，不提供统一 old/current 值；确认最终状态必须另行回读。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "end-revision": {
+          "description": "可选非负结束 revision；返回区间包含该 revision",
+          "example": "121",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "在线电子表格文档 ID 或完整 URL",
+          "example": "https://alidocs.dingtalk.com/i/nodes/xxx",
+          "required": true,
+          "type": "string"
+        },
+        "start-revision": {
+          "description": "非负查询基线；返回区间不包含该 revision",
+          "example": "120",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet changeset-get --node <NODE_ID_OR_URL> --start-revision 120 --end-revision 121 --format json"
+      ]
+    },
+    {
+      "operation": "revision-get",
+      "description": "获取在线电子表格工作簿当前持久化 revision。该能力是工作簿级的，不接收 --sheet-id；--node 可传文档 ID 或完整 URL。服务端业务 JSON 原样放入统一输出的 data。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "在线电子表格文档 ID 或完整 URL",
+          "example": "https://alidocs.dingtalk.com/i/nodes/xxx",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet revision-get --node <NODE_ID_OR_URL> --format json"
+      ]
+    },
+    {
+      "operation": "group-dimension",
+      "description": "对钉钉表格指定工作表中的连续整行或整列创建分组。\n\n--range 使用整行/整列范围：\n  行分组：3:7 或 3\n  列分组：C:F 或 C\n\n支持在 --range 中携带工作表前缀（如 \"Sheet1!3:7\" / \"Sheet1!C:F\"），此时将忽略 --sheet-id。\n创建后可通过 sheet info --include groups 回读 rowGroups / columnGroups。\n\n--group-state 支持 expand / fold，默认 expand。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "group-state": {
+          "default": "expand",
+          "description": "创建后的分组状态: expand 或 fold",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "整行/整列范围 (必填)，如 \"3:7\" 或 \"C:F\"",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet group-dimension --node <NODE_ID> --sheet-id <SHEET_ID> --range \"3:7\""
+      ]
+    },
+    {
+      "operation": "hide-gridline",
+      "description": "隐藏工作表网格线。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet hide-gridline --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "import create",
+      "description": "将本地表格文件导入为一个新的钉钉在线电子表格，与 dws sheet export（导出）对称。\n\n支持的文件格式 (按扩展名):\n  xlsx, xls   Microsoft Excel 表格\n\n文件大小限制: 20MB\n固定导入为电子表格类型；只新建文档，不操作已有表格。\n\nCLI 内部自动完成全部流程:\n  1. 创建导入会话（获取 OSS 上传凭证）\n  2. 上传文件到 OSS\n  3. 确认导入（触发格式转换）\n  4. 渐进式退避轮询等待完成（最多约 5 分钟）\n\n如果轮询超时仍未完成，会输出 taskId 供后续手动查询:\n  dws sheet import get --task-id <taskId>",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "non_idempotent",
+      "parameters": {
+        "file": {
+          "description": "本地表格文件路径 (必填，支持 xlsx/xls)",
+          "required": true,
+          "type": "string"
+        },
+        "folder-token": {
+          "description": "目标文件夹 ID 或 URL (与 --workspace 至少传一个)",
+          "required": false,
+          "type": "string"
+        },
+        "name": {
+          "description": "导入后表格名称 (可选，默认取文件名)",
+          "required": false,
+          "type": "string"
+        },
+        "workspace": {
+          "description": "目标知识库 ID 或 URL (与 --folder-token 至少传一个)",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet import create --file ./report.xlsx --folder-token <FOLDER_TOKEN> --format json",
+        "dws sheet import create --file ./data.xls --workspace <WORKSPACE_ID> --name \"月度报表\" --format json"
+      ]
+    },
+    {
+      "operation": "import get",
+      "description": "根据 taskId 查询表格导入任务的执行结果。\n通常不需要手动调用，dws sheet import 会自动完成轮询。\n仅在导入命令超时或中断后，用于手动查询任务状态。\n\n任务状态:\n  processing  转换中\n  completed   导入成功，返回 documentUrl\n  failed      导入失败",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "task-id": {
+          "description": "导入任务 ID (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet import get --task-id <TASK_ID> --format json"
+      ]
+    },
+    {
+      "operation": "info",
+      "description": "获取指定工作表的详细信息，包括 ID、名称、可见性、行列数、最后非空行列位置、合并单元格范围（mergedRanges）等。\n\n非空数据边界使用 A1/UI 语义字段：\n  nonEmptyRange.range              从 A1 到最后非空单元格的 A1 范围（空表为 null）\n  nonEmptyRange.lastCell           最后非空单元格地址（如 J5，空表为 null）\n  nonEmptyRange.lastRow            1-based 行号（空表为 null）\n  nonEmptyRange.lastColumn         列字母（空表为 null）\n\nmergedRanges 已经是 A1 表示法（如 \"A1:B2\"），可原样用于 range/merge 相关命令。\n\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid）；\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\n不传 --sheet-id 时默认返回第一个工作表。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "include": {
+          "description": "可选扩展信息，逗号分隔；支持 groups / row_heights / col_widths / hidden_rows / hidden_cols / frozen",
+          "required": false,
+          "type": "array"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (不传则返回第一个工作表)",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet info --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "insert-dimension",
+      "description": "在钉钉表格指定工作表的指定位置之前（before）插入若干空行或空列。\n\n位置参数使用 A1 表示法：\n  --dimension ROWS 时，--position 为 1-based 行号字符串，如 \"3\" 表示在第 3 行之前插入\n  --dimension COLUMNS 时，--position 为列字母，如 \"A\" 表示在 A 列之前插入、\"AB\" 表示在 AB 列之前插入\n\n支持在 --position 中携带工作表前缀（如 \"Sheet1!3\" / \"Sheet1!A\"），此时将忽略 --sheet-id。\n若需要在工作表末尾追加行/列，请使用 append 命令。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "dimension": {
+          "description": "插入维度: ROWS 或 COLUMNS (必填)",
+          "enum": [
+            "ROWS",
+            "COLUMNS"
+          ],
+          "required": true,
+          "type": "string"
+        },
+        "length": {
+          "description": "插入数量，正整数 (必填)，最大 5000",
+          "format": "positive-integer",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "position": {
+          "description": "插入位置，A1 表示法 (必填)。ROWS 时为行号如 \"3\"；COLUMNS 时为列字母如 \"A\"",
+          "example": "1",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet insert-dimension --node <NODE_ID> --sheet-id <SHEET_ID> --dimension ROWS --position \"3\" --length 2"
+      ]
+    },
+    {
+      "operation": "list-float-images",
+      "description": "列出钉钉表格指定工作表中所有浮动图片。\n\n返回每个浮动图片的 ID、图片 URL、锚点位置、尺寸和偏移量等信息，以及总数。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet list-float-images --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "pivot-table list",
+      "description": "列出或获取透视表信息。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "pivot-table-id": {
+          "description": "透视表 ID (可选，不传则返回全部)",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet pivot-table list --node NODE_ID --sheet-id SHEET_ID"
+      ]
+    },
+    {
+      "operation": "comment list-replies",
+      "description": "Tool 名与 Lark list_replies 对齐，但返回 scope=DIRECT，只包含目标评论\n的直接子回复。topicId 和 commentKey 均从 comment list 的同一条结果中取得。\n\npageSize 只限制本次最多返回多少条直接子回复，不保证凑满。首次不传\n--page-token；complete=false 且确实需要继续时，将 meta.pagination.next_token\n原样传给下一次 --page-token。服务端不会自动递归展开全部后代。\n\n参数约束：\n  - --page-size 必须在 1-50 之间",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "comment-key": {
+          "description": "目标父评论的 commentKey",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "文档或表格 ID / URL",
+          "required": true,
+          "type": "string"
+        },
+        "page-size": {
+          "default": "20",
+          "description": "本次最多返回的直接子回复数，范围 1-50",
+          "required": false,
+          "type": "integer"
+        },
+        "page-token": {
+          "description": "扫描断点，取自上页 meta.pagination.next_token",
+          "required": false,
+          "type": "string"
+        },
+        "topic-id": {
+          "description": "comment list 返回的 topicId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet comment list-replies --node <NODE_ID> --topic-id <TOPIC_ID> --comment-key <COMMENT_KEY> --format json",
+        "dws sheet comment list-replies --node <NODE_ID> --topic-id <TOPIC_ID> --comment-key <COMMENT_KEY> --page-token <NEXT_TOKEN> --page-size 20 --format json"
+      ]
+    },
+    {
+      "operation": "comment list",
+      "description": "查询表格单元格评论列表，支持分页与按解决状态过滤",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "cursor": {
+          "description": "分页游标",
+          "required": false,
+          "type": "string"
+        },
+        "limit": {
+          "default": "50",
+          "description": "每页返回的评论数量，默认 50，最大 50",
+          "required": false,
+          "type": "integer"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "单元格位置 A1 表示法（与 --sheet-id 一起按单元格过滤）",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "resolve-status": {
+          "description": "按解决状态过滤: resolved / unresolved",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称（与 --range 一起按单元格过滤）",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet comment list --node <SHEET_ID> --format json"
+      ]
+    },
+    {
+      "operation": "media-upload",
+      "description": "将本地文件作为附件上传到钉钉表格（两步自动完成）。\n\n流程:\n  1. 获取附件上传凭证 (get_doc_attachment_upload_info)\n  2. HTTP PUT 上传文件到 OSS\n\n上传成功后返回 resourceId，可用于后续引用。\n--mime-type 可选，不指定时根据文件扩展名自动推断。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "file": {
+          "description": "本地文件路径 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "mime-type": {
+          "description": "文件 MIME 类型 (默认根据扩展名推断)",
+          "required": false,
+          "type": "string"
+        },
+        "name": {
+          "description": "附件显示名称 (默认使用文件名)",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "目标表格文档的标识，支持传入 URL 或 ID (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet media-upload --node <NODE_ID> --file ./report.pdf"
+      ]
+    },
+    {
+      "operation": "merge-cells",
+      "description": "将钉钉电子表格中指定工作表的指定区域内的单元格合并为一个或多个合并区域。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\nrangeAddress 也支持带工作表前缀的写法，如 Sheet1!A1:B3，此时将优先使用前缀解析出的工作表。\n\n支持三种合并方式（通过 --merge-type 指定）：\n  mergeAll（默认）    合并所有单元格，将选定区域内的所有单元格合并成一个\n  mergeRows           按行合并，在选定区域内将同一行相邻的单元格合并\n  mergeColumns        按列合并，在选定区域内将同一列相邻的单元格合并\n\n注意：合并时只保留左上角单元格的值，其他单元格的值会被丢弃。\n如果目标区域与其他合并单元格、锁定区域或表格区域存在交集，合并将失败。\n仅限用户对文档具备\"可编辑\"权限时可操作。不支持跨组织操作。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "merge-type": {
+          "description": "合并方式: mergeAll(默认)/mergeRows/mergeColumns",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "目标单元格区域地址，如 A1:B3 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet merge-cells --node <NODE_ID> --sheet-id <SHEET_ID> --range \"A1:B3\""
+      ]
+    },
+    {
+      "operation": "move-dimension",
+      "description": "在钉钉表格的指定工作表中，将指定范围的行或列移动到目标位置。\n\n参数说明：\n  --dimension         维度类型，ROWS 表示移动行，COLUMNS 表示移动列\n  --start-index       源起始位置，A1 表示法（ROWS 时为行号如 \"2\"，COLUMNS 时为列字母如 \"B\"）\n  --end-index         源结束位置，A1 表示法（同 start-index 格式，必须 >= start-index）\n  --destination-index 目标位置，A1 表示法，源行/列移动后将出现在该位置\n\n注意事项：\n  - destination-index 不能在源范围 [start-index, end-index] 内\n  - 向下/向右移动时，destination-index 应大于 end-index\n  - 向上/向左移动时，destination-index 应小于 start-index",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "destination-index": {
+          "description": "目标位置，A1 表示法 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "dimension": {
+          "description": "维度类型: ROWS 或 COLUMNS (必填)",
+          "enum": [
+            "ROWS",
+            "COLUMNS"
+          ],
+          "required": true,
+          "type": "string"
+        },
+        "end-index": {
+          "description": "源结束位置，A1 表示法 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "start-index": {
+          "description": "源起始位置，A1 表示法 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet move-dimension --node <NODE_ID> --sheet-id <SHEET_ID> --dimension ROWS --start-index 1 --end-index 1 --destination-index 4"
+      ]
+    },
+    {
+      "operation": "range batch-clear",
+      "description": "批量清除多个区域，一次原子请求。任一区域清除失败则整批回滚。\n\n每个 --ranges 项必须包含工作表前缀（格式: \"SheetName!A1:B3\"）。\n不同区域可以属于不同工作表。\n真实执行必须获得用户确认后加 --yes；--dry-run 仅预览且不调用远程接口。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "ranges": {
+          "description": "目标区域 JSON 数组，每项带 sheet 前缀 (必填，如 '[\"Sheet1!A1:B3\"]')",
+          "example": "[\"Sheet1!A1:B2\"]",
+          "format": "json",
+          "required": true,
+          "type": "string"
+        },
+        "type": {
+          "description": "清除类型: content(仅值,默认) / format(仅格式) / all(全部)",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet range batch-clear --node NODE_ID --ranges '[\"Sheet1!A1:B3\",\"Sheet2!C1:D5\"]'"
+      ]
+    },
+    {
+      "operation": "range batch-set-style",
+      "description": "批量为多个区域设置样式，CLI 组装为**一次** batch_update 调用，由服务端原子执行\n（底层每项走 set_cell_range 的 cellStyles/borderStyles）。任一项失败默认整批回滚。\n\n两种入口，二选一：\n\n1) --ranges（对齐飞书 +cells-batch-set-style）：同一组样式应用到多个区域，支持跨工作表\n   每项必须带工作表前缀（格式 \"SheetName!A1:B3\"），最多 100 项；样式用与 set-style 相同的 flag。\n\n2) --batch <file>（每项可用不同样式）：JSON 数组，每个元素为一个批次项\n[\n  {\n    \"sheetId\": \"Sheet1\",\n    \"range\":   \"A1:B3\",\n    \"bgColor\":    \"#FFF2CC\",\n    \"fontSize\":   12,\n    \"hAlign\":     \"center\",\n    \"fontWeight\": \"bold\",\n    \"fontStyle\":  \"italic\",\n    \"fontLine\":   \"underline\",\n    \"fontFamily\": \"Arial\",\n    \"borderStylesJson\": \"{\\\"top\\\":{\\\"style\\\":\\\"solid\\\"}}\",\n    \"numberFormat\": \"General\"\n  },\n  {\n    \"sheetId\": \"Sheet1\",\n    \"range\":   \"C1:C5\",\n    \"bgColorsJson\": \"[[\\\"#FF0000\\\"],[\\\"#00FF00\\\"],[\\\"#0000FF\\\"],[\\\"#FFFF00\\\"],[\\\"#FF00FF\\\"]]\"\n  }\n]\n\n每项执行与 set-style 一致的本地校验（至少一项样式字段 + rows≤1000 + rows×cols≤30000 + 枚举），\n全部校验通过后才下发，避免部分生效。\n批量上限：最多 100 个区域，且**所有区域累计**不超过 200000 个单元格（一次请求要把全部\n单元格矩阵建好，累计量才是真正的峰值约束）。超出请拆成多次调用。\n--continue-on-error 透传给服务端 batch_update：默认严格事务（失败整批回滚），传入后遇失败继续执行其余项。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "batch": {
+          "description": "批次配置 JSON 文件路径（与 --ranges 二选一，每项可用不同样式）",
+          "required": false,
+          "type": "string"
+        },
+        "bg-color": {
+          "description": "背景色（#RRGGBB），一键刷满目标区域；与 --bg-colors-json 二选一",
+          "required": false,
+          "type": "string"
+        },
+        "bg-colors-json": {
+          "description": "背景色二维 JSON 数组，维度需与目标区域一致",
+          "required": false,
+          "type": "string"
+        },
+        "border-styles-json": {
+          "description": "四边边框 JSON（整区共用，逐格应用=网格），如 '{\"top\":{\"style\":\"solid\",\"color\":\"#000\"},\"bottom\":{\"style\":\"solid\"}}'；style 取 solid/medium/thick/dashed/dotted/double/none 等（粗细含在 style 内）；每条边只接受 style / color 两个键，写错的键或非字符串 color 直接报错",
+          "required": false,
+          "type": "string"
+        },
+        "continue-on-error": {
+          "description": "遇到失败时继续执行其余项（默认严格事务，整批回滚）",
+          "required": false,
+          "type": "boolean"
+        },
+        "font-color": {
+          "description": "字体颜色（#RRGGBB），一键刷满目标区域",
+          "required": false,
+          "type": "string"
+        },
+        "font-colors-json": {
+          "description": "字体颜色二维 JSON 数组，维度需与目标区域一致",
+          "required": false,
+          "type": "string"
+        },
+        "font-family": {
+          "description": "字体族（如 Arial / 微软雅黑），整个目标区域共用",
+          "required": false,
+          "type": "string"
+        },
+        "font-line": {
+          "description": "字体线条（none/underline/line-through），整个目标区域共用",
+          "required": false,
+          "type": "string"
+        },
+        "font-size": {
+          "description": "字号，一键刷满目标区域；与 --font-sizes-json 二选一",
+          "required": false,
+          "type": "integer"
+        },
+        "font-sizes-json": {
+          "description": "字号二维 JSON 数组，维度需与目标区域一致",
+          "required": false,
+          "type": "string"
+        },
+        "font-style": {
+          "description": "字体样式（normal/italic），整个目标区域共用",
+          "required": false,
+          "type": "string"
+        },
+        "font-weight": {
+          "description": "字体粗细（bold/normal），一键刷满目标区域",
+          "required": false,
+          "type": "string"
+        },
+        "font-weights-json": {
+          "description": "字体粗细二维 JSON 数组，维度需与目标区域一致",
+          "required": false,
+          "type": "string"
+        },
+        "h-align": {
+          "description": "水平对齐（left/center/right/general），一键刷满目标区域",
+          "required": false,
+          "type": "string"
+        },
+        "h-aligns-json": {
+          "description": "水平对齐二维 JSON 数组，维度需与目标区域一致",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "number-format": {
+          "description": "数字格式 code（常用 General/@/#,##0/#,##0.00/0%/0.00%/yyyy/m/d/h:mm:ss；@ 为文本，适合长数字 ID）",
+          "required": false,
+          "type": "string"
+        },
+        "ranges": {
+          "description": "目标区域 JSON 数组，每项须带工作表前缀且最多 100 项，如 '[\"Sheet1!A1:B2\",\"Sheet2!D1:D10\"]'（与 --batch 二选一，同一组样式应用到所有区域）",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "v-align": {
+          "description": "垂直对齐（top/middle/bottom），一键刷满目标区域",
+          "required": false,
+          "type": "string"
+        },
+        "v-aligns-json": {
+          "description": "垂直对齐二维 JSON 数组，维度需与目标区域一致",
+          "required": false,
+          "type": "string"
+        },
+        "word-wrap": {
+          "description": "换行方式（overflow/clip/autoWrap），整个目标区域共用",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet range batch-set-style --node <NODE_ID> --ranges '[\"Sheet1!A1:B2\"]' --bg-color \"#FFF2CC\""
+      ]
+    },
+    {
+      "operation": "range copy-to",
+      "description": "将源范围的数据复制到目标位置。支持跨工作表复制。\n\n跨工作表复制的两种方式：\n  1. --target-sheet-id \"Sheet2\"          显式指定目标工作表\n  2. --target-range \"Sheet2!A1\"          在目标范围中携带工作表前缀\n\n限制：\n  - 同一工作表内源和目标范围不能重叠",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "paste-type": {
+          "description": "粘贴类型: values(仅值) / formulas(仅公式) / formats(仅格式) / all(全部,默认)",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "源工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "source-range": {
+          "description": "源范围，A1 表示法 (必填，如 A1:C5)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "target-range": {
+          "description": "目标位置，A1 表示法 (必填，如 D1；支持 Sheet2!A1 表示法指定目标工作表)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "target-sheet-id": {
+          "description": "目标工作表 ID 或名称（可选，不传则复制到同一工作表）",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet range copy-to --node NODE_ID --sheet-id SHEET_ID --source-range \"A1:C5\" --target-range \"E1\""
+      ]
+    },
+    {
+      "operation": "range move-to",
+      "description": "将源范围的数据移动到目标位置，源区域将被清空。支持跨工作表移动。\n\n跨工作表移动的两种方式：\n  1. --target-sheet-id \"Sheet2\"          显式指定目标工作表\n  2. --target-range \"Sheet2!A1\"          在目标范围中携带工作表前缀\n\n限制：\n  - 同一工作表内源和目标范围不能重叠",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "源工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "source-range": {
+          "description": "源范围，A1 表示法 (必填，如 A1:C5)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "target-range": {
+          "description": "目标位置，A1 表示法 (必填，如 D1；支持 Sheet2!A1 表示法指定目标工作表)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "target-sheet-id": {
+          "description": "目标工作表 ID 或名称（可选，不传则移动到同一工作表）",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet range move-to --node NODE_ID --sheet-id SHEET_ID --source-range \"A1:C5\" --target-range \"E1\""
+      ]
+    },
+    {
+      "operation": "range read",
+      "description": "读取钉钉电子表格中指定工作表的指定范围数据，返回 per-cell 结构化信息。\n\n别名: dws sheet range get 与 dws sheet range read 等价。\n\n返回内容为 cells 二维数组，每个 cell 包含：\n  value           单元格值（内容由 --value-render-option 决定）\n  dataValidation  数据验证配置（下拉列表/复选框），无则为 null\n  hyperlink       单元格级超链接（path/sheet/range），无则省略\n顶层还会返回 rowIndices / colIndices 与完成度字段：\n  hasMore           目标范围是否还有未返回数据\n  truncationReasons 部分返回原因（max_cells）\n  resolvedRange     未传 --range 时底层解析出的完整目标范围\n  returnedRange     本次实际完整返回的范围\n\n单次最多返回 30,000 个单元格。hasMore=true 是部分成功，本命令\n不会自动续读；请结合目标范围和 returnedRange 从下一行显式传\n--range。收到 forbidden.document.sizeOverLimit 则表示工作簿整体无法装载，\n应创建更小副本或拆分工作簿，缩小 --range 不能解决。\n\n注意：range read/get 不返回合并单元格结构。查看合并范围请使用\ndws sheet info --node NODE_ID --sheet-id SHEET_ID --format json，并读取 mergedRanges。\n\n取值模式 (--value-render-option):\n  formatted_value  格式化后的展示值（默认），如 ¥1,000.00、2025-06-01\n  raw_value        原始值，如 1000、45808\n  formula          公式文本，如 =SUM(A1:A10)，无公式时回退原始值\n\n范围格式使用 A1 表示法：\n  --range A1:D10            读取当前工作表 A1:D10 区域\n  --range \"Sheet1!A1:D10\"   读取 Sheet1 工作表的 A1:D10 区域（忽略 --sheet-id）\n  不传 --range 则默认读取整个工作表的全部非空数据\n\n超时处理建议: 读取大范围数据时若出现超时或响应过慢，请主动缩小 --range 查询范围，\n建议单次读取的单元格数量控制在 5000 个以内（例如 50 行 × 100 列、100 行 × 50 列）。\n对于大表可采用分页读取策略：先通过 info 获取 nonEmptyRange.range\n或 nonEmptyRange.lastRow / nonEmptyRange.lastColumn 确定 A1 边界；\n再按行分批读取，避免不传 --range 直接读取整个大工作表。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "读取范围，A1 表示法 (如 A1:D10，不传则读取全部数据)",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (不传则默认第一个工作表)",
+          "required": false,
+          "type": "string"
+        },
+        "value-render-option": {
+          "description": "取值模式: formatted_value(默认) | raw_value | formula",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet range read --node <NODE_ID> --sheet-id <SHEET_ID> --range \"A1:D10\""
+      ]
+    },
+    {
+      "operation": "range set-style",
+      "description": "为指定 range 设置背景色 / 字号 / 对齐 / 字体颜色 / 字体粗细 / 换行 / 数字格式 / 斜体 / 下划线删除线 / 字体族。\n底层走 set_cell_range 的 cellStyles（仅设样式、保留原值），纯样式写入可作用于含合并单元格的区域。\n\n每个样式维度（bg-color/font-size/h-align/v-align/font-color/font-weight）提供两种用法，二选一：\n  --xxx             单值，一键刷整个 range\n  --xxx-json        二维 JSON 数组，逐单元格指定，维度需与 --range 一致\n\n整区共用的标量样式（无 *-json 形式）：\n  --word-wrap    overflow/clip/autoWrap\n  --number-format 数字格式 code\n  --font-style   normal/italic（斜体）\n  --font-line    none/underline/line-through（下划线/删除线，单选）\n  --font-family  字体族名\n\n单次调用建议：行数 ≤ 1000 且行×列 ≤ 30000（服务端硬限）。\n\n数字格式（--number-format）传格式 code：\n  General 常规；@ 文本；0/0.00 普通数字；#,##0/#,##0.00 千分位；0%/0.00% 百分比；yyyy/m/d 日期；h:mm/h:mm:ss 时间；货币格式如 \"¥\"#,##0.00。\n  商品ID/订单号/手机号等数字形态标识符请设置 @，否则可能转为科学计数法。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "bg-color": {
+          "description": "背景色（#RRGGBB），一键刷满目标区域；与 --bg-colors-json 二选一",
+          "required": false,
+          "type": "string"
+        },
+        "bg-colors-json": {
+          "description": "背景色二维 JSON 数组，维度需与目标区域一致",
+          "example": "[[\"#ffffff\",\"#ffffff\"],[\"#ffffff\",\"#ffffff\"]]",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "border-styles-json": {
+          "description": "四边边框 JSON（整区共用，逐格应用=网格），如 '{\"top\":{\"style\":\"solid\",\"color\":\"#000\"},\"bottom\":{\"style\":\"solid\"}}'；style 取 solid/medium/thick/dashed/dotted/double/none 等（粗细含在 style 内）；每条边只接受 style / color 两个键，写错的键或非字符串 color 直接报错",
+          "required": false,
+          "type": "string"
+        },
+        "font-color": {
+          "description": "字体颜色（#RRGGBB），一键刷满目标区域",
+          "required": false,
+          "type": "string"
+        },
+        "font-colors-json": {
+          "description": "字体颜色二维 JSON 数组，维度需与目标区域一致",
+          "example": "[[\"#000000\",\"#000000\"],[\"#000000\",\"#000000\"]]",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "font-family": {
+          "description": "字体族（如 Arial / 微软雅黑），整个目标区域共用",
+          "required": false,
+          "type": "string"
+        },
+        "font-line": {
+          "description": "字体线条（none/underline/line-through），整个目标区域共用",
+          "required": false,
+          "type": "string"
+        },
+        "font-size": {
+          "description": "字号，一键刷满目标区域；与 --font-sizes-json 二选一",
+          "required": false,
+          "type": "integer"
+        },
+        "font-sizes-json": {
+          "description": "字号二维 JSON 数组，维度需与目标区域一致",
+          "example": "[[12,12],[12,12]]",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "font-style": {
+          "description": "字体样式（normal/italic），整个目标区域共用",
+          "required": false,
+          "type": "string"
+        },
+        "font-weight": {
+          "description": "字体粗细（bold/normal），一键刷满目标区域",
+          "enum": [
+            "bold",
+            "normal"
+          ],
+          "required": false,
+          "type": "string"
+        },
+        "font-weights-json": {
+          "description": "字体粗细二维 JSON 数组，维度需与目标区域一致",
+          "example": "[[\"normal\",\"normal\"],[\"normal\",\"normal\"]]",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "h-align": {
+          "description": "水平对齐（left/center/right/general），一键刷满目标区域",
+          "enum": [
+            "left",
+            "center",
+            "right",
+            "general"
+          ],
+          "required": false,
+          "type": "string"
+        },
+        "h-aligns-json": {
+          "description": "水平对齐二维 JSON 数组，维度需与目标区域一致",
+          "example": "[[\"left\",\"left\"],[\"left\",\"left\"]]",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "number-format": {
+          "description": "数字格式 code（常用 General/@/#,##0/#,##0.00/0%/0.00%/yyyy/m/d/h:mm:ss；@ 为文本，适合长数字 ID）",
+          "required": false,
+          "type": "string"
+        },
+        "range": {
+          "description": "目标单元格区域地址，如 A1:B3 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "v-align": {
+          "description": "垂直对齐（top/middle/bottom），一键刷满目标区域",
+          "enum": [
+            "top",
+            "middle",
+            "bottom"
+          ],
+          "required": false,
+          "type": "string"
+        },
+        "v-aligns-json": {
+          "description": "垂直对齐二维 JSON 数组，维度需与目标区域一致",
+          "example": "[[\"top\",\"top\"],[\"top\",\"top\"]]",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "word-wrap": {
+          "description": "换行方式（overflow/clip/autoWrap），整个目标区域共用",
+          "enum": [
+            "overflow",
+            "clip",
+            "autoWrap"
+          ],
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet range set-style --node <NODE_ID> --sheet-id <SHEET_ID> --range \"B2:B10\" --number-format \"¥#,##0.00\""
+      ]
+    },
+    {
+      "operation": "range update",
+      "description": "更新钉钉在线表格指定区域内单元格内容。\n\n--values 二维 JSON 数组，行列维度需与 --range 完全一致。每个 cell 是以下之一：\n  - {} 空对象：跳过该单元格，保留原值不变\n  - {type:\"text\",...} 或 {type:\"richText\",...} 对象\n\n【type=text】普通文本（可带 cellStyles）\n  {\"type\":\"text\", \"text\":\"内容\"}\n  {\"type\":\"text\", \"text\":\"内容\", \"cellStyles\":{\"fontWeight\":\"bold\",\"fontColor\":\"#FF0000\"}}\n  - text 以 \"=\" 开头识别为公式（如 \"=SUM(B2:B4)\"）\n  - text 为空字符串 \"\" 表示清空该单元格\n  - 写数字 / 布尔请用字符串形式（如 {\"type\":\"text\",\"text\":\"100\"}），\n    服务端按内容自动识别为数字 / 布尔\n\n【{} 跳过】保留原值不变\n  只更新部分单元格时，用 {} 占位不需要修改的位置，避免拆分成多次调用\n\n【type=richText】富文本（多子项组合：超链接 / 附件 / 图片 / 带样式片段）\n  {\"type\":\"richText\", \"texts\":[...]}\n  texts[].type 枚举:\n    • text       {\"type\":\"text\",       \"text\":\"文字\",   \"style\":{...}?}\n    • link       {\"type\":\"link\",       \"text\":\"显示文字\",\"link\":\"https://...\", \"subType\":\"path\"?, \"style\":{...}?}\n    • attachment {\"type\":\"attachment\", \"text\":\"文件名.pdf\",\"resourceId\":\"...\",\"mimeType\":\"application/pdf\",\"size\":12345?}\n    • image      {\"type\":\"image\",      \"text\":\"\",       \"resourceId\":\"...\",\"resourceUrl\":\"/core/api/resources/img/xxx\",\"width\":?,\"height\":?}\n  resourceId / resourceUrl 通过 dws sheet media-upload 获取。\n  link.subType 可为 path/sheet/range；不传默认 path。sheet/range 必须使用真实工作表名称或 A1 范围，禁止猜 Sheet1。\n\n【style 子结构】（仅 richText 的 text / link 子项支持）\n  bold / italic / underline / strike: boolean\n  color: 16 进制色值字符串如 \"#FF0000\"\n  size:  字号正整数\n\n【cellStyles 子结构】（可选，与 type 同级，作用于整格）\n  fontWeight/fontColor/fontSize/fontStyle/backgroundColor/horizontalAlignment/verticalAlignment/wordWrap/numberFormat/textUnderline/textLineThrough\n  只设样式不改值时，可传 {\"cellStyles\":{...}} 保留原值；大面积统一样式优先用 dws sheet range set-style。\n\n【hyperlink 子结构】（可选，与 type 同级，作用于整格）\n  1) 不传 hyperlink 字段                         → 保留原整格超链接\n  2) {\"hyperlink\":{\"type\":\"none\"}}                → 显式清除整格超链接\n  3) {\"hyperlink\":{\"type\":\"path\",\"link\":\"https://...\"}}  → 写外部链接\n     {\"hyperlink\":{\"type\":\"sheet\",\"link\":\"Sheet2\"}}      → 写工作表链接\n     {\"hyperlink\":{\"type\":\"range\",\"link\":\"Sheet2!A1\"}}   → 写区域链接\n\n【dataValidation 子结构】（可选，与 type 同级）三种语义：\n  1) 不传 dataValidation 字段                      → 保留原 DV\n  2) {\"dataValidation\":{\"type\":\"none\"}}             → 显式清除该单元格 DV\n  3) {\"dataValidation\":{\"type\":\"dropdown\",...}}     → 写新 dropdown（覆盖）\n     {\"dataValidation\":{\"type\":\"checkbox\",...}}    → 写新 checkbox（覆盖）\n  Inline dropdown:\n    {\"dataValidation\":{\"type\":\"dropdown\",\"options\":[{\"value\":\"选项1\"}],\"enableMultiSelect\":false}}\n  SourceRange dropdown（同一工作簿内可跨工作表；不展开来源 values，不支持 colors）：\n    {\"dataValidation\":{\"type\":\"dropdown\",\"sourceRange\":{\"sheetId\":\"SOURCE_SHEET_ID\",\"a1Notation\":\"T1:T3\"},\"enableMultiSelect\":false}}\n  dropdown 的 options 与 sourceRange 必须且只能传一个。SourceRange 支持普通区域、整行和整列；\n  a1Notation 不带工作表前缀，来源工作表单独写在 sheetId。\n  checkbox: {\"dataValidation\":{\"type\":\"checkbox\",\"checked\":true}}\n  可与 text/richText 共存，也可单独使用（如 {dataValidation:{type:\"none\"}} 仅清除 DV 不写值）\n\n注意：\n  - 仅支持 text / richText 两种 type；number / boolean / null 等不再支持\n  - type=text 顶层旧 style 字段不要作为新写法使用；整格样式用 cellStyles，片段样式用 richText 子项 style\n  - 单元格级超链接写在 cell.hyperlink；richText link 仅表示富文本片段链接\n  - 写图片到单元格建议直接用 dws sheet write-image（更简洁）\n  - 只设样式或批量刷整片区域样式请用 dws sheet range set-style；写值同时设置少量 cell 样式可用 cellStyles\n  - 目标范围与已有合并区域冲突时，range update 会返回 MERGED_CELLS_CONFLICT；先用 sheet info 查看 mergedRanges，取消合并后写入，必要时再重新合并\n  - csv-put 的合并处理不同：目标区域含合并单元格时会打散合并并写入 CSV 值或公式\n  - SourceRange 在已验证的重命名、引用前插入行/列、删除引用前行的场景会自动调整；move-dimension 及其他未覆盖的删除/移动场景后先回读 sourceRangeStatus，仅 invalid 时重新选源写入\n  - 同一 cell 的 value/style 已写入但 SourceRange 校验失败时，服务端可返回 success=true，并通过 message 明确下拉未创建；必须检查 message，必要时重新读取确认\n  - 清空整片区域请用 dws sheet range clear",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "目标单元格区域地址，如 A1:B3 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "values": {
+          "description": "单元格内容，二维 JSON 数组 (必填)；每个元素必须是 object：{type:text,text:...}、{type:richText,texts:[...]}、{dataValidation:...}、{cellStyles:...}、{hyperlink:...} 或 {}（详见 --help 长描述）",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet range update --node <NODE_ID> --sheet-id <SHEET_ID> --range \"A1\" --values '[[{\"type\":\"text\",\"text\":\"张三\"}]]'"
+      ]
+    },
+    {
+      "operation": "comment react-reply",
+      "description": "创建表情回复的便捷命令。底层复用 reply_comment，并固定传入 emoji=true。\n\n与 comment reply --emoji 一致，--reaction 必须填写钉钉表情名称，不要直接传\nUnicode Emoji。例如用户要求 😄 时传“憨笑”，要求 👏 时传“鼓掌”。\n\n当前轻量版仅支持创建，不包含删除或聚合能力。",
+      "effect": "write",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "non_idempotent",
+      "parameters": {
+        "comment-key": {
+          "description": "被回应评论的 commentKey (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "文档或表格 ID / URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "reaction": {
+          "description": "钉钉表情名称，不是 Unicode Emoji；例如 😄=憨笑、👏=鼓掌 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet comment react-reply --node <NODE_ID> --comment-key <COMMENT_KEY> --reaction \"憨笑\" --format json"
+      ]
+    },
+    {
+      "operation": "replace",
+      "description": "在钉钉表格的指定工作表中，全局查找并替换文本内容。\n\n支持以下替换选项：\n  --match-case           区分大小写（默认 false）\n  --match-entire-cell    完整单元格匹配（默认 false）\n  --use-regexp           使用正则表达式匹配（默认 false）\n  --match-formula        在公式文本中查找替换（默认 false，替换公式源码而非显示值）\n  --include-hidden       包含隐藏行/列（默认 false）\n  --range                限定替换范围，A1 表示法（不传时在整个工作表中替换）\n\n返回被替换的单元格数量。\n\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "find": {
+          "description": "查找文本 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "include-hidden": {
+          "description": "包含隐藏行/列",
+          "required": false,
+          "type": "boolean"
+        },
+        "match-case": {
+          "description": "区分大小写 (默认 false)",
+          "required": false,
+          "type": "boolean"
+        },
+        "match-entire-cell": {
+          "description": "完整单元格匹配",
+          "required": false,
+          "type": "boolean"
+        },
+        "match-formula": {
+          "description": "在公式文本中查找替换（默认 false）",
+          "required": false,
+          "type": "boolean"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "替换范围，A1 表示法 (如 A1:D100)",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "replacement": {
+          "description": "替换文本 (必填，可为空字符串表示删除)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "use-regexp": {
+          "description": "启用正则表达式匹配",
+          "required": false,
+          "type": "boolean"
+        }
+      },
+      "examples": [
+        "dws sheet replace --node <NODE_ID> --sheet-id <SHEET_ID> --find \"旧文本\" --replacement \"新文本\""
+      ]
+    },
+    {
+      "operation": "comment reply",
+      "description": "回复指定单元格评论，支持表情贴图回复",
+      "effect": "write",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "non_idempotent",
+      "parameters": {
+        "comment-key": {
+          "description": "被回复评论的 commentKey (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "content": {
+          "description": "回复内容 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "emoji": {
+          "description": "作为表情贴图回复",
+          "required": false,
+          "type": "boolean"
+        },
+        "mention": {
+          "description": "被 @ 的用户 uid 列表，逗号分隔",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet comment reply --node <SHEET_ID> --comment-key <COMMENT_KEY> --content \"已核实\" --format json"
+      ]
+    },
+    {
+      "operation": "comment resolve",
+      "description": "将评论标记为已解决",
+      "effect": "write",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "comment-key": {
+          "description": "目标评论的 commentKey (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "文档或表格 ID / URL (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet comment resolve --node <NODE_ID> --comment-key <COMMENT_KEY> --format json"
+      ]
+    },
+    {
+      "operation": "comment restore",
+      "description": "将已解决评论恢复为未解决",
+      "effect": "write",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "comment-key": {
+          "description": "目标评论的 commentKey (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "文档或表格 ID / URL (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet comment restore --node <NODE_ID> --comment-key <COMMENT_KEY> --format json"
+      ]
+    },
+    {
+      "operation": "set-dropdown",
+      "description": "在钉钉表格的指定单元格范围内设置下拉列表。\n\nInline 模式通过 --options 提供静态选项，支持选项颜色。\nSourceRange 模式通过 --source-sheet-id + --source-range 引用同一工作簿内的来源区域，\n支持跨工作表、整行和整列引用；读取配置时不会展开来源区域的当前值或颜色。\n两种模式都支持 --multi-select，并且 --options 与 --source-range 必须且只能指定一个。\n如果目标范围已存在下拉列表，会被新的配置覆盖。\n\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\n\n--options 为 JSON 数组，每个元素包含 value（必填）和 color（可选）。\n选项值不能包含英文逗号。\n\n--source-range 只接受不含工作表前缀的 A1 区域，例如 T1:T3、T:T 或 1:3；\n来源工作表由 --source-sheet-id 单独指定。SourceRange 颜色写入暂不支持。\n\n已验证行为：工作表重命名、在引用前插入行/列、删除引用前的行会自动调整引用并保持 valid；\n已验证的 move-dimension 场景会使引用变为 invalid。列删除、删除整个来源区域或来源工作表等未覆盖场景不能预设结果；\n结构操作后应先回读 sourceRangeStatus，只有 invalid 时才重新选择来源并写入。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "multi-select": {
+          "description": "是否允许多选（默认单选）",
+          "required": false,
+          "type": "boolean"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "options": {
+          "description": "Inline 下拉选项 JSON 数组，与 --source-range 二选一，如 '[{\"value\":\"选项1\",\"color\":\"#ff0000\"}]'",
+          "example": "[{\"value\":\"option1\"},{\"value\":\"option2\"}]",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "range": {
+          "description": "目标单元格范围，A1 表示法，如 A2:A100 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "source-range": {
+          "description": "SourceRange 来源区域，与 --options 二选一；不含工作表前缀，如 T1:T3、T:T 或 1:3",
+          "format": "a1-range",
+          "required": false,
+          "required_when": "exactly one of --options or --source-range must be provided",
+          "type": "string"
+        },
+        "source-sheet-id": {
+          "description": "SourceRange 来源工作表 ID；使用 --source-range 时必填",
+          "required": false,
+          "required_when": "--source-range is provided",
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet set-dropdown --node <NODE_ID> --sheet-id <SHEET_ID> --range \"A2:A100\" --options '[{\"value\":\"选项1\"},{\"value\":\"选项2\"}]'",
+        "dws sheet set-dropdown --node <NODE_ID> --sheet-id <TARGET_SHEET_ID> --range \"B2:B100\" --source-sheet-id <SOURCE_SHEET_ID> --source-range \"T1:T3\""
+      ]
+    },
+    {
+      "operation": "csv-put",
+      "description": "将 RFC 4180 格式的 CSV 文本写入指定工作表的指定单元格位置。\n写入值和公式，不支持样式/批注。字段值以 = 开头时默认按公式解析；\n如需写入以 = 开头的字面文本，在字段值前加单引号（例如 \"'=1+1\"）。自动扩容行列。\n目标区域如含合并单元格，csv-put 会打散合并并覆盖所有单元格；这不同于\nrange update 与合并区域冲突时返回 MERGED_CELLS_CONFLICT 的行为。\n\n--csv 支持三种输入：直接传文本、@filepath 从文件读取、- 从 stdin 读取。\n--auto-convert 默认 true，沿用表格系统现有的数字、日期、布尔等类型识别。\n设为 false 时，只关闭非公式字段的自动转换：解码后以 = 开头的字段仍作为公式，\n其他字段按普通文本原样写入（包括 \"'=1+1\"，前置单引号会保留）。\n--allow-overwrite 默认 false，目标区域有数据时需显式传 --allow-overwrite 才能覆盖。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "allow-overwrite": {
+          "description": "允许覆盖已有数据 (默认 false)",
+          "required": false,
+          "type": "boolean"
+        },
+        "auto-convert": {
+          "default": "true",
+          "description": "自动推断非公式 CSV 字段的数字、日期、布尔等类型；设为 false 时非公式字段按文本原样写入，= 开头仍作为公式",
+          "required": false,
+          "type": "boolean"
+        },
+        "csv": {
+          "description": "CSV 文本、@文件路径 或 - 表示 stdin (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "start-cell": {
+          "description": "起始单元格，A1 表示法 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet csv-put --node <NODE_ID> --sheet-id <SHEET_ID> --start-cell A1 --csv @data.csv --allow-overwrite",
+        "dws sheet csv-put --node <NODE_ID> --sheet-id <SHEET_ID> --start-cell A1 --auto-convert=false --csv \"001,2026/8/1,=1+1,'=1+1\""
+      ]
+    },
+    {
+      "operation": "+list-sheets",
+      "description": "需要发现一个在线电子表格中的工作表与稳定 sheetId，或验证某个完整工作表标题是否存在时\n\n参数约束：\n  - --node 去除空白后不能为空\n  - --title 显式传入时去除空白后不能为空",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL；--node 去除空白后不能为空（必填）",
+          "required": true,
+          "type": "string"
+        },
+        "title": {
+          "description": "按完整工作表标题精确筛选（区分大小写）；显式传入时去除空白后不能为空",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet +list-sheets --node NODE_ID"
+      ]
+    },
+    {
+      "operation": "+read",
+      "description": "需要逐格读取在线电子表格的值、公式或格式化值，并要求结果未被服务端截断时\n\n参数约束：\n  - --node 去除空白后不能为空\n  - --sheet-id 显式传入时去除空白后不能为空\n  - --range 显式传入时去除空白后不能为空",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL；--node 去除空白后不能为空（必填）",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "读取范围，A1 表示法 (不传则全部数据)；显式传入时去除空白后不能为空",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (不传则第一个工作表)；显式传入时去除空白后不能为空",
+          "required": false,
+          "type": "string"
+        },
+        "value-render-option": {
+          "description": "取值模式（可选值: formatted_value, raw_value, formula）",
+          "enum": [
+            "formatted_value",
+            "raw_value",
+            "formula"
+          ],
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet +read --node NODE_ID --sheet-id SHEET_ID --range \"A1:D10\""
+      ]
+    },
+    {
+      "operation": "show-gridline",
+      "description": "显示工作表网格线。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet show-gridline --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "filter sort",
+      "description": "对筛选范围内的数据按指定列排序。\n\n前置条件：工作表必须已创建筛选（通过 filter create）。\n排序会实际改变工作表中数据行的物理顺序，不可撤销。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "ascending": {
+          "default": "true",
+          "description": "是否升序，默认 true",
+          "required": false,
+          "type": "boolean"
+        },
+        "column": {
+          "description": "排序列偏移量，从 0 开始 (必填)",
+          "required": true,
+          "type": "integer"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter sort --node <NODE_ID> --sheet-id <SHEET_ID> --column 0 --ascending"
+      ]
+    },
+    {
+      "operation": "range sort",
+      "description": "对钉钉电子表格中指定工作表指定范围的数据进行排序。\n\n支持多级排序（按 --sort-keys 数组顺序优先级递减）。\ncolumn 使用字母列名（如 \"A\"、\"B\"、\"AA\"），表示排序的目标列。\n\n注意：排序前必须先 range read 排序范围的前 3-5 行，对比首行与后续行模式判断表头：\n  - 首行全文本 + 后续行含数字/日期 → 加 --has-header\n  - 首行与后续行模式一致 → 不加\n  - 首行语义像列标题且与后续行明显不同 → 加 --has-header\n  表头误排入数据不可撤销，禁止不读就排。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "has-header": {
+          "description": "首行是否为表头（不参与排序）",
+          "required": false,
+          "type": "boolean"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "排序范围，A1 表示法 (必填，如 A1:D10)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sort-keys": {
+          "description": "排序规则 JSON 数组 (必填，如 [{\"column\":\"A\",\"ascending\":true}])",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet range sort --node NODE_ID --sheet-id SHEET_ID --range A1:D10 --sort-keys '[{\"column\":\"A\",\"ascending\":true}]'"
+      ]
+    },
+    {
+      "operation": "export",
+      "description": "将钉钉在线电子表格导出为 Office xlsx 格式（单命令一站式）。\n\n执行流程（全程自动，无需 Agent 介入轮询）:\n  1. 提交导出任务（submit_export_job），获取 jobId\n  2. 按渐进式退避策略轮询任务状态（query_export_job）\n       第 1~5 次：每次 2 秒\n       第 6~10 次：每次 5 秒\n       第 11~20 次：每次 10 秒\n       第 21~30 次：每次 15 秒\n       硬上限 30 次（约 5 分钟），超时后返回错误\n  3. 任务成功后取得 downloadUrl\n  4. 若指定了 --output，将 xlsx 下载到本地文件；否则直接输出 downloadUrl\n\n参数说明:\n  --node    表格文档 ID 或链接 URL，系统自动识别（必填）\n  --output  本地保存路径（可选）。可为文件路径或目录：\n            - 文件路径：如 ./a.xlsx，直接按此路径保存\n            - 目录路径：如 ./，自动从下载链接推断文件名\n            - 未指定：仅返回 downloadUrl，链接有时效性请尽快下载\n\n支持范围:\n  仅支持钉钉在线电子表格（axls）→ xlsx；\n  若需导出钉钉文字文档，请使用 dingtalkdoc 侧的导出工具。\n\n权限要求:\n  当前用户对目标表格具备可查看/下载权限。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "output": {
+          "description": "本地保存路径（可选，支持文件路径或目录）",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet export --node <NODE_ID> --output ./report.xlsx"
+      ]
+    },
+    {
+      "operation": "table-get",
+      "description": "读取结构化 table 数据。\n\n返回列名、行数据、pandas-style dtypes 和表格 number formats。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "no-header": {
+          "description": "首行不作为表头，自动生成 col1/col2/...",
+          "required": false,
+          "type": "boolean"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "读取范围，A1 表示法；可带 sheet 前缀，如 Sheet1!A1:D10",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet table-get --node <NODE_ID> --sheet-id <SHEET_ID>"
+      ]
+    },
+    {
+      "operation": "table-put",
+      "description": "写入结构化 table 数据。\n\n支持一次写入一个或多个 sheet；目标 sheet 存在时写入，传 name 且不存在时会创建 sheet。\n\n--sheets 支持三种输入：\n  JSON 数组                  [{\"name\":\"Sheet1\",\"columns\":[\"name\"],\"data\":[[\"Alice\"]]}]\n  JSON 对象                  {\"sheets\":[{\"name\":\"Sheet1\",\"columns\":[\"name\"],\"data\":[[\"Alice\"]]}]}\n  单个 sheet spec JSON 对象   {\"name\":\"Sheet1\",\"columns\":[\"name\"],\"data\":[[\"Alice\"]]}\n\n--sheets 可传 @filepath 从文件读取，或传 - 从 stdin 读取。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheets": {
+          "description": "sheet table JSON、@文件路径 或 - 表示 stdin (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet table-put --node NODE_ID --sheets '[{\"name\":\"Sheet1\",\"columns\":[\"name\"],\"data\":[[\"Alice\"]]}]'"
+      ]
+    },
+    {
+      "operation": "template apply",
+      "description": "使用指定模板创建新表格文档。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "folder": {
+          "description": "目标文件夹 ID (可选)",
+          "required": false,
+          "type": "string"
+        },
+        "name": {
+          "description": "新表格文档名称 (可选)",
+          "required": false,
+          "type": "string"
+        },
+        "template-id": {
+          "description": "模板 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "workspace": {
+          "description": "知识库 ID (可选)",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet template apply --template-id <TEMPLATE_ID> --name \"新表格\""
+      ]
+    },
+    {
+      "operation": "template list",
+      "description": "获取当前用户可用的表格模板列表，支持按来源筛选。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "cursor": {
+          "description": "分页游标",
+          "required": false,
+          "type": "string"
+        },
+        "limit": {
+          "description": "返回数量上限",
+          "required": false,
+          "type": "integer"
+        },
+        "source": {
+          "description": "模板来源: MY(我的模版)/PUBLIC(公开模版)，不传默认 MY",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet template list --limit 20"
+      ]
+    },
+    {
+      "operation": "template search",
+      "description": "根据关键词搜索表格模板。",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "cursor": {
+          "description": "分页游标",
+          "required": false,
+          "type": "string"
+        },
+        "limit": {
+          "description": "返回数量上限",
+          "required": false,
+          "type": "integer"
+        },
+        "query": {
+          "description": "搜索关键词 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "source": {
+          "description": "模板来源: MY(我的模版)/PUBLIC(公开模版)，不传默认 MY",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet template search --query \"销售\""
+      ]
+    },
+    {
+      "operation": "ungroup-dimension",
+      "description": "取消钉钉表格指定工作表中的连续整行或整列分组。\n\n--range 使用整行/整列范围：\n  行分组：3:7 或 3\n  列分组：C:F 或 C\n\n支持在 --range 中携带工作表前缀（如 \"Sheet1!3:7\" / \"Sheet1!C:F\"），此时将忽略 --sheet-id。\n取消后可通过 sheet info --include groups 回读 rowGroups / columnGroups。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "整行/整列范围 (必填)，如 \"3:7\" 或 \"C:F\"",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet ungroup-dimension --node <NODE_ID> --sheet-id <SHEET_ID> --range \"3:7\""
+      ]
+    },
+    {
+      "operation": "unmerge-cells",
+      "description": "取消钉钉表格指定工作表中指定范围内的合并单元格。\n\n通过 --range 参数指定要取消合并的范围，使用 A1 表示法（如 A1:D5）。\n该范围内所有合并的单元格都会被取消合并，恢复为独立的单元格。\n\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "取消合并的范围，A1 表示法，如 A1:D5 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet unmerge-cells --node <NODE_ID> --sheet-id <SHEET_ID> --range \"A1:D5\""
+      ]
+    },
+    {
+      "operation": "cond-format update",
+      "description": "更新钉钉电子表格中指定工作表的一条条件格式规则。\n\n可以部分更新以下字段：\n- --ranges：修改规则的应用范围\n- --condition：切换或修改条件类型及参数\n- --cell-style：修改命中时的单元格样式\n- --data-bar-style：修改数据条样式\n\n未传入的字段将保持原有值不变。\n传入 --condition 时，新条件类型将替换原有条件类型。\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表，通过 --rule-id 定位条件格式规则。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\nruleId 可通过 cond-format list 获取。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "cell-style": {
+          "description": "单元格样式 JSON 对象 (可选)",
+          "example": "{\"backgroundColor\":\"#FFCDD2\",\"bold\":true}",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "condition": {
+          "description": "条件类型及参数 JSON 对象 (可选)，传入后替换原有条件类型",
+          "example": "{\"numberCondition\":{\"operator\":\"greater\",\"value1\":\"80\"}}",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "data-bar-style": {
+          "description": "数据条样式 JSON 对象 (可选，仅数据条类型)",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "ranges": {
+          "description": "应用范围 JSON 数组 (可选)，如 '[\"A1:E10\"]'",
+          "example": "[\"A1:B2\"]",
+          "format": "json",
+          "required": false,
+          "type": "string"
+        },
+        "rule-id": {
+          "description": "条件格式规则 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet cond-format update --node NODE_ID --sheet-id SHEET_ID --rule-id RULE_ID --condition '{\"numberCondition\":{\"operator\":\"greater\",\"value1\":\"90\"}}'"
+      ]
+    },
+    {
+      "operation": "update-dimension",
+      "description": "批量更新钉钉表格指定工作表中连续多行/多列的属性，支持设置显隐状态（hidden）与行高/列宽（pixelSize）。\n\n起始位置 startIndex 使用 A1 表示法：\n  --dimension ROWS 时，--start-index 为 1-based 行号字符串，如 \"3\" 表示从第 3 行开始\n  --dimension COLUMNS 时，--start-index 为列字母，如 \"A\" 表示从 A 列开始、\"AB\" 表示从 AB 列开始\n\n支持在 --start-index 中携带工作表前缀（如 \"Sheet1!3\" / \"Sheet1!A\"），此时将忽略 --sheet-id。\n--hidden 与 --pixel-size 至少必须提供一个（或用 --size-type standard/auto 让服务端决定尺寸）。\n当同时提供时，将先应用尺寸再应用显隐，任一失败整体失败。\n--pixel-size 单位为像素，dimension=ROWS 时表示行高、dimension=COLUMNS 时表示列宽。\n\n尺寸模式（--size-type，对齐飞书）:\n  pixel     默认，按 --pixel-size 指定的像素值设置\n  standard  恢复默认行高/列宽，无需 --pixel-size\n  auto      按内容自适应行高，仅 ROWS 支持（列宽不提供自适应），无需 --pixel-size\n\n常见场景：隐藏/显示指定连续行或列、批量调整行高/列宽、在同一次调用中同时修改尺寸与显隐。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "dimension": {
+          "description": "更新维度: ROWS 或 COLUMNS (必填)",
+          "enum": [
+            "ROWS",
+            "COLUMNS"
+          ],
+          "required": true,
+          "type": "string"
+        },
+        "hidden": {
+          "description": "是否隐藏 (true=隐藏, false=显示)",
+          "required": false,
+          "type": "boolean"
+        },
+        "length": {
+          "description": "更新数量，正整数 (必填)，最大 5000",
+          "format": "positive-integer",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "pixel-size": {
+          "description": "行高或列宽（像素），ROWS 时为行高，COLUMNS 时为列宽",
+          "required": false,
+          "type": "integer"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "size-type": {
+          "description": "尺寸模式（对齐飞书）: pixel(默认,用 --pixel-size) / standard(恢复默认行高列宽) / auto(按内容自适应行高，仅 ROWS；列宽无此选项)",
+          "required": false,
+          "type": "string"
+        },
+        "start-index": {
+          "description": "起始位置，A1 表示法 (必填)。ROWS 时为行号如 \"3\"；COLUMNS 时为列字母如 \"A\"",
+          "example": "1",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet update-dimension --node <NODE_ID> --sheet-id <SHEET_ID> --dimension ROWS --start-index \"1\" --length 5 --pixel-size 40"
+      ]
+    },
+    {
+      "operation": "filter update",
+      "description": "批量更新筛选条件，可同时设置多列的筛选条件。\n\n前置条件：工作表必须已创建筛选（通过 filter create）。\n覆盖式：指定列的条件会被替换，未指定的列保持不变。\n\n--criteria JSON 数组，每个元素含 column（列偏移量，从 0 开始）和筛选条件字段。\n支持三种 filterType：\n  - values：按值筛选，指定 visibleValues 数组\n  - condition：按条件筛选，指定 conditions 数组（最多 2 个）和可选的 conditionOperator\n  - color：按颜色筛选，指定 backgroundColor 或 fontColor（二选一）",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "criteria": {
+          "description": "筛选条件 JSON 数组 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter update --node <NODE_ID> --sheet-id <SHEET_ID> --criteria '[{\"column\":0,\"filterType\":\"values\",\"visibleValues\":[\"已完成\"]}]'"
+      ]
+    },
+    {
+      "operation": "filter-view update",
+      "description": "更新钉钉电子表格中指定工作表的筛选视图属性（名称、范围和/或筛选条件）。\n\n用途：修改已有筛选视图的名称、数据范围或筛选条件。\n场景：\n  - 数据区域扩展后需要扩大筛选视图范围（如从 A1:D10 扩到 A1:D100）\n  - 重命名筛选视图以更好描述其用途\n  - 通过 --criteria 一次性批量更新多列的筛选条件\n区分：\n  - update 可同时修改名称、范围和条件，适合批量更新\n  - update-criteria 只能设置单列条件，适合精确控制某一列的筛选逻辑\n  - update --criteria 会替换指定列的条件，未指定的列保持不变\n\n通过 --node 定位电子表格文档，通过 --sheet-id 定位工作表，通过 --filter-view-id 定位筛选视图。\nnodeId 支持传入文档链接 URL 或文档 ID（dentryUuid），系统自动识别。\nsheetId 支持传入工作表 ID 或工作表名称，可通过 sheet list 获取。\nfilterViewId 可通过 filter-view list 获取。\n\n至少需要传入一个更新字段（--name / --range / --criteria）。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "criteria": {
+          "description": "筛选条件，JSON 数组",
+          "required": false,
+          "type": "string"
+        },
+        "filter-view-id": {
+          "description": "筛选视图 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "name": {
+          "description": "筛选视图新名称",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "筛选视图新范围，A1 表示法",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet filter-view update --node <NODE_ID> --sheet-id <SHEET_ID> --filter-view-id <FV_ID> --name \"新名称\""
+      ]
+    },
+    {
+      "operation": "update-float-image",
+      "description": "更新钉钉表格指定工作表中浮动图片的属性。\n\n可直接传 --file 上传本地图片并替换浮动图片，也可传已上传图片的 --src。\n至少需要传入一个更新字段（--file / --src / --range / --width / --height / --offset-x / --offset-y），且 --file 与 --src 不能同时使用。\nfloatImageId 可通过 list-float-images 获取。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "file": {
+          "description": "用于替换浮动图片的本地图片路径，与 --src 不能同时使用",
+          "required": false,
+          "type": "string"
+        },
+        "float-image-id": {
+          "description": "浮动图片 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "height": {
+          "description": "新的图片高度，像素",
+          "required": false,
+          "type": "integer"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "offset-x": {
+          "description": "新的水平偏移量，像素",
+          "required": false,
+          "type": "integer"
+        },
+        "offset-y": {
+          "description": "新的垂直偏移量，像素",
+          "required": false,
+          "type": "integer"
+        },
+        "range": {
+          "description": "新的锚点单元格，A1 表示法",
+          "format": "a1-range",
+          "required": false,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "src": {
+          "description": "新的图片资源路径，通过 media-upload 获取的 resourceUrl",
+          "required": false,
+          "type": "string"
+        },
+        "width": {
+          "description": "新的图片宽度，像素",
+          "required": false,
+          "type": "integer"
+        }
+      },
+      "examples": [
+        "dws sheet update-float-image --node <NODE_ID> --sheet-id <SHEET_ID> --float-image-id <FI_ID> --range C5"
+      ]
+    },
+    {
+      "operation": "pivot-table update",
+      "description": "更新透视表配置。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "pivot-table-id": {
+          "description": "透视表 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "properties": {
+          "description": "需要更新的透视表配置 JSON 或 @文件路径 (必填)",
+          "example": "{\"show_subtotals\":false}",
+          "format": "json",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet pivot-table update --node NODE_ID --sheet-id SHEET_ID --pivot-table-id PIVOT_TABLE_ID --properties '{\"show_subtotals\":false}'"
+      ]
+    },
+    {
+      "operation": "update",
+      "description": "更新工作表名称、位置、隐藏状态、冻结行列、标签颜色。\n\n--name / --index / --hidden / --frozen-row-count / --frozen-column-count / --tab-color 至少提供一个；\n多个属性可同时传入，将在同一次请求中更新。\n\n注意：\n  - name 不能包含 / \\ ? * [ ] : 等特殊字符，最长 100 字符\n  - 至少需要保留一个可见的工作表，不能将所有工作表都隐藏\n  - 冻结行数/列数不能超过工作表的总行数/总列数，设为 0 表示取消冻结\n  - tab-color 为 Hex 格式如 #FF0000，传空字符串清除颜色",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "frozen-column-count": {
+          "description": "冻结列数，0 表示取消冻结",
+          "required": false,
+          "type": "integer"
+        },
+        "frozen-row-count": {
+          "description": "冻结行数，0 表示取消冻结",
+          "required": false,
+          "type": "integer"
+        },
+        "hidden": {
+          "description": "是否隐藏工作表 (true=隐藏, false=显示)",
+          "required": false,
+          "type": "boolean"
+        },
+        "index": {
+          "description": "工作表新位置索引，0-based",
+          "required": false,
+          "type": "integer"
+        },
+        "name": {
+          "description": "工作表新名称，最长 100 字符",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "tab-color": {
+          "description": "工作表标签颜色，Hex 格式如 #FF0000；传空字符串清除颜色",
+          "required": false,
+          "type": "string"
+        },
+        "title": {
+          "description": "--name 的别名（兼容）",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet update --node <NODE_ID> --sheet-id <SHEET_ID> --title \"汇总表\" --frozen-row-count 2"
+      ]
+    },
+    {
+      "operation": "comment update",
+      "description": "更新单元格评论内容",
+      "effect": "write",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "comment-key": {
+          "description": "待更新评论的 commentKey (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "content": {
+          "description": "更新后的评论内容 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet comment update --node <SHEET_ID> --comment-key <COMMENT_KEY> --content \"已修正\" --format json"
+      ]
+    },
+    {
+      "operation": "version list",
+      "description": "查看表格历史版本列表",
+      "effect": "read",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "idempotent",
+      "parameters": {
+        "cursor": {
+          "description": "分页游标",
+          "required": false,
+          "type": "string"
+        },
+        "limit": {
+          "description": "返回版本数量上限",
+          "required": false,
+          "type": "integer"
+        },
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet version list --node <SHEET_ID> --limit 10 --format json"
+      ]
+    },
+    {
+      "operation": "version revert",
+      "description": "将在线表格恢复到指定历史版本或精确 revision。\n\n通常应从 version list 选择已保存的历史版本。用户明确要求恢复到某个精确 revision 时，\n也可传入已从同一工作簿真实查询结果确认的 revision，即使它不在版本列表中。未列入\n版本列表的 revision 只有在服务端仍可恢复时才能成功；禁止猜测 revision。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "user_required",
+      "idempotency": "non_idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "version": {
+          "description": "目标历史版本或已确认 revision (必填，通常从 version list 获取)",
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "examples": [
+        "dws sheet version revert --node <SHEET_ID> --version 3 --format json"
+      ]
+    },
+    {
+      "operation": "version save",
+      "description": "手动保存表格版本快照",
+      "effect": "write",
+      "risk": "low",
+      "confirmation": "not_required",
+      "idempotency": "non_idempotent",
+      "parameters": {
+        "node": {
+          "description": "表格文档 ID 或 URL (必填)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "examples": [
+        "dws sheet version save --node <SHEET_ID> --format json"
+      ]
+    },
+    {
+      "operation": "write-image",
+      "description": "将本地图片上传并写入到钉钉表格的指定单元格（三步自动完成）。\n\n流程:\n  1. 获取附件上传凭证 (get_doc_attachment_upload_info)\n  2. HTTP PUT 上传图片到 OSS\n  3. 调用 write_image 将图片写入指定单元格\n\n--mime-type 可选，不指定时根据文件扩展名自动推断。\n--width / --height 可选，设置图片在单元格中的显示尺寸。",
+      "effect": "write",
+      "risk": "medium",
+      "confirmation": "not_required",
+      "idempotency": "unknown",
+      "parameters": {
+        "file": {
+          "description": "本地图片文件路径 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "height": {
+          "description": "图片显示高度 (可选)",
+          "required": false,
+          "type": "integer"
+        },
+        "mime-type": {
+          "description": "文件 MIME 类型 (默认根据扩展名推断)",
+          "required": false,
+          "type": "string"
+        },
+        "name": {
+          "description": "图片显示名称 (默认使用文件名)",
+          "required": false,
+          "type": "string"
+        },
+        "node": {
+          "description": "目标表格文档的标识，支持传入 URL 或 ID (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "range": {
+          "description": "目标单元格区域地址，如 A1:B3 (必填)",
+          "format": "a1-range",
+          "required": true,
+          "type": "string"
+        },
+        "sheet-id": {
+          "description": "工作表 ID 或名称 (必填)",
+          "required": true,
+          "type": "string"
+        },
+        "width": {
+          "description": "图片显示宽度 (可选)",
+          "required": false,
+          "type": "integer"
+        }
+      },
+      "examples": [
+        "dws sheet write-image --node <NODE_ID> --sheet-id <SHEET_ID> --range A1:A1 --file ./chart.png"
+      ]
+    }
+  ]
+}

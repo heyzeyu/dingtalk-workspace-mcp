@@ -1,0 +1,12 @@
+{
+  "name": "dingtalk-local",
+  "interface": { "displayName": "钉钉本地插件" },
+  "plugins": [
+    {
+      "name": "dingtalk-codex-bridge",
+      "source": { "source": "local", "path": "./plugins/dingtalk-codex-bridge" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_USE" },
+      "category": "Productivity"
+    }
+  ]
+}

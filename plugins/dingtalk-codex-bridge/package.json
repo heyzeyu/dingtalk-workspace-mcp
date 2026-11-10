@@ -1,0 +1,21 @@
+{
+  "name": "dingtalk-codex-bridge",
+  "version": "0.3.3",
+  "private": true,
+  "type": "module",
+  "description": "Structured MCP access to the pinned official DingTalk Workspace CLI.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "setup": "node scripts/setup.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "smoke:write": "node scripts/write-smoke.mjs",
+    "verify:catalog": "node scripts/verify-catalog.mjs",
+    "smoke:workspace": "node scripts/workspace-smoke.mjs",
+    "test:privacy": "python3 -B -m unittest discover -s test -p '*_test.py'",
+    "package:release": "python3 scripts/package-release.py"
+  }
+}

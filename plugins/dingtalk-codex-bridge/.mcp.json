@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "dingtalk_sheets": {
+      "command": "node",
+      "args": [
+        "./mcp/server.mjs"
+      ],
+      "cwd": ".",
+      "env_vars": [
+        "PATH",
+        "DWS_CLI_PATH",
+        "DWS_CONFIG_DIR",
+        "DINGTALK_BRIDGE_CACHE_DIR",
+        "DINGTALK_BRIDGE_FILES_DIR",
+        "DWS_CLIENT_ID",
+        "DWS_CLIENT_SECRET",
+        "DINGTALK_BRIDGE_SECRET_DOC_PASSWORD",
+        "DINGTALK_BRIDGE_SECRET_WEBHOOK_TOKEN"
+      ],
+      "startup_timeout_sec": 15,
+      "tool_timeout_sec": 600
+    }
+  }
+}

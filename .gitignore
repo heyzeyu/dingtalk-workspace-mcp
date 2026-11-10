@@ -1,0 +1,40 @@
+# Local credentials and runtime state
+.env
+.env.*
+!.env.example
+.dws/
+.codex/
+*.key
+*.pem
+*.p12
+*.pfx
+auth.json
+credentials.json
+tokens.json
+
+# Dependencies, caches and editor metadata
+node_modules/
+__pycache__/
+*.py[cod]
+.DS_Store
+.idea/
+.vscode/
+
+# Private historical acceptance records and generated artifacts
+/VALIDATION-*.json
+/VALIDATION-*.md
+/FILES.sha256
+logs/
+outputs/
+downloads/
+minutes-downloads/
+minutes-transcripts/
+*.log
+*.db
+*.sqlite
+*.sqlite3
+*.zip
+*.xlsx
+*.xls
+*.mp3
+*.mp4

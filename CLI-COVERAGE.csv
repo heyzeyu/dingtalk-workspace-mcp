@@ -1,0 +1,1597 @@
+command,product,mode,effect,risk,availability,reason
+agoal +contract-fields,agoal,mcp,read,low,available,Pinned public structured command
+agoal +obj-template-list,agoal,mcp,read,low,available,Pinned public structured command
+agoal +report-statistics-list,agoal,mcp,read,low,available,Pinned public structured command
+agoal +report-submit-detail,agoal,mcp,read,low,available,Pinned public structured command
+agoal +user-rules,agoal,mcp,read,low,available,Pinned public structured command
+aicard explain,aicard,mcp,read,low,available,Pinned public structured command
+aicard lint,aicard,mcp,read,low,available,Pinned public structured command
+aicard preview,aicard,mcp,write,medium,available,Pinned public structured command
+aicard template create,aicard,mcp,write,medium,available,Pinned public structured command
+aicard template get,aicard,mcp,read,low,available,Pinned public structured command
+aicard template update,aicard,mcp,write,medium,available,Pinned public structured command
+aisearch person,aisearch,mcp,read,low,available,Pinned public structured command
+aisearch enterprise,aisearch,mcp,read,low,available,Pinned public structured command
+aisearch behavior,aisearch,mcp,read,low,available,Pinned public structured command
+aisearch +search-behavior,aisearch,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+aisearch +search-enterprise,aisearch,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+aisearch +search-person,aisearch,mcp,read,low,available,Pinned public structured command
+aitable advperm disable,aitable,mcp,write,high,available,Pinned public structured command
+aitable advperm enable,aitable,mcp,write,medium,available,Pinned public structured command
+aitable advperm role-copy,aitable,mcp,write,medium,available,Pinned public structured command
+aitable advperm role-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable advperm role-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable advperm role-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable advperm role-list,aitable,mcp,read,low,available,Pinned public structured command
+aitable advperm role-members-add,aitable,mcp,write,medium,available,Pinned public structured command
+aitable advperm role-members-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable advperm role-query-user,aitable,mcp,read,low,available,Pinned public structured command
+aitable advperm role-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable app get,aitable,mcp,write,low,available,Pinned public structured command
+aitable app page create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable app page delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable app page get,aitable,mcp,read,low,available,Pinned public structured command
+aitable app page list,aitable,mcp,write,low,available,Pinned public structured command
+aitable app page move,aitable,mcp,write,medium,available,Pinned public structured command
+aitable app page update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable app update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable app widget create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable app widget delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable app widget get,aitable,mcp,read,low,available,Pinned public structured command
+aitable app widget list,aitable,mcp,read,low,available,Pinned public structured command
+aitable app widget update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable attachment remove,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable attachment upload,aitable,mcp,write,medium,available,Pinned public structured command
+aitable base copy,aitable,mcp,write,medium,available,Pinned public structured command
+aitable base create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable base delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable base get,aitable,mcp,read,low,available,Pinned public structured command
+aitable base get-primary-doc-id,aitable,mcp,read,low,available,Pinned public structured command
+aitable base list,aitable,mcp,read,low,available,Pinned public structured command
+aitable base search,aitable,mcp,read,low,available,Pinned public structured command
+aitable base update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable chart batch-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable chart create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable chart delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable chart get,aitable,mcp,read,low,available,Pinned public structured command
+aitable chart share get,aitable,mcp,read,low,available,Pinned public structured command
+aitable chart share update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable chart templates,aitable,mcp,read,low,available,Pinned public structured command
+aitable chart update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable chart widgets-example,aitable,mcp,read,low,available,Pinned public structured command
+aitable create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable comment create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable supabase api-key create,aitable,mcp,write,high,available,Pinned public structured command
+aitable dashboard arrange,aitable,mcp,write,medium,available,Pinned public structured command
+aitable dashboard config-example,aitable,mcp,read,low,available,Pinned public structured command
+aitable dashboard create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable dashboard delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable dashboard get,aitable,mcp,read,low,available,Pinned public structured command
+aitable dashboard preview,aitable,mcp,read,low,available,Pinned public structured command
+aitable dashboard share get,aitable,mcp,read,low,available,Pinned public structured command
+aitable dashboard share update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable dashboard update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable datasource create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable datasource get-config,aitable,mcp,read,low,available,Pinned public structured command
+aitable datasource get-fields,aitable,mcp,read,low,available,Pinned public structured command
+aitable datasource list-sources,aitable,mcp,read,low,available,Pinned public structured command
+aitable datasource sync,aitable,mcp,write,medium,available,Pinned public structured command
+aitable datasource sync-status,aitable,mcp,read,low,available,Pinned public structured command
+aitable datasource update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable comment delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable entity search,aitable,mcp,read,low,available,Pinned public structured command
+aitable export data,aitable,mcp,read,low,available,Pinned public structured command
+aitable field ai-plugins,aitable,mcp,read,low,available,Pinned public structured command
+aitable field create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable field delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable field get,aitable,mcp,read,low,available,Pinned public structured command
+aitable field-group create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable field-group list,aitable,mcp,read,low,available,Pinned public structured command
+aitable field-group move-fields,aitable,mcp,write,medium,available,Pinned public structured command
+aitable field-group ungroup,aitable,mcp,write,medium,available,Pinned public structured command
+aitable field-group update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable field list,aitable,mcp,read,low,available,Pinned public structured command
+aitable field run-ai,aitable,mcp,write,medium,available,Pinned public structured command
+aitable field search-options,aitable,mcp,read,low,available,Pinned public structured command
+aitable field task-status,aitable,mcp,read,low,available,Pinned public structured command
+aitable field update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable form create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable form delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable form field hide,aitable,mcp,write,medium,available,Pinned public structured command
+aitable form field list,aitable,mcp,read,low,available,Pinned public structured command
+aitable form field update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable form get,aitable,mcp,read,low,available,Pinned public structured command
+aitable form list,aitable,mcp,read,low,available,Pinned public structured command
+aitable form questions create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable form questions delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable form share get,aitable,mcp,read,low,available,Pinned public structured command
+aitable form share notify,aitable,mcp,write,high,available,Pinned public structured command
+aitable form share update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable form share url,aitable,mcp,read,low,available,Pinned public structured command
+aitable form submit,aitable,mcp,write,medium,available,Pinned public structured command
+aitable form update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable import data,aitable,mcp,write,medium,available,Pinned public structured command
+aitable import upload,aitable,mcp,write,medium,available,Pinned public structured command
+aitable info,aitable,mcp,read,low,available,Pinned public structured command
+aitable list,aitable,mcp,read,low,available,Pinned public structured command
+aitable comment list,aitable,mcp,read,low,available,Pinned public structured command
+aitable supabase api-key list,aitable,mcp,read,low,available,Pinned public structured command
+aitable psql,aitable,mcp,read,low,available,Pinned public structured command
+aitable record query,aitable,mcp,read,low,available,Pinned public structured command
+aitable record stats,aitable,mcp,read,low,available,Pinned public structured command
+aitable record group-stats,aitable,mcp,read,low,available,Pinned public structured command
+aitable record batch-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable record create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable record create-sub,aitable,mcp,write,medium,available,Pinned public structured command
+aitable record delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable record get,aitable,mcp,read,low,available,Pinned public structured command
+aitable record history-list,aitable,mcp,read,low,available,Pinned public structured command
+aitable record ids,aitable,mcp,read,low,available,Pinned public structured command
+aitable record primary-doc-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable record primary-doc-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable record query-empty,aitable,mcp,read,low,available,Pinned public structured command
+aitable record share-url,aitable,mcp,read,low,available,Pinned public structured command
+aitable record update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable record upsert,aitable,mcp,write,medium,available,Pinned public structured command
+aitable comment reply,aitable,mcp,write,medium,available,Pinned public structured command
+aitable supabase api-key revoke,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable search,aitable,mcp,read,low,available,Pinned public structured command
+aitable section create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable section delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable section list-empty,aitable,mcp,read,low,available,Pinned public structured command
+aitable section list-nodes,aitable,mcp,read,low,available,Pinned public structured command
+aitable section move-node,aitable,mcp,write,medium,available,Pinned public structured command
+aitable section rename,aitable,mcp,write,medium,available,Pinned public structured command
+aitable section reorder,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +advperm-disable,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +advperm-enable,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +app-block-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +app-block-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +app-block-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +app-block-list,aitable,mcp,read,low,available,Pinned public structured command
+aitable +app-block-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +app-get,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +app-page-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +app-page-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +app-page-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +app-page-list,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +app-page-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +attachment-put,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +attachment-remove,aitable,mcp,write,high,available,Pinned public structured command
+aitable +attachment-upload,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +base-bootstrap,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +base-copy,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +base-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +base-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +base-get-primary-doc-id,aitable,mcp,read,low,available,Pinned public structured command
+aitable +base-list,aitable,mcp,read,low,available,Pinned public structured command
+aitable +base-schema-snapshot,aitable,mcp,read,low,available,Pinned public structured command
+aitable +base-search,aitable,mcp,read,low,available,Pinned public structured command
+aitable +base-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +build-plan,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +build-plan-verify,aitable,mcp,read,low,available,Pinned public structured command
+aitable +chart-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +chart-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +chart-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +chart-share-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +chart-share-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +chart-templates,aitable,mcp,read,low,available,Pinned public structured command
+aitable +chart-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +chart-widgets-example,aitable,mcp,read,low,available,Pinned public structured command
+aitable +charts-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +dashboard-arrange,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +dashboard-config-example,aitable,mcp,read,low,available,Pinned public structured command
+aitable +dashboard-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +dashboard-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +dashboard-diagnose,aitable,mcp,read,low,available,Pinned public structured command
+aitable +dashboard-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +dashboard-list,aitable,mcp,read,low,available,Pinned public structured command
+aitable +dashboard-preview,aitable,mcp,read,low,available,Pinned public structured command
+aitable +dashboard-share-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +dashboard-share-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +dashboard-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +data-query,aitable,mcp,read,low,available,Pinned public structured command
+aitable +datasource-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +datasource-get-config,aitable,mcp,read,low,available,Pinned public structured command
+aitable +datasource-get-fields,aitable,mcp,read,low,available,Pinned public structured command
+aitable +datasource-list-sources,aitable,mcp,read,low,available,Pinned public structured command
+aitable +datasource-sync,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +datasource-sync-status,aitable,mcp,read,low,available,Pinned public structured command
+aitable +datasource-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +export-data,aitable,mcp,read,low,available,Pinned public structured command
+aitable +field-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +field-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +field-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +field-run-ai,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +field-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +field-wait-ai,aitable,mcp,read,low,available,Pinned public structured command
+aitable +find-record,aitable,mcp,read,low,available,Pinned public structured command
+aitable +form-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +form-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +form-field-hide,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +form-field-list,aitable,mcp,read,low,available,Pinned public structured command
+aitable +form-field-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +form-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +form-list,aitable,mcp,read,low,available,Pinned public structured command
+aitable +form-questions-remove,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +form-share-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +form-share-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +form-submit,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +form-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +import-data,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +import-file,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +import-upload,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +list-tables,aitable,mcp,read,low,available,Pinned public structured command
+aitable +read-batch,aitable,mcp,read,low,available,Pinned public structured command
+aitable +record-batch-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +record-bulk-patch,aitable,mcp,write,high,available,Pinned public structured command
+aitable +record-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +record-download-attachment,aitable,mcp,read,low,available,Pinned public structured command
+aitable +record-history-list,aitable,mcp,read,low,available,Pinned public structured command
+aitable +record-primary-doc-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +record-primary-doc-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +record-query,aitable,mcp,read,low,available,Pinned public structured command
+aitable +record-query-empty,aitable,mcp,read,low,available,Pinned public structured command
+aitable +record-share-links,aitable,mcp,read,low,available,Pinned public structured command
+aitable +record-share-url,aitable,mcp,read,low,available,Pinned public structured command
+aitable +record-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +record-upsert,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +record-upsert-by-key,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +record-write-result,aitable,mcp,read,low,available,Pinned public structured command
+aitable +resolve-base,aitable,mcp,read,low,available,Pinned public structured command
+aitable +resolve-field,aitable,mcp,read,low,available,Pinned public structured command
+aitable +resolve-table,aitable,mcp,read,low,available,Pinned public structured command
+aitable +resolve-view,aitable,mcp,read,low,available,Pinned public structured command
+aitable +role-copy,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +role-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +role-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +role-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +role-list,aitable,mcp,read,low,available,Pinned public structured command
+aitable +role-members-add,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +role-members-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +role-query-user,aitable,mcp,read,low,available,Pinned public structured command
+aitable +role-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +section-create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +section-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +section-list-empty,aitable,mcp,read,low,available,Pinned public structured command
+aitable +section-list-nodes,aitable,mcp,read,low,available,Pinned public structured command
+aitable +section-move-node,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +section-rename,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +section-reorder,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +table-bootstrap,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +table-copy,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +table-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +table-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +table-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +task-report,aitable,mcp,read,low,available,Pinned public structured command
+aitable +template-search,aitable,mcp,read,low,available,Pinned public structured command
+aitable +url-resolve,aitable,mcp,read,low,available,Pinned public structured command
+aitable +view-delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +view-duplicate,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +view-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +view-get-frozen-cols,aitable,mcp,read,low,available,Pinned public structured command
+aitable +view-get-lock,aitable,mcp,read,low,available,Pinned public structured command
+aitable +view-get-row-height,aitable,mcp,read,low,available,Pinned public structured command
+aitable +view-lock,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +view-preset-apply,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +view-set-fill-color-rule,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +view-set-frozen-cols,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +view-set-row-height,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +view-update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +workflow-deploy,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +workflow-disable,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable +workflow-enable,aitable,mcp,write,medium,available,Pinned public structured command
+aitable +workflow-get,aitable,mcp,read,low,available,Pinned public structured command
+aitable +workflow-list,aitable,mcp,read,low,available,Pinned public structured command
+aitable table create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable table delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable table get,aitable,mcp,read,low,available,Pinned public structured command
+aitable table list,aitable,mcp,read,low,available,Pinned public structured command
+aitable table update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable template search,aitable,mcp,read,low,available,Pinned public structured command
+aitable comment update,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view delete,aitable,mcp,destructive,high,available,Pinned public structured command
+aitable view duplicate,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view get aggregate,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get card,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get field-widths,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get fill-color-rule,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get filter,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get frozen-cols,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get group,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get hidden-fields,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get lock,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get row-height,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get sort,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get timebar,aitable,mcp,read,low,available,Pinned public structured command
+aitable view get visible-fields,aitable,mcp,read,low,available,Pinned public structured command
+aitable view list,aitable,mcp,read,low,available,Pinned public structured command
+aitable view lock,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update aggregate,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update card,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update field-widths,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update fill-color-rule,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update filter,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update frozen-cols,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update group,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update name,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update row-height,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update sort,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update timebar,aitable,mcp,write,medium,available,Pinned public structured command
+aitable view update visible-fields,aitable,mcp,write,medium,available,Pinned public structured command
+aitable workflow create,aitable,mcp,write,medium,available,Pinned public structured command
+aitable workflow disable,aitable,mcp,write,high,available,Pinned public structured command
+aitable workflow edit-example,aitable,mcp,read,low,available,Pinned public structured command
+aitable workflow enable,aitable,mcp,write,medium,available,Pinned public structured command
+aitable workflow get,aitable,mcp,read,low,available,Pinned public structured command
+aitable workflow history,aitable,mcp,read,low,available,Pinned public structured command
+aitable workflow list,aitable,mcp,read,low,available,Pinned public structured command
+aitable workflow run,aitable,mcp,write,medium,available,Pinned public structured command
+aitable workflow update,aitable,mcp,write,medium,available,Pinned public structured command
+attendance adjustment get,attendance,mcp,read,low,available,Pinned public structured command
+attendance adjustment search,attendance,mcp,read,low,available,Pinned public structured command
+attendance approve list,attendance,mcp,read,low,available,Pinned public structured command
+attendance approve templates,attendance,mcp,read,low,available,Pinned public structured command
+attendance shift list,attendance,mcp,read,low,available,Pinned public structured command
+attendance boss-check,attendance,mcp,write,medium,available,Pinned public structured command
+attendance check record,attendance,mcp,read,low,available,Pinned public structured command
+attendance check result,attendance,mcp,read,low,available,Pinned public structured command
+attendance checkin records,attendance,mcp,read,low,available,Pinned public structured command
+attendance class create,attendance,mcp,write,medium,available,Pinned public structured command
+attendance class get,attendance,mcp,read,low,available,Pinned public structured command
+attendance class search,attendance,mcp,read,low,available,Pinned public structured command
+attendance class update,attendance,mcp,write,medium,available,Pinned public structured command
+attendance summary,attendance,mcp,read,low,available,Pinned public structured command
+attendance record get,attendance,mcp,read,low,available,Pinned public structured command
+attendance globalsetting get,attendance,mcp,read,low,available,Pinned public structured command
+attendance globalsetting save,attendance,mcp,write,medium,available,Pinned public structured command
+attendance group create,attendance,mcp,write,medium,available,Pinned public structured command
+attendance group filtered-get,attendance,mcp,read,low,available,Pinned public structured command
+attendance group get,attendance,mcp,read,low,available,Pinned public structured command
+attendance group search,attendance,mcp,read,low,available,Pinned public structured command
+attendance group update,attendance,mcp,write,medium,available,Pinned public structured command
+attendance group update-members,attendance,mcp,write,medium,available,Pinned public structured command
+attendance approve leave-check,attendance,mcp,read,low,available,Pinned public structured command
+attendance approve leave-duration,attendance,mcp,read,low,available,Pinned public structured command
+attendance approve leave-types,attendance,mcp,read,low,available,Pinned public structured command
+attendance overtime get,attendance,mcp,read,low,available,Pinned public structured command
+attendance overtime search,attendance,mcp,read,low,available,Pinned public structured command
+attendance rules,attendance,mcp,read,low,available,Pinned public structured command
+attendance report columns,attendance,mcp,read,low,available,Pinned public structured command
+attendance report query-data,attendance,mcp,read,low,available,Pinned public structured command
+attendance report query-leave,attendance,mcp,read,low,available,Pinned public structured command
+attendance schedule get,attendance,mcp,read,low,available,Pinned public structured command
+attendance schedule import,attendance,mcp,write,medium,available,Pinned public structured command
+attendance selfsetting get,attendance,mcp,read,low,available,Pinned public structured command
+attendance selfsetting save,attendance,mcp,write,medium,available,Pinned public structured command
+attendance +calculate-approve-duration,attendance,mcp,read,low,available,Pinned public structured command
+attendance +check-companion-schedules,attendance,mcp,read,low,available,Pinned public structured command
+attendance +check-record,attendance,mcp,read,low,available,Pinned public structured command
+attendance +check-result,attendance,mcp,read,low,available,Pinned public structured command
+attendance +get-adjustment-rule,attendance,mcp,read,low,available,Pinned public structured command
+attendance +get-approve-template,attendance,mcp,read,low,available,Pinned public structured command
+attendance +get-checkin-record,attendance,mcp,read,low,available,Pinned public structured command
+attendance +get-class,attendance,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+attendance +get-complex-overtime-setting,attendance,mcp,read,low,available,Pinned public structured command
+attendance +get-leave-records,attendance,mcp,read,low,available,Pinned public structured command
+attendance +get-overtime-rule,attendance,mcp,read,low,available,Pinned public structured command
+attendance +get-schedule,attendance,mcp,read,low,available,Pinned public structured command
+attendance +get-self-setting,attendance,mcp,read,low,available,Pinned public structured command
+attendance +get-summary,attendance,mcp,read,low,available,Pinned public structured command
+attendance +list-approve,attendance,mcp,read,low,available,Pinned public structured command
+attendance +list-leave-types,attendance,mcp,read,low,available,Pinned public structured command
+attendance +my-attendance,attendance,mcp,read,low,available,Pinned public structured command
+attendance +query-report-data,attendance,mcp,read,low,available,Pinned public structured command
+attendance +search-adjustment-rule,attendance,mcp,read,low,available,Pinned public structured command
+attendance +search-class,attendance,mcp,read,low,available,Pinned public structured command
+attendance +search-group,attendance,mcp,read,low,available,Pinned public structured command
+attendance +search-overtime-rule,attendance,mcp,read,low,available,Pinned public structured command
+attendance +this-month,attendance,mcp,read,low,available,Pinned public structured command
+attendance approve supply-check,attendance,mcp,read,low,available,Pinned public structured command
+attendance approve supply-plans,attendance,mcp,read,low,available,Pinned public structured command
+attendance vacation balance,attendance,mcp,read,low,available,Pinned public structured command
+attendance vacation records,attendance,mcp,read,low,available,Pinned public structured command
+attendance vacation save-balance,attendance,mcp,write,medium,available,Pinned public structured command
+attendance vacation types,attendance,mcp,read,low,available,Pinned public structured command
+attendance vacation update-type,attendance,mcp,write,medium,available,Pinned public structured command
+audit export,audit,mcp,read,low,available,Pinned public structured command
+audit tail,audit,mcp,read,low,available,Pinned public structured command
+audit verify,audit,mcp,read,low,available,Pinned public structured command
+calendar attachment add,calendar,mcp,write,medium,available,Pinned public structured command
+calendar attendee add,calendar,mcp,write,medium,available,Pinned public structured command
+calendar room add,calendar,mcp,write,medium,available,Pinned public structured command
+calendar event create,calendar,mcp,write,medium,available,Pinned public structured command
+calendar event delete,calendar,mcp,destructive,high,available,Pinned public structured command
+calendar room delete,calendar,mcp,write,high,available,Pinned public structured command
+calendar book get,calendar,mcp,read,low,available,Pinned public structured command
+calendar event get,calendar,mcp,read,low,available,Pinned public structured command
+calendar attendee list,calendar,mcp,read,low,available,Pinned public structured command
+calendar event share-info,calendar,mcp,read,low,available,Pinned public structured command
+calendar acl list,calendar,mcp,read,low,available,Pinned public structured command
+calendar event list,calendar,mcp,read,low,available,Pinned public structured command
+calendar book list,calendar,mcp,read,low,available,Pinned public structured command
+calendar event instances,calendar,mcp,read,low,available,Pinned public structured command
+calendar room list-groups,calendar,mcp,read,low,available,Pinned public structured command
+calendar event suggest,calendar,mcp,read,low,available,Pinned public structured command
+calendar room search,calendar,mcp,read,low,available,Pinned public structured command
+calendar busy search,calendar,mcp,read,low,available,Pinned public structured command
+calendar attendee delete,calendar,mcp,write,high,available,Pinned public structured command
+calendar event respond,calendar,mcp,write,medium,available,Pinned public structured command
+calendar book search,calendar,mcp,read,low,available,Pinned public structured command
+calendar +agenda,calendar,mcp,read,low,available,Pinned public structured command
+calendar +attendee-list,calendar,mcp,read,low,available,Pinned public structured command
+calendar +book,calendar,mcp,write,medium,available,Pinned public structured command
+calendar +book-list,calendar,mcp,read,low,available,Pinned public structured command
+calendar +book-search,calendar,mcp,read,low,available,Pinned public structured command
+calendar +cancel-event,calendar,mcp,destructive,high,available,Pinned public structured command
+calendar +conflicts,calendar,mcp,read,low,available,Pinned public structured command
+calendar +create,calendar,mcp,write,medium,available,Pinned public structured command
+calendar +free,calendar,mcp,read,low,available,Pinned public structured command
+calendar +free-slots,calendar,mcp,read,low,available,Pinned public structured command
+calendar +freebusy,calendar,mcp,read,low,available,Pinned public structured command
+calendar +get,calendar,mcp,read,low,available,Pinned public structured command
+calendar +invite,calendar,mcp,write,medium,available,Pinned public structured command
+calendar +my-free,calendar,mcp,read,low,available,Pinned public structured command
+calendar +next-event,calendar,mcp,read,low,available,Pinned public structured command
+calendar +reschedule,calendar,mcp,write,medium,available,Pinned public structured command
+calendar +room-find,calendar,mcp,read,low,available,Pinned public structured command
+calendar +room-groups,calendar,mcp,read,low,available,Pinned public structured command
+calendar +room-search,calendar,mcp,read,low,available,Pinned public structured command
+calendar +rsvp,calendar,mcp,write,medium,available,Pinned public structured command
+calendar +search-event,calendar,mcp,read,low,available,Pinned public structured command
+calendar +suggest-time,calendar,mcp,read,low,available,Pinned public structured command
+calendar +suggestion,calendar,mcp,read,low,available,Pinned public structured command
+calendar +today,calendar,mcp,read,low,available,Pinned public structured command
+calendar +tomorrow,calendar,mcp,read,low,available,Pinned public structured command
+calendar +update,calendar,mcp,write,medium,available,Pinned public structured command
+calendar +week,calendar,mcp,read,low,available,Pinned public structured command
+calendar event update,calendar,mcp,write,medium,available,Pinned public structured command
+chat category add-conv,chat,mcp,write,low,available,Pinned public structured command
+chat group-role add,chat,mcp,write,medium,available,Pinned public structured command
+chat message add-emoji,chat,mcp,write,medium,available,Pinned public structured command
+chat group members add,chat,mcp,write,medium,available,Pinned public structured command
+chat message add-favorite,chat,mcp,write,medium,available,Pinned public structured command
+chat group members add-bot,chat,mcp,write,medium,available,Pinned public structured command
+chat toolbar add,chat,mcp,write,low,available,Pinned public structured command
+chat message add-text-emotion,chat,mcp,write,medium,available,Pinned public structured command
+chat group audit-join-validation,chat,mcp,write,medium,available,Pinned public structured command
+chat group user-settings query,chat,mcp,read,low,available,Pinned public structured command
+chat group user-settings set,chat,mcp,write,medium,available,Pinned public structured command
+chat crypto decrypt,chat,mcp,write,medium,available,Pinned public structured command
+chat chmod,chat,mcp,write,high,available,Pinned public structured command
+chat data-auth cross-org,chat,mcp,write,high,available,Pinned public structured command
+chat clear-all-red-point,chat,mcp,write,medium,available,Pinned public structured command
+chat clear-messages,chat,mcp,destructive,high,available,Pinned public structured command
+chat clear-red-point,chat,mcp,write,low,available,Pinned public structured command
+chat message combine-forward,chat,mcp,write,medium,available,Pinned public structured command
+chat message send-a2ui-card,chat,mcp,write,medium,available,Pinned public structured command
+chat message send-card,chat,mcp,write,medium,available,Pinned public structured command
+chat category create,chat,mcp,write,low,available,Pinned public structured command
+chat toolbar create-custom,chat,mcp,write,medium,available,Pinned public structured command
+chat group create,chat,mcp,write,medium,available,Pinned public structured command
+chat group notice create,chat,mcp,write,medium,available,Pinned public structured command
+chat category create-smart,chat,mcp,write,medium,available,Pinned public structured command
+chat message create-text-emotion,chat,mcp,write,medium,available,Pinned public structured command
+chat thread create-group,chat,mcp,write,medium,available,Pinned public structured command
+chat category delete,chat,mcp,destructive,high,available,Pinned public structured command
+chat group dismiss,chat,mcp,destructive,high,available,Pinned public structured command
+chat message download-media,chat,mcp,read,low,available,Pinned public structured command
+chat group notice edit,chat,mcp,write,medium,available,Pinned public structured command
+chat message edit,chat,mcp,write,medium,available,Pinned public structured command
+chat emotion favorite,chat,mcp,write,medium,available,Pinned public structured command
+chat message forward,chat,mcp,write,medium,available,Pinned public structured command
+chat thread forward,chat,mcp,write,medium,available,Pinned public structured command
+chat category batch-info,chat,mcp,read,low,available,Pinned public structured command
+chat group get-by-group-id,chat,mcp,read,low,available,Pinned public structured command
+chat conversation-info,chat,mcp,read,low,available,Pinned public structured command
+chat group get-info-by-invite-url,chat,mcp,read,low,available,Pinned public structured command
+chat group invite-url,chat,mcp,read,low,available,Pinned public structured command
+chat group get-mute-config,chat,mcp,read,low,available,Pinned public structured command
+chat group notice get,chat,mcp,read,low,available,Pinned public structured command
+chat hide,chat,mcp,write,low,available,Pinned public structured command
+chat toolbar hide,chat,mcp,write,low,available,Pinned public structured command
+chat group join-by-group-id,chat,mcp,write,medium,available,Pinned public structured command
+chat group join-by-invite-url,chat,mcp,write,medium,available,Pinned public structured command
+chat list-all-conversations,chat,mcp,read,low,available,Pinned public structured command
+chat group list-join-validations,chat,mcp,read,low,available,Pinned public structured command
+chat toolbar list,chat,mcp,read,low,available,Pinned public structured command
+chat category list-by-conv,chat,mcp,read,low,available,Pinned public structured command
+chat message list,chat,mcp,read,low,available,Pinned public structured command
+chat category list-conversations,chat,mcp,read,low,available,Pinned public structured command
+chat group-role list,chat,mcp,read,low,available,Pinned public structured command
+chat group bots,chat,mcp,read,low,available,Pinned public structured command
+chat group members list-by-ids,chat,mcp,read,low,available,Pinned public structured command
+chat group notice list,chat,mcp,read,low,available,Pinned public structured command
+chat message list-direct,chat,mcp,read,low,available,Pinned public structured command
+chat message list-emotion-replies,chat,mcp,read,low,available,Pinned public structured command
+chat message list-favorites,chat,mcp,read,low,available,Pinned public structured command
+chat message list-by-ids,chat,mcp,read,low,available,Pinned public structured command
+chat group list-all,chat,mcp,read,low,available,Pinned public structured command
+chat group list-my-groups,chat,mcp,read,low,available,Pinned public structured command
+chat emotion list,chat,mcp,read,low,available,Pinned public structured command
+chat message list-pin-msg,chat,mcp,read,low,available,Pinned public structured command
+chat message list-focused,chat,mcp,read,low,available,Pinned public structured command
+chat thread list,chat,mcp,read,low,available,Pinned public structured command
+chat list-top-conversations,chat,mcp,read,low,available,Pinned public structured command
+chat thread list-replies,chat,mcp,read,low,available,Pinned public structured command
+chat category list,chat,mcp,read,low,available,Pinned public structured command
+chat mark-unread,chat,mcp,write,low,available,Pinned public structured command
+chat mark-read,chat,mcp,write,low,available,Pinned public structured command
+chat thread promote,chat,unavailable,write,medium,unavailable,Official fixed-version Schema marks this command unavailable or retired
+chat group-role query-user,chat,mcp,read,low,available,Pinned public structured command
+chat message query-send-status,chat,mcp,read,low,available,Pinned public structured command
+chat message read-status,chat,mcp,read,low,available,Pinned public structured command
+chat group quit,chat,mcp,write,medium,available,Pinned public structured command
+chat message recall,chat,mcp,write,medium,available,Pinned public structured command
+chat message recall-by-bot,chat,mcp,write,medium,available,Pinned public structured command
+chat category remove-conv,chat,mcp,write,low,available,Pinned public structured command
+chat group-role remove,chat,mcp,write,medium,available,Pinned public structured command
+chat toolbar remove-custom,chat,mcp,destructive,high,available,Pinned public structured command
+chat group-role remove-user,chat,mcp,write,medium,available,Pinned public structured command
+chat message remove-emoji,chat,mcp,write,medium,available,Pinned public structured command
+chat group members remove,chat,mcp,write,high,available,Pinned public structured command
+chat message remove-favorite,chat,mcp,write,medium,available,Pinned public structured command
+chat group members remove-bot,chat,mcp,write,medium,available,Pinned public structured command
+chat message remove-text-emotion,chat,mcp,write,medium,available,Pinned public structured command
+chat category rename,chat,mcp,write,low,available,Pinned public structured command
+chat message reply,chat,mcp,write,medium,available,Pinned public structured command
+chat thread reply,chat,mcp,write,medium,available,Pinned public structured command
+chat message list-mentions,chat,mcp,read,low,available,Pinned public structured command
+chat bot find,chat,mcp,read,low,available,Pinned public structured command
+chat search-common,chat,mcp,read,low,available,Pinned public structured command
+chat search,chat,mcp,read,low,available,Pinned public structured command
+chat message search-advanced,chat,mcp,read,low,available,Pinned public structured command
+chat message search,chat,mcp,read,low,available,Pinned public structured command
+chat message list-by-sender,chat,mcp,read,low,available,Pinned public structured command
+chat message list-all,chat,mcp,read,low,available,Pinned public structured command
+chat bot search,chat,mcp,read,low,available,Pinned public structured command
+chat message send-by-webhook,chat,mcp,write,medium,available,Pinned public structured command
+chat emotion send,chat,mcp,write,medium,available,Pinned public structured command
+chat message send,chat,mcp,write,medium,available,Pinned public structured command
+chat message send-by-bot,chat,mcp,write,medium,available,Pinned public structured command
+chat thread send,chat,mcp,write,medium,available,Pinned public structured command
+chat group-role set-user,chat,mcp,write,medium,available,Pinned public structured command
+chat group-mute-member,chat,mcp,write,medium,available,Pinned public structured command
+chat group-mute,chat,mcp,write,medium,available,Pinned public structured command
+chat message set-pin-msg,chat,mcp,write,medium,available,Pinned public structured command
+chat set-top,chat,mcp,write,medium,available,Pinned public structured command
+chat message set-top-msg,chat,mcp,write,medium,available,Pinned public structured command
+chat group share-invite,chat,mcp,write,medium,available,Pinned public structured command
+chat +recent-conversations,chat,mcp,read,low,available,Pinned public structured command
+chat +at-me,chat,mcp,read,low,available,Pinned public structured command
+chat +bot-find,chat,mcp,read,low,available,Pinned public structured command
+chat +bot-search,chat,mcp,read,low,available,Pinned public structured command
+chat +broadcast,chat,mcp,write,medium,available,Pinned public structured command
+chat +category-add-conversation,chat,mcp,write,medium,available,Pinned public structured command
+chat +category-create,chat,mcp,write,medium,available,Pinned public structured command
+chat +category-delete,chat,mcp,destructive,high,available,Pinned public structured command
+chat +category-list,chat,mcp,read,low,available,Pinned public structured command
+chat +category-list-conversations,chat,mcp,read,low,available,Pinned public structured command
+chat +category-remove-conversation,chat,mcp,write,medium,available,Pinned public structured command
+chat +category-rename,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-add-bot,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-audit-join,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-bots,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-create,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-dismiss,chat,mcp,destructive,high,available,Pinned public structured command
+chat +chat-get-by-id,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-invite-url,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-list,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-list-all,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-list-join-requests,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-list-mine,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-members-get,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-members-list,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-messages,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-mute,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-mute-member,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-quit,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-remove-bot,chat,mcp,destructive,high,available,Pinned public structured command
+chat +chat-role-add,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-role-list,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-role-query-user,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-role-remove,chat,mcp,destructive,high,available,Pinned public structured command
+chat +chat-role-remove-user,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-role-set-user,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-role-update,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-search,chat,mcp,read,low,available,Pinned public structured command
+chat +chat-set-admin,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-set-history,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-transfer-owner,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-update,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-update-alias,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-update-icon,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-update-nick,chat,mcp,write,medium,available,Pinned public structured command
+chat +chat-update-settings,chat,mcp,write,medium,available,Pinned public structured command
+chat +conversation-clear-all-red-point,chat,mcp,write,medium,available,Pinned public structured command
+chat +conversation-clear-messages,chat,mcp,destructive,high,available,Pinned public structured command
+chat +conversation-clear-red-point,chat,mcp,write,medium,available,Pinned public structured command
+chat +conversation-hide,chat,mcp,write,medium,available,Pinned public structured command
+chat +conversation-info,chat,mcp,read,low,available,Pinned public structured command
+chat +conversation-list,chat,mcp,read,low,available,Pinned public structured command
+chat +conversation-list-top,chat,mcp,read,low,available,Pinned public structured command
+chat +conversation-mark-read,chat,mcp,write,medium,available,Pinned public structured command
+chat +conversation-mark-unread,chat,mcp,write,medium,available,Pinned public structured command
+chat +conversation-mute,chat,mcp,write,medium,available,Pinned public structured command
+chat +conversation-set-top,chat,mcp,write,medium,available,Pinned public structured command
+chat +dm,chat,mcp,write,medium,available,Pinned public structured command
+chat +feed-group-query-item,chat,mcp,read,low,available,Pinned public structured command
+chat +feed-shortcut-create,chat,mcp,write,medium,available,Pinned public structured command
+chat +feed-shortcut-remove,chat,mcp,write,medium,available,Pinned public structured command
+chat +flag-cancel,chat,mcp,write,medium,available,Pinned public structured command
+chat +flag-create,chat,mcp,write,medium,available,Pinned public structured command
+chat +flag-list,chat,mcp,read,low,available,Pinned public structured command
+chat +group-members,chat,mcp,read,low,available,Pinned public structured command
+chat +messages-add-emoji,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-add-text-emotion,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-batch-recall-by-bot,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-batch-send-by-bot,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-combine-forward,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-create-text-emotion,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-edit,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-forward,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-forward-topic,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-list,chat,mcp,read,low,available,Pinned public structured command
+chat +messages-list-direct,chat,mcp,read,low,available,Pinned public structured command
+chat +messages-list-pin,chat,mcp,read,low,available,Pinned public structured command
+chat +messages-list-unread-conversations,chat,mcp,read,low,available,Pinned public structured command
+chat +messages-mget,chat,mcp,read,low,available,Pinned public structured command
+chat +messages-query-send-status,chat,mcp,read,low,available,Pinned public structured command
+chat +messages-read-status,chat,mcp,read,low,available,Pinned public structured command
+chat +messages-recall,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-recall-by-bot,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-remove-emoji,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-remove-text-emotion,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-reply,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-resource-download,chat,mcp,read,low,available,Pinned public structured command
+chat +messages-resource-url,chat,mcp,read,low,available,Pinned public structured command
+chat +messages-send,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-send-by-bot,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-send-by-webhook,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-send-card,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-set-pin,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-set-top,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-unset-pin,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-unset-top,chat,mcp,write,medium,available,Pinned public structured command
+chat +messages-update-card,chat,mcp,write,medium,available,Pinned public structured command
+chat +my-groups,chat,mcp,read,low,available,Pinned public structured command
+chat +search-msg,chat,mcp,read,low,available,Pinned public structured command
+chat +send-to-group,chat,mcp,write,medium,available,Pinned public structured command
+chat +thread-replies,chat,mcp,read,low,available,Pinned public structured command
+chat +unread-chats,chat,mcp,read,low,available,Pinned public structured command
+chat toolbar sort,chat,mcp,write,low,available,Pinned public structured command
+chat thread add-emoji,chat,mcp,write,medium,available,Pinned public structured command
+chat thread add-text-emotion,chat,mcp,write,medium,available,Pinned public structured command
+chat thread list-emotion-replies,chat,mcp,read,low,available,Pinned public structured command
+chat thread recall-message,chat,mcp,write,medium,available,Pinned public structured command
+chat thread remove-emoji,chat,mcp,write,medium,available,Pinned public structured command
+chat thread remove-text-emotion,chat,mcp,write,medium,available,Pinned public structured command
+chat thread update-text-emotion,chat,mcp,write,low,available,Pinned public structured command
+chat group transfer-owner,chat,mcp,write,medium,available,Pinned public structured command
+chat text translate,chat,mcp,read,low,available,Pinned public structured command
+chat message list-unread-conversations,chat,mcp,read,low,available,Pinned public structured command
+chat message unset-pin-msg,chat,mcp,write,medium,available,Pinned public structured command
+chat message unset-top-msg,chat,mcp,write,medium,available,Pinned public structured command
+chat message update-a2ui-card,chat,mcp,write,medium,available,Pinned public structured command
+chat mute-at-all,chat,mcp,write,low,available,Pinned public structured command
+chat group set-admin,chat,mcp,write,medium,available,Pinned public structured command
+chat group-role update,chat,mcp,write,medium,available,Pinned public structured command
+chat toolbar update-custom,chat,mcp,write,medium,available,Pinned public structured command
+chat group update-icon,chat,mcp,write,medium,available,Pinned public structured command
+chat group rename,chat,mcp,write,medium,available,Pinned public structured command
+chat group update-nick,chat,mcp,write,medium,available,Pinned public structured command
+chat group update-settings,chat,mcp,write,medium,available,Pinned public structured command
+chat mute,chat,mcp,write,medium,available,Pinned public structured command
+chat mute-red-envelope,chat,mcp,write,low,available,Pinned public structured command
+chat group set-history,chat,mcp,write,medium,available,Pinned public structured command
+chat message update-card,chat,mcp,write,medium,available,Pinned public structured command
+chat message update-text-emotion,chat,mcp,write,low,available,Pinned public structured command
+chat group update-alias,chat,mcp,write,low,available,Pinned public structured command
+chat group upgrade-to-external,chat,mcp,destructive,high,available,Pinned public structured command
+chat conversation-file upload,chat,mcp,write,medium,available,Pinned public structured command
+contact user invite,contact,mcp,write,medium,available,Pinned public structured command
+contact label create,contact,mcp,write,medium,available,Pinned public structured command
+contact label add-members,contact,mcp,write,medium,available,Pinned public structured command
+contact ext-field create,contact,mcp,write,medium,available,Pinned public structured command
+contact org apply-approve,contact,mcp,write,medium,available,Pinned public structured command
+contact org apply-block,contact,mcp,write,high,available,Pinned public structured command
+contact label delete,contact,mcp,write,high,available,Pinned public structured command
+contact dept create,contact,mcp,write,medium,available,Pinned public structured command
+contact dept update,contact,mcp,write,medium,available,Pinned public structured command
+contact user update,contact,mcp,write,medium,available,Pinned public structured command
+contact account create,contact,mcp,write,medium,available,Pinned public structured command
+contact exclusive-account disable,contact,mcp,write,medium,available,Pinned public structured command
+contact exclusive-account enable,contact,mcp,write,medium,available,Pinned public structured command
+contact account update,contact,mcp,write,medium,available,Pinned public structured command
+contact user profile get,contact,mcp,read,low,available,Pinned public structured command
+contact user get-self,contact,mcp,read,low,available,Pinned public structured command
+contact dept get-info,contact,mcp,read,low,available,Pinned public structured command
+contact dept list-members,contact,mcp,read,low,available,Pinned public structured command
+contact user get-open-dingtalk-id,contact,mcp,read,low,available,Pinned public structured command
+contact ext-field list,contact,mcp,read,low,available,Pinned public structured command
+contact org invite-info,contact,mcp,read,low,available,Pinned public structured command
+contact dept list-children,contact,mcp,read,low,available,Pinned public structured command
+contact user get-by-dingtalk-id,contact,mcp,read,low,available,Pinned public structured command
+contact user get-by-open-dingtalk-id,contact,mcp,read,low,available,Pinned public structured command
+contact user get,contact,mcp,read,low,available,Pinned public structured command
+contact user profile fields,contact,mcp,read,low,available,Pinned public structured command
+contact relation list-my-followings,contact,mcp,read,low,available,Pinned public structured command
+contact org invite-list,contact,mcp,read,low,available,Pinned public structured command
+contact org create,contact,mcp,write,medium,available,Pinned public structured command
+contact user dismission search,contact,mcp,read,low,available,Pinned public structured command
+contact org apply-list,contact,mcp,write,low,available,Pinned public structured command
+contact org apply-reject,contact,mcp,write,medium,available,Pinned public structured command
+contact label remove-members,contact,mcp,write,medium,available,Pinned public structured command
+contact org apply-remove,contact,mcp,destructive,high,available,Pinned public structured command
+contact ext-field delete,contact,mcp,write,high,available,Pinned public structured command
+contact user search,contact,mcp,read,low,available,Pinned public structured command
+contact dept search,contact,mcp,read,low,available,Pinned public structured command
+contact user search-mobile,contact,mcp,read,low,available,Pinned public structured command
+contact user update-self,contact,mcp,write,medium,available,Pinned public structured command
+contact dept invite-audit,contact,mcp,write,medium,available,Pinned public structured command
+contact org invite-audit,contact,mcp,write,medium,available,Pinned public structured command
+contact org invite-switch,contact,mcp,write,medium,available,Pinned public structured command
+contact +friend-request-accept,contact,mcp,write,medium,available,Pinned public structured command
+contact +by-mobile,contact,mcp,read,low,available,Pinned public structured command
+contact +dept-members,contact,mcp,read,low,available,Pinned public structured command
+contact +get-roster,contact,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+contact +list-dept-members,contact,mcp,read,low,available,Pinned public structured command
+contact +list-followings,contact,mcp,read,low,available,Pinned public structured command
+contact +friend-request-list,contact,mcp,read,low,available,Pinned public structured command
+contact +friend-list,contact,mcp,read,low,available,Pinned public structured command
+contact +list-role-members,contact,mcp,read,low,available,Pinned public structured command
+contact +list-roles,contact,mcp,read,low,available,Pinned public structured command
+contact +list-roster-fields,contact,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+contact +list-sub-depts,contact,mcp,read,low,available,Pinned public structured command
+contact +lookup,contact,mcp,read,low,available,Pinned public structured command
+contact +me,contact,mcp,read,low,available,Pinned public structured command
+contact +org,contact,mcp,read,low,available,Pinned public structured command
+contact +friend-request-reject,contact,mcp,write,medium,available,Pinned public structured command
+contact +friend-remove,contact,mcp,write,high,available,Pinned public structured command
+contact +resolve-dept,contact,mcp,read,low,available,Pinned public structured command
+contact +search-mobile,contact,mcp,read,low,available,Pinned public structured command
+contact +search-user,contact,mcp,read,low,available,Pinned public structured command
+contact +friend-request-send,contact,mcp,write,medium,available,Pinned public structured command
+contact +team,contact,mcp,read,low,available,Pinned public structured command
+contact label update,contact,mcp,write,medium,available,Pinned public structured command
+contact label update-member-scope,contact,mcp,write,medium,available,Pinned public structured command
+contact ext-field update,contact,mcp,write,medium,available,Pinned public structured command
+contact user update-ownness,contact,mcp,write,medium,available,Pinned public structured command
+contract account create,contract,mcp,write,medium,available,Pinned public structured command
+contract account delete,contract,mcp,destructive,high,available,Pinned public structured command
+contract account get,contract,mcp,read,low,available,Pinned public structured command
+contract account list,contract,mcp,read,low,available,Pinned public structured command
+contract account update,contract,mcp,write,medium,available,Pinned public structured command
+contract archive,contract,mcp,destructive,high,available,Pinned public structured command
+contract draft,contract,mcp,write,medium,available,Pinned public structured command
+contract file-directories,contract,mcp,read,low,available,Pinned public structured command
+contract import batch,contract,mcp,write,medium,available,Pinned public structured command
+contract import batch-result,contract,mcp,read,low,available,Pinned public structured command
+contract process-templates,contract,mcp,read,low,available,Pinned public structured command
+contract project add,contract,mcp,write,medium,available,Pinned public structured command
+contract project delete,contract,mcp,destructive,high,available,Pinned public structured command
+contract project detail,contract,mcp,read,low,available,Pinned public structured command
+contract project digests,contract,mcp,read,low,available,Pinned public structured command
+contract project export,contract,mcp,read,low,available,Pinned public structured command
+contract project import,contract,mcp,write,medium,available,Pinned public structured command
+contract project import-result,contract,mcp,read,low,available,Pinned public structured command
+contract project import-template,contract,mcp,read,low,available,Pinned public structured command
+contract project list,contract,mcp,read,low,available,Pinned public structured command
+contract project set-status,contract,mcp,write,medium,available,Pinned public structured command
+contract project update,contract,mcp,write,medium,available,Pinned public structured command
+contract record create,contract,mcp,write,medium,available,Pinned public structured command
+contract record get,contract,mcp,read,low,available,Pinned public structured command
+contract record list,contract,mcp,read,low,available,Pinned public structured command
+contract record quantity-by-type,contract,mcp,read,low,available,Pinned public structured command
+contract review analysis,contract,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+contract review benefit,contract,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+contract review create,contract,unavailable,write,medium,unavailable,Official fixed-version Schema marks this command unavailable or retired
+contract review result,contract,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+contract subject add,contract,mcp,write,medium,available,Pinned public structured command
+contract subject auto-fill,contract,mcp,read,low,available,Pinned public structured command
+contract subject base-info,contract,mcp,read,low,available,Pinned public structured command
+contract subject batch-delete,contract,mcp,destructive,high,available,Pinned public structured command
+contract subject delete,contract,mcp,destructive,high,available,Pinned public structured command
+contract subject detail,contract,mcp,read,low,available,Pinned public structured command
+contract subject detect-risk,contract,mcp,read,low,available,Pinned public structured command
+contract subject export,contract,mcp,read,low,available,Pinned public structured command
+contract subject import,contract,mcp,write,medium,available,Pinned public structured command
+contract subject import-result,contract,mcp,read,low,available,Pinned public structured command
+contract subject import-template,contract,mcp,read,low,available,Pinned public structured command
+contract subject list,contract,mcp,read,low,available,Pinned public structured command
+contract subject sort,contract,mcp,write,medium,available,Pinned public structured command
+contract subject update,contract,mcp,write,medium,available,Pinned public structured command
+dev app member add,dev,mcp,write,high,available,Pinned public structured command
+dev app permission add,dev,mcp,write,high,available,Pinned public structured command
+dev connect,dev,local_workflow,write,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev connect list,dev,mcp,read,low,available,Pinned public structured command
+dev connect restart,dev,mcp,destructive,high,available,Pinned public structured command
+dev connect status,dev,mcp,write,medium,available,Pinned public structured command
+dev connect stop,dev,mcp,write,medium,available,Pinned public structured command
+dev app create,dev,mcp,write,high,available,Pinned public structured command
+dev app version create,dev,mcp,write,high,available,Pinned public structured command
+dev liteapp create,dev,mcp,write,medium,available,Pinned public structured command
+dev app delete,dev,mcp,destructive,high,available,Pinned public structured command
+dev liteapp delete,dev,mcp,destructive,high,available,Pinned public structured command
+dev app disable,dev,mcp,write,high,available,Pinned public structured command
+dev app robot disable,dev,mcp,write,high,available,Pinned public structured command
+dev app enable,dev,mcp,write,high,available,Pinned public structured command
+dev app robot enable,dev,mcp,write,high,available,Pinned public structured command
+dev app get,dev,mcp,read,low,available,Pinned public structured command
+dev app credentials get,dev,local_workflow,read,low,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev app scope get,dev,mcp,read,low,available,Pinned public structured command
+dev app version get,dev,mcp,read,low,available,Pinned public structured command
+dev app version status,dev,mcp,read,low,available,Pinned public structured command
+dev app robot get,dev,mcp,read,low,available,Pinned public structured command
+dev app webapp get,dev,mcp,read,low,available,Pinned public structured command
+dev liteapp credential,dev,local_workflow,read,high,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev liteapp detail,dev,mcp,read,low,available,Pinned public structured command
+dev app list,dev,mcp,read,low,available,Pinned public structured command
+dev app event list,dev,mcp,read,low,available,Pinned public structured command
+dev app member list,dev,mcp,read,low,available,Pinned public structured command
+dev app permission list,dev,mcp,read,low,available,Pinned public structured command
+dev app version list,dev,mcp,read,low,available,Pinned public structured command
+dev liteapp list,dev,mcp,read,low,available,Pinned public structured command
+dev mcp auth get,dev,local_workflow,read,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev mcp auth save,dev,local_workflow,write,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev mcp credential bind,dev,local_workflow,write,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev mcp credential debug,dev,local_workflow,write,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev mcp credential delete,dev,local_workflow,destructive,high,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev mcp credential get,dev,local_workflow,read,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev mcp credential list,dev,local_workflow,read,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev mcp credential save,dev,local_workflow,write,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev mcp credential unbind,dev,local_workflow,write,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dev mcp hsf method-list,dev,mcp,read,medium,available,Pinned public structured command
+dev mcp member add,dev,mcp,write,medium,available,Pinned public structured command
+dev mcp member list,dev,mcp,read,medium,available,Pinned public structured command
+dev mcp member remove,dev,mcp,destructive,high,available,Pinned public structured command
+dev mcp url get,dev,mcp,read,medium,available,Pinned public structured command
+dev mcp service create,dev,mcp,write,medium,available,Pinned public structured command
+dev mcp service delete,dev,mcp,destructive,high,available,Pinned public structured command
+dev mcp service get,dev,mcp,read,medium,available,Pinned public structured command
+dev mcp service list,dev,mcp,read,medium,available,Pinned public structured command
+dev mcp service update,dev,mcp,write,medium,available,Pinned public structured command
+dev mcp tool create-hsf,dev,mcp,write,medium,available,Pinned public structured command
+dev mcp tool create,dev,mcp,write,medium,available,Pinned public structured command
+dev mcp tool debug,dev,mcp,write,medium,available,Pinned public structured command
+dev mcp tool delete,dev,mcp,destructive,high,available,Pinned public structured command
+dev mcp tool get,dev,mcp,read,medium,available,Pinned public structured command
+dev mcp tool list,dev,mcp,read,medium,available,Pinned public structured command
+dev mcp tool publish,dev,mcp,write,medium,available,Pinned public structured command
+dev mcp tool update-hsf,dev,mcp,write,medium,available,Pinned public structured command
+dev mcp tool update,dev,mcp,write,medium,available,Pinned public structured command
+dev mcp tool versions,dev,mcp,read,medium,available,Pinned public structured command
+dev app version publish,dev,mcp,write,high,available,Pinned public structured command
+dev app robot result,dev,mcp,read,low,available,Pinned public structured command
+dev app member remove,dev,mcp,write,high,available,Pinned public structured command
+dev app permission remove,dev,mcp,write,high,available,Pinned public structured command
+dev doc search,dev,mcp,read,low,available,Pinned public structured command
+dev app scope set,dev,mcp,write,high,available,Pinned public structured command
+dev app robot config,dev,mcp,write,high,available,Pinned public structured command
+dev app webapp config,dev,mcp,write,high,available,Pinned public structured command
+dev app robot submit,dev,mcp,write,high,available,Pinned public structured command
+dev app event subscribe,dev,mcp,write,high,available,Pinned public structured command
+dev app event unsubscribe,dev,mcp,write,high,available,Pinned public structured command
+dev app update,dev,mcp,write,high,available,Pinned public structured command
+dev app security config,dev,mcp,write,high,available,Pinned public structured command
+dev liteapp update,dev,mcp,write,medium,available,Pinned public structured command
+dev app version check-approval,dev,mcp,read,low,available,Pinned public structured command
+devapp +create,devapp,mcp,write,medium,available,Pinned public structured command
+devapp +credentials-get,devapp,local_workflow,read,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+devapp +delete,devapp,mcp,destructive,high,available,Pinned public structured command
+devapp +disable,devapp,mcp,destructive,high,available,Pinned public structured command
+devapp +enable,devapp,mcp,write,medium,available,Pinned public structured command
+devapp +event-list,devapp,mcp,read,low,available,Pinned public structured command
+devapp +event-subscribe,devapp,mcp,write,medium,available,Pinned public structured command
+devapp +get,devapp,mcp,read,low,available,Pinned public structured command
+devapp +list,devapp,mcp,read,low,available,Pinned public structured command
+devapp +member-add,devapp,mcp,write,medium,available,Pinned public structured command
+devapp +member-list,devapp,mcp,read,low,available,Pinned public structured command
+devapp +member-remove,devapp,mcp,destructive,high,available,Pinned public structured command
+devapp +permission-list,devapp,mcp,read,low,available,Pinned public structured command
+devapp +robot-config,devapp,mcp,write,medium,available,Pinned public structured command
+devapp +robot-disable,devapp,mcp,destructive,high,available,Pinned public structured command
+devapp +robot-enable,devapp,mcp,write,medium,available,Pinned public structured command
+devapp +robot-get,devapp,mcp,read,low,available,Pinned public structured command
+devapp +update,devapp,mcp,write,medium,available,Pinned public structured command
+devapp +version-check-approval,devapp,mcp,read,low,available,Pinned public structured command
+devapp +version-create,devapp,mcp,write,medium,available,Pinned public structured command
+devapp +version-get,devapp,mcp,read,low,available,Pinned public structured command
+devapp +version-list,devapp,mcp,read,low,available,Pinned public structured command
+devapp +version-status,devapp,mcp,read,low,available,Pinned public structured command
+devapp +webapp-config,devapp,mcp,write,medium,available,Pinned public structured command
+devapp +webapp-get,devapp,mcp,read,low,available,Pinned public structured command
+devdoc article search,devdoc,mcp,read,low,available,Pinned public structured command
+devdoc +search-docs,devdoc,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+ding message recall,ding,mcp,write,medium,available,Pinned public structured command
+ding message send,ding,mcp,write,medium,available,Pinned public structured command
+ding +list,ding,mcp,read,low,available,Pinned public structured command
+ding +recall-personal,ding,mcp,destructive,high,available,Pinned public structured command
+ding +receiver-status,ding,mcp,read,low,available,Pinned public structured command
+ding +send-by-message,ding,unavailable,write,medium,unavailable,Official fixed-version Schema marks this command unavailable or retired
+ding +send-personal,ding,mcp,write,medium,available,Pinned public structured command
+dingtalk-tag channel binding,dingtalk-tag,local_workflow,read,low,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dingtalk-tag channel capabilities,dingtalk-tag,local_workflow,read,low,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dingtalk-tag channel operator-private,dingtalk-tag,local_workflow,write,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dingtalk-tag channel reply,dingtalk-tag,local_workflow,write,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dingtalk-tag connect,dingtalk-tag,local_workflow,write,high,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dingtalk-tag connect list,dingtalk-tag,mcp,read,medium,available,Pinned public structured command
+dingtalk-tag connect restart,dingtalk-tag,mcp,write,medium,available,Pinned public structured command
+dingtalk-tag connect status,dingtalk-tag,mcp,read,medium,available,Pinned public structured command
+dingtalk-tag connect stop,dingtalk-tag,mcp,write,medium,available,Pinned public structured command
+dingtalk-tag connect unbind,dingtalk-tag,mcp,write,high,available,Pinned public structured command
+dingtalk-tag manage create,dingtalk-tag,mcp,write,medium,available,Pinned public structured command
+dingtalk-tag capability mcp create,dingtalk-tag,mcp,write,high,available,Pinned public structured command
+dingtalk-tag capability skill create,dingtalk-tag,mcp,write,high,available,Pinned public structured command
+dingtalk-tag manage delete,dingtalk-tag,mcp,destructive,high,available,Pinned public structured command
+dingtalk-tag capability mcp delete,dingtalk-tag,mcp,write,high,available,Pinned public structured command
+dingtalk-tag capability skill delete,dingtalk-tag,mcp,write,high,available,Pinned public structured command
+dingtalk-tag manage detail,dingtalk-tag,mcp,read,low,available,Pinned public structured command
+dingtalk-tag capability mcp query,dingtalk-tag,mcp,read,low,available,Pinned public structured command
+dingtalk-tag capability skill query,dingtalk-tag,mcp,read,low,available,Pinned public structured command
+dingtalk-tag manage list,dingtalk-tag,mcp,read,low,available,Pinned public structured command
+dingtalk-tag capability mcp list,dingtalk-tag,mcp,read,low,available,Pinned public structured command
+dingtalk-tag capability skill list,dingtalk-tag,mcp,read,low,available,Pinned public structured command
+dingtalk-tag manage login,dingtalk-tag,local_workflow,write,high,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+dingtalk-tag manage publish,dingtalk-tag,mcp,write,high,available,Pinned public structured command
+dingtalk-tag run run-status,dingtalk-tag,mcp,read,low,available,Pinned public structured command
+dingtalk-tag run trace,dingtalk-tag,mcp,read,high,available,Pinned public structured command
+dingtalk-tag manage set-visibility,dingtalk-tag,mcp,write,high,available,Pinned public structured command
+dingtalk-tag manage save-draft,dingtalk-tag,mcp,write,high,available,Pinned public structured command
+dingtalk-tag capability mcp update,dingtalk-tag,mcp,write,high,available,Pinned public structured command
+dingtalk-tag capability skill update,dingtalk-tag,mcp,write,high,available,Pinned public structured command
+doc permission add,doc,mcp,write,medium,available,Pinned public structured command
+doc comment batch-query,doc,mcp,read,low,available,Pinned public structured command
+doc copy,doc,mcp,write,medium,available,Pinned public structured command
+doc comment create,doc,mcp,write,medium,available,Pinned public structured command
+doc create,doc,mcp,write,medium,available,Pinned public structured command
+doc file create,doc,mcp,write,medium,available,Pinned public structured command
+doc folder create,doc,mcp,write,medium,available,Pinned public structured command
+doc comment create-inline,doc,mcp,write,medium,available,Pinned public structured command
+doc comment delete,doc,mcp,write,medium,available,Pinned public structured command
+doc delete,doc,mcp,destructive,high,available,Pinned public structured command
+doc block delete,doc,mcp,destructive,high,available,Pinned public structured command
+doc media download,doc,mcp,read,low,available,Pinned public structured command
+doc download,doc,mcp,read,low,available,Pinned public structured command
+doc read,doc,mcp,read,low,available,Pinned public structured command
+doc info,doc,mcp,read,low,available,Pinned public structured command
+doc style get,doc,mcp,read,low,available,Pinned public structured command
+doc import get,doc,mcp,write,medium,available,Pinned public structured command
+doc block insert,doc,mcp,write,medium,available,Pinned public structured command
+doc comment list,doc,mcp,read,low,available,Pinned public structured command
+doc block list,doc,mcp,read,low,available,Pinned public structured command
+doc list,doc,mcp,read,low,available,Pinned public structured command
+doc permission list,doc,mcp,read,low,available,Pinned public structured command
+doc comment list-replies,doc,mcp,read,low,available,Pinned public structured command
+doc media insert,doc,mcp,write,medium,available,Pinned public structured command
+doc media upload,doc,mcp,write,medium,available,Pinned public structured command
+doc move,doc,mcp,write,medium,available,Pinned public structured command
+doc export get,doc,mcp,read,low,available,Pinned public structured command
+doc comment react-reply,doc,mcp,write,low,available,Pinned public structured command
+doc permission remove,doc,mcp,write,medium,available,Pinned public structured command
+doc rename,doc,mcp,write,medium,available,Pinned public structured command
+doc comment reply,doc,mcp,write,medium,available,Pinned public structured command
+doc comment resolve,doc,mcp,write,low,available,Pinned public structured command
+doc comment restore,doc,mcp,write,low,available,Pinned public structured command
+doc search,doc,mcp,read,low,available,Pinned public structured command
+doc +access-change,doc,mcp,write,medium,available,Pinned public structured command
+doc +access-grant,doc,mcp,write,medium,available,Pinned public structured command
+doc +access-revoke,doc,mcp,destructive,high,available,Pinned public structured command
+doc +background-delete,doc,mcp,write,medium,available,Pinned public structured command
+doc +background-update,doc,mcp,write,low,available,Pinned public structured command
+doc +checkpoint-update,doc,mcp,write,medium,available,Pinned public structured command
+doc +comment-create,doc,mcp,write,medium,available,Pinned public structured command
+doc +comment-delete,doc,mcp,destructive,high,available,Pinned public structured command
+doc +comment-list,doc,mcp,read,low,available,Pinned public structured command
+doc +comment-reply,doc,mcp,write,medium,available,Pinned public structured command
+doc +comment-update,doc,mcp,write,medium,available,Pinned public structured command
+doc +copy,doc,mcp,write,medium,available,Pinned public structured command
+doc +create,doc,mcp,write,medium,available,Pinned public structured command
+doc +create-from-template,doc,mcp,write,medium,available,Pinned public structured command
+doc +create-with-media,doc,mcp,write,medium,available,Pinned public structured command
+doc +doc-append,doc,mcp,write,medium,available,Pinned public structured command
+doc +download-overwrite,doc,mcp,write,medium,available,Pinned public structured command
+doc +export,doc,mcp,read,low,available,Pinned public structured command
+doc +export-get,doc,mcp,read,low,available,Pinned public structured command
+doc +export-submit,doc,mcp,read,low,available,Pinned public structured command
+doc +fetch,doc,mcp,read,low,available,Pinned public structured command
+doc +find-doc,doc,mcp,read,low,available,Pinned public structured command
+doc +grant-and-share,doc,mcp,write,medium,available,Pinned public structured command
+doc +history-list,doc,mcp,read,low,available,Pinned public structured command
+doc +history-revert,doc,mcp,destructive,high,available,Pinned public structured command
+doc +history-save,doc,mcp,write,medium,available,Pinned public structured command
+doc +import,doc,mcp,write,medium,available,Pinned public structured command
+doc +inspect,doc,mcp,read,low,available,Pinned public structured command
+doc +list,doc,mcp,read,low,available,Pinned public structured command
+doc +media-download,doc,mcp,read,low,available,Pinned public structured command
+doc +media-insert,doc,mcp,write,medium,available,Pinned public structured command
+doc +media-list,doc,mcp,read,low,available,Pinned public structured command
+doc +media-preview,doc,mcp,read,low,available,Pinned public structured command
+doc +media-upload,doc,mcp,write,medium,available,Pinned public structured command
+doc +move,doc,mcp,write,medium,available,Pinned public structured command
+doc +resource-delete,doc,mcp,destructive,high,available,Pinned public structured command
+doc +resource-download,doc,mcp,read,low,available,Pinned public structured command
+doc +resource-update,doc,mcp,write,medium,available,Pinned public structured command
+doc +review,doc,mcp,read,low,available,Pinned public structured command
+doc +script,doc,mcp,write,low,available,Pinned public structured command
+doc +search,doc,mcp,read,low,available,Pinned public structured command
+doc +share,doc,mcp,write,medium,available,Pinned public structured command
+doc +share-doc,doc,mcp,write,medium,available,Pinned public structured command
+doc +template-list,doc,mcp,read,low,available,Pinned public structured command
+doc +template-search,doc,mcp,read,low,available,Pinned public structured command
+doc +update,doc,mcp,write,medium,available,Pinned public structured command
+doc +version-list,doc,mcp,read,low,available,Pinned public structured command
+doc +version-revert,doc,mcp,destructive,high,available,Pinned public structured command
+doc +version-save,doc,mcp,write,medium,available,Pinned public structured command
+doc style background clear,doc,mcp,write,low,available,Pinned public structured command
+doc style background set,doc,mcp,write,low,available,Pinned public structured command
+doc style cover clear,doc,mcp,write,low,available,Pinned public structured command
+doc style cover set,doc,mcp,write,low,available,Pinned public structured command
+doc template apply,doc,mcp,write,medium,available,Pinned public structured command
+doc template list,doc,mcp,read,low,available,Pinned public structured command
+doc template search,doc,mcp,read,low,available,Pinned public structured command
+doc comment update,doc,mcp,write,medium,available,Pinned public structured command
+doc update,doc,mcp,write,medium,available,Pinned public structured command
+doc block update,doc,mcp,write,medium,available,Pinned public structured command
+doc permission update,doc,mcp,write,high,available,Pinned public structured command
+doc upload,doc,mcp,write,medium,available,Pinned public structured command
+doc version list,doc,mcp,read,low,available,Pinned public structured command
+doc version revert,doc,mcp,write,medium,available,Pinned public structured command
+doc version save,doc,mcp,write,medium,available,Pinned public structured command
+doc whiteboard insert,doc,mcp,write,medium,available,Pinned public structured command
+drive permission add,drive,mcp,write,medium,available,Pinned public structured command
+drive permission apply,drive,mcp,write,medium,available,Pinned public structured command
+drive comment batch-query,drive,mcp,read,low,available,Pinned public structured command
+drive commit,drive,mcp,write,medium,available,Pinned public structured command
+drive copy,drive,mcp,write,medium,available,Pinned public structured command
+drive comment create-v2,drive,mcp,write,medium,available,Pinned public structured command
+drive comment create,drive,mcp,write,medium,available,Pinned public structured command
+drive mkdir,drive,mcp,write,medium,available,Pinned public structured command
+drive shortcut,drive,mcp,write,medium,available,Pinned public structured command
+drive comment delete,drive,mcp,write,medium,available,Pinned public structured command
+drive delete,drive,mcp,destructive,high,available,Pinned public structured command
+drive download,drive,mcp,read,low,available,Pinned public structured command
+drive download-version,drive,mcp,read,low,available,Pinned public structured command
+drive export,drive,mcp,read,low,available,Pinned public structured command
+drive pull,drive,mcp,write,high,available,Pinned public structured command
+drive push,drive,mcp,write,high,available,Pinned public structured command
+drive status,drive,mcp,read,low,available,Pinned public structured command
+drive sync,drive,mcp,write,high,available,Pinned public structured command
+drive cover,drive,mcp,read,low,available,Pinned public structured command
+drive info,drive,mcp,read,low,available,Pinned public structured command
+drive stats,drive,mcp,read,low,available,Pinned public structured command
+drive permission get-setting,drive,mcp,read,low,available,Pinned public structured command
+drive star list,drive,mcp,read,low,available,Pinned public structured command
+drive quota,drive,mcp,read,low,available,Pinned public structured command
+drive upload-info,drive,mcp,read,low,available,Pinned public structured command
+drive comment list-v2,drive,mcp,read,low,available,Pinned public structured command
+drive comment list,drive,mcp,read,low,available,Pinned public structured command
+drive list,drive,mcp,read,low,available,Pinned public structured command
+drive permission list,drive,mcp,read,low,available,Pinned public structured command
+drive comment list-replies,drive,mcp,read,low,available,Pinned public structured command
+drive list-spaces,drive,mcp,read,low,available,Pinned public structured command
+drive quota apps,drive,mcp,read,low,available,Pinned public structured command
+drive star add,drive,mcp,write,low,available,Pinned public structured command
+drive move,drive,mcp,write,medium,available,Pinned public structured command
+drive permission remove,drive,mcp,write,medium,available,Pinned public structured command
+drive permission update,drive,mcp,write,medium,available,Pinned public structured command
+drive publish get,drive,mcp,read,low,available,Pinned public structured command
+drive publish set,drive,unavailable,write,medium,unavailable,Official fixed-version Schema marks this command unavailable or retired
+drive publish unset,drive,mcp,write,medium,available,Pinned public structured command
+drive export get,drive,mcp,read,low,available,Pinned public structured command
+drive permission apply-info,drive,mcp,read,low,available,Pinned public structured command
+drive task get,drive,mcp,read,low,available,Pinned public structured command
+drive comment react-reply,drive,mcp,write,low,available,Pinned public structured command
+drive recent,drive,mcp,read,low,available,Pinned public structured command
+drive recycle list,drive,mcp,read,low,available,Pinned public structured command
+drive recycle restore,drive,mcp,write,medium,available,Pinned public structured command
+drive rename,drive,mcp,write,medium,available,Pinned public structured command
+drive comment reply,drive,mcp,write,low,available,Pinned public structured command
+drive comment resolve,drive,mcp,write,low,available,Pinned public structured command
+drive comment restore,drive,mcp,write,low,available,Pinned public structured command
+drive revert,drive,mcp,write,medium,available,Pinned public structured command
+drive search,drive,mcp,read,low,available,Pinned public structured command
+drive permission set-share-scope,drive,mcp,write,high,available,Pinned public structured command
+drive +copy,drive,mcp,write,medium,available,Pinned public structured command
+drive +cover,drive,mcp,read,low,available,Pinned public structured command
+drive +create-folder,drive,mcp,write,medium,available,Pinned public structured command
+drive +create-shortcut,drive,mcp,write,medium,available,Pinned public structured command
+drive +delete,drive,mcp,destructive,high,available,Pinned public structured command
+drive +download,drive,mcp,read,low,available,Pinned public structured command
+drive +find-file,drive,mcp,read,low,available,Pinned public structured command
+drive +info,drive,mcp,read,low,available,Pinned public structured command
+drive +inspect,drive,mcp,read,low,available,Pinned public structured command
+drive +list,drive,mcp,read,low,available,Pinned public structured command
+drive +move,drive,mcp,write,medium,available,Pinned public structured command
+drive +publish-get,drive,mcp,read,low,available,Pinned public structured command
+drive +publish-set,drive,unavailable,write,high,unavailable,Official fixed-version Schema marks this command unavailable or retired
+drive +publish-unset,drive,mcp,write,high,available,Pinned public structured command
+drive +recent,drive,mcp,read,low,available,Pinned public structured command
+drive +recycle-list,drive,mcp,read,low,available,Pinned public structured command
+drive +recycle-restore,drive,mcp,write,medium,available,Pinned public structured command
+drive +rename,drive,mcp,write,medium,available,Pinned public structured command
+drive +search,drive,mcp,read,low,available,Pinned public structured command
+drive +search-docs,drive,mcp,read,low,available,Pinned public structured command
+drive +star-add,drive,mcp,write,low,available,Pinned public structured command
+drive +star-list,drive,mcp,read,low,available,Pinned public structured command
+drive +star-remove,drive,mcp,write,low,available,Pinned public structured command
+drive +stats,drive,mcp,read,low,available,Pinned public structured command
+drive +upload,drive,mcp,write,medium,available,Pinned public structured command
+drive +version-download,drive,mcp,read,low,available,Pinned public structured command
+drive +version-get,drive,mcp,read,low,available,Pinned public structured command
+drive +version-history,drive,mcp,read,low,available,Pinned public structured command
+drive +version-revert,drive,mcp,write,high,available,Pinned public structured command
+drive permission transfer-owner,drive,mcp,write,high,available,Pinned public structured command
+drive star remove,drive,mcp,write,low,available,Pinned public structured command
+drive comment update,drive,mcp,write,low,available,Pinned public structured command
+drive upload,drive,mcp,write,medium,available,Pinned public structured command
+event consume,event,event_adapter,write,medium,available,Bounded NDJSON event adapter with graceful shutdown and owned-subscription cleanup
+event list,event,mcp,read,low,available,Pinned public structured command
+event +listen-im,event,event_adapter,write,medium,available,Bounded NDJSON event adapter with graceful shutdown and owned-subscription cleanup
+event schema,event,mcp,read,low,available,Pinned public structured command
+event status,event,mcp,read,low,available,Pinned public structured command
+event stop,event,mcp,destructive,high,available,Pinned public structured command
+hrbrain talent-pool save,hrbrain,mcp,write,medium,available,Pinned public structured command
+hrbrain talent-pool move-members,hrbrain,mcp,write,medium,available,Pinned public structured command
+hrbrain profile career,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain profile performance,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain profile labels,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain profile metadata,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain search fields,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain talent-pool detail,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain talent-pool employees,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain talent-pool list,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain profile query,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain search employees,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain search employees-structured,hrbrain,mcp,read,low,available,Pinned public structured command
+hrbrain +get-pool,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+hrbrain +list-pool-employees,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+hrbrain +list-pools,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+hrbrain +profile-career,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+hrbrain +profile-labels,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+hrbrain +profile-metadata,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+hrbrain +profile-performance,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+hrbrain +query-profile,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+hrbrain +search-employees,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+hrbrain +search-employees-structured,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+hrbrain +search-fields,hrbrain,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+html create,html,mcp,write,medium,available,Pinned public structured command
+html fetch,html,mcp,read,low,available,Pinned public structured command
+html overwrite,html,mcp,destructive,high,available,Pinned public structured command
+html patch,html,mcp,write,medium,available,Pinned public structured command
+live stream list,live,mcp,read,low,available,Pinned public structured command
+live +list-my-lives,live,unavailable,read,low,unavailable,Official fixed-version Schema marks this command unavailable or retired
+mail message batch-delete,mail,mcp,write,medium,available,Pinned public structured command
+mail contact batch-delete,mail,mcp,write,medium,available,Pinned public structured command
+mail user batch-get,mail,mcp,read,low,available,Pinned public structured command
+mail message batch-move,mail,mcp,write,medium,available,Pinned public structured command
+mail attachment download,mail,mcp,read,low,available,Pinned public structured command
+mail draft create,mail,mcp,write,medium,available,Pinned public structured command
+mail message forward,mail,mcp,write,medium,available,Pinned public structured command
+mail folder create,mail,mcp,write,medium,available,Pinned public structured command
+mail message reply,mail,mcp,write,medium,available,Pinned public structured command
+mail message reply-all,mail,mcp,write,medium,available,Pinned public structured command
+mail contact create,mail,mcp,write,medium,available,Pinned public structured command
+mail template create,mail,mcp,write,medium,available,Pinned public structured command
+mail folder delete,mail,mcp,write,medium,available,Pinned public structured command
+mail template delete,mail,mcp,write,medium,available,Pinned public structured command
+mail message export,mail,mcp,read,low,available,Pinned public structured command
+mail message get,mail,mcp,read,low,available,Pinned public structured command
+mail thread get,mail,mcp,read,low,available,Pinned public structured command
+mail user get,mail,mcp,read,low,available,Pinned public structured command
+mail template get,mail,mcp,read,low,available,Pinned public structured command
+mail message list,mail,mcp,read,low,available,Pinned public structured command
+mail folder list,mail,mcp,read,low,available,Pinned public structured command
+mail attachment list,mail,mcp,read,low,available,Pinned public structured command
+mail calendar-event list,mail,mcp,read,low,available,Pinned public structured command
+mail calendar list,mail,mcp,read,low,available,Pinned public structured command
+mail mailbox shared-with-me,mail,mcp,read,low,available,Pinned public structured command
+mail tag list,mail,mcp,read,low,available,Pinned public structured command
+mail contact list,mail,mcp,read,low,available,Pinned public structured command
+mail mailbox list,mail,mcp,read,low,available,Pinned public structured command
+mail template list,mail,mcp,read,low,available,Pinned public structured command
+mail message search,mail,mcp,read,low,available,Pinned public structured command
+mail user search,mail,mcp,read,low,available,Pinned public structured command
+mail draft send,mail,mcp,write,medium,available,Pinned public structured command
+mail message send,mail,mcp,write,medium,available,Pinned public structured command
+mail message share-to-chat,mail,mcp,write,high,available,Pinned public structured command
+mail +contact-list,mail,mcp,read,low,available,Pinned public structured command
+mail +draft-create,mail,unavailable,write,medium,unavailable,Official fixed-version Schema marks this command unavailable or retired
+mail +draft-edit,mail,unavailable,write,medium,unavailable,Official fixed-version Schema marks this command unavailable or retired
+mail +find-mail-user,mail,mcp,read,low,available,Pinned public structured command
+mail +folder-list,mail,mcp,read,low,available,Pinned public structured command
+mail +message,mail,mcp,read,low,available,Pinned public structured command
+mail +messages,mail,mcp,read,low,available,Pinned public structured command
+mail +recent-mail,mail,mcp,read,low,available,Pinned public structured command
+mail +search-mail,mail,mcp,read,low,available,Pinned public structured command
+mail +tag-list,mail,mcp,read,low,available,Pinned public structured command
+mail +template-create,mail,unavailable,write,medium,unavailable,Official fixed-version Schema marks this command unavailable or retired
+mail +template-list,mail,mcp,read,low,available,Pinned public structured command
+mail +template-update,mail,unavailable,write,medium,unavailable,Official fixed-version Schema marks this command unavailable or retired
+mail +thread,mail,mcp,read,low,available,Pinned public structured command
+mail +thread-list,mail,mcp,read,low,available,Pinned public structured command
+mail +triage,mail,mcp,read,low,available,Pinned public structured command
+mail +unread-mail,mail,mcp,read,low,available,Pinned public structured command
+mail +user-search,mail,mcp,read,low,available,Pinned public structured command
+mail draft update,mail,mcp,write,medium,available,Pinned public structured command
+mail folder update,mail,mcp,write,medium,available,Pinned public structured command
+mail contact update,mail,mcp,write,medium,available,Pinned public structured command
+mail template update,mail,mcp,write,medium,available,Pinned public structured command
+markdown create,markdown,mcp,write,medium,available,Pinned public structured command
+markdown diff,markdown,mcp,read,low,available,Pinned public structured command
+markdown fetch,markdown,mcp,read,low,available,Pinned public structured command
+markdown comment list,markdown,mcp,read,low,available,Pinned public structured command
+markdown overwrite,markdown,mcp,destructive,high,available,Pinned public structured command
+markdown patch,markdown,mcp,write,medium,available,Pinned public structured command
+mcp market search,mcp,mcp,read,low,available,Pinned public structured command
+mcp published invoke,mcp,published_adapter,write,high,available,Explicitly authorized published MCP invocation; native fresh Schema gate and exact service/tool identity
+mcp published tools,mcp,mcp,read,medium,available,Pinned public structured command
+mcp url get,mcp,local_workflow,read,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+mind create,mind,mcp,write,medium,available,Pinned public structured command
+mind node create,mind,mcp,write,medium,available,Pinned public structured command
+mind node delete,mind,mcp,destructive,high,available,Pinned public structured command
+mind node list,mind,mcp,read,low,available,Pinned public structured command
+mind node update,mind,mcp,write,medium,available,Pinned public structured command
+minutes permission add,minutes,mcp,write,medium,available,Pinned public structured command
+minutes hot-word add,minutes,mcp,write,medium,available,Pinned public structured command
+minutes tag add,minutes,mcp,write,medium,available,Pinned public structured command
+minutes permission apply,minutes,mcp,write,medium,available,Pinned public structured command
+minutes get batch,minutes,mcp,read,low,available,Pinned public structured command
+minutes upload cancel,minutes,mcp,write,medium,available,Pinned public structured command
+minutes upload complete,minutes,mcp,write,medium,available,Pinned public structured command
+minutes template create,minutes,mcp,write,medium,available,Pinned public structured command
+minutes mind-graph create,minutes,mcp,write,medium,available,Pinned public structured command
+minutes tag create,minutes,mcp,write,medium,available,Pinned public structured command
+minutes speaker summary create,minutes,mcp,write,medium,available,Pinned public structured command
+minutes upload create,minutes,mcp,write,medium,available,Pinned public structured command
+minutes upload create-and-notify,minutes,mcp,write,medium,available,Pinned public structured command
+minutes template delete,minutes,mcp,destructive,high,available,Pinned public structured command
+minutes tag delete,minutes,mcp,destructive,high,available,Pinned public structured command
+minutes hot-word delete,minutes,mcp,write,medium,available,Pinned public structured command
+minutes get summary,minutes,mcp,read,low,available,Pinned public structured command
+minutes get info,minutes,mcp,read,low,available,Pinned public structured command
+minutes get keywords,minutes,mcp,read,low,available,Pinned public structured command
+minutes get transcription,minutes,mcp,read,low,available,Pinned public structured command
+minutes speaker summary get,minutes,mcp,read,low,available,Pinned public structured command
+minutes list all,minutes,mcp,read,low,available,Pinned public structured command
+minutes audio-memo list,minutes,mcp,read,low,available,Pinned public structured command
+minutes list mine,minutes,mcp,read,low,available,Pinned public structured command
+minutes template list-custom,minutes,mcp,read,low,available,Pinned public structured command
+minutes get todos,minutes,mcp,read,low,available,Pinned public structured command
+minutes hot-word list,minutes,mcp,read,low,available,Pinned public structured command
+minutes list shared,minutes,mcp,read,low,available,Pinned public structured command
+minutes template list-system,minutes,mcp,read,low,available,Pinned public structured command
+minutes mind-graph status,minutes,mcp,read,low,available,Pinned public structured command
+minutes get audio,minutes,mcp,read,low,available,Pinned public structured command
+minutes tag query,minutes,mcp,read,low,available,Pinned public structured command
+minutes tag list,minutes,mcp,read,low,available,Pinned public structured command
+minutes record pause,minutes,mcp,write,medium,available,Pinned public structured command
+minutes record resume,minutes,mcp,write,medium,available,Pinned public structured command
+minutes record start,minutes,mcp,write,medium,available,Pinned public structured command
+minutes record stop,minutes,mcp,write,medium,available,Pinned public structured command
+minutes permission remove,minutes,mcp,write,medium,available,Pinned public structured command
+minutes tag remove,minutes,mcp,write,medium,available,Pinned public structured command
+minutes replace-text,minutes,mcp,destructive,high,available,Pinned public structured command
+minutes speaker replace,minutes,mcp,write,medium,available,Pinned public structured command
+minutes template set-default,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +action-items,minutes,mcp,read,low,available,Pinned public structured command
+minutes +apply-permission,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +detail,minutes,mcp,read,low,available,Pinned public structured command
+minutes +download,minutes,mcp,read,low,available,Pinned public structured command
+minutes +export-pack,minutes,mcp,read,low,available,Pinned public structured command
+minutes +latest,minutes,mcp,read,low,available,Pinned public structured command
+minutes +list-all,minutes,mcp,read,low,available,Pinned public structured command
+minutes +list-mine,minutes,mcp,read,low,available,Pinned public structured command
+minutes +list-shared,minutes,mcp,read,low,available,Pinned public structured command
+minutes +mindmap,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +minutes-search,minutes,mcp,read,low,available,Pinned public structured command
+minutes +prepare-asr,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +record-pause,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +record-resume,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +record-start,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +record-stop,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +record-wrap-up,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +replace-batch,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +search,minutes,mcp,read,low,available,Pinned public structured command
+minutes +share,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +speaker-insights,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +speaker-replace,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +summary,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +sync-asr,minutes,mcp,destructive,high,available,Pinned public structured command
+minutes +transcript,minutes,mcp,read,low,available,Pinned public structured command
+minutes +unshare,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +update,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +upload,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +upload-and-analyze,minutes,mcp,write,medium,available,Pinned public structured command
+minutes +upload-and-notify,minutes,mcp,write,medium,available,Pinned public structured command
+minutes template update,minutes,mcp,write,medium,available,Pinned public structured command
+minutes update summary,minutes,mcp,write,medium,available,Pinned public structured command
+minutes update title,minutes,mcp,write,medium,available,Pinned public structured command
+oa approval approve,oa,mcp,write,medium,available,Pinned public structured command
+oa approval attachment upload,oa,mcp,write,low,available,Pinned public structured command
+oa approval attachment authorize-download,oa,mcp,write,low,available,Pinned public structured command
+oa approval attachment authorize-preview,oa,mcp,write,low,available,Pinned public structured command
+oa approval template create,oa,mcp,write,medium,available,Pinned public structured command
+oa approval oa-comments,oa,mcp,write,medium,available,Pinned public structured command
+oa approval forecast-process,oa,mcp,read,low,available,Pinned public structured command
+oa approval attachment download-url,oa,mcp,read,low,available,Pinned public structured command
+oa approval list-executed,oa,mcp,read,low,available,Pinned public structured command
+oa approval list-cc,oa,mcp,read,low,available,Pinned public structured command
+oa approval detail,oa,mcp,read,low,available,Pinned public structured command
+oa approval records,oa,mcp,read,low,available,Pinned public structured command
+oa approval list-by-admin,oa,mcp,read,low,available,Pinned public structured command
+oa approval form-schema,oa,mcp,read,low,available,Pinned public structured command
+oa approval list-submitted,oa,mcp,read,low,available,Pinned public structured command
+oa approval template detail,oa,mcp,read,low,available,Pinned public structured command
+oa approval image upload,oa,mcp,write,low,available,Pinned public structured command
+oa approval list-initiated,oa,mcp,read,low,available,Pinned public structured command
+oa approval template list,oa,mcp,read,low,available,Pinned public structured command
+oa approval list-pending,oa,mcp,read,low,available,Pinned public structured command
+oa approval tasks,oa,mcp,read,low,available,Pinned public structured command
+oa approval list-forms,oa,mcp,read,low,available,Pinned public structured command
+oa approval oa-cc-noticer,oa,mcp,write,medium,available,Pinned public structured command
+oa approval redirect-task,oa,mcp,write,medium,available,Pinned public structured command
+oa approval reject,oa,mcp,write,medium,available,Pinned public structured command
+oa approval revoke,oa,mcp,write,high,available,Pinned public structured command
+oa +approve-by,oa,mcp,write,high,available,Pinned public structured command
+oa +done-approvals,oa,mcp,read,low,available,Pinned public structured command
+oa +list-cc,oa,mcp,read,low,available,Pinned public structured command
+oa +list-executed,oa,mcp,read,low,available,Pinned public structured command
+oa +list-forms,oa,mcp,read,low,available,Pinned public structured command
+oa +list-pending,oa,mcp,read,low,available,Pinned public structured command
+oa +list-submitted,oa,mcp,read,low,available,Pinned public structured command
+oa +my-initiated,oa,mcp,read,low,available,Pinned public structured command
+oa +pending,oa,mcp,read,low,available,Pinned public structured command
+oa +search-forms,oa,mcp,read,low,available,Pinned public structured command
+oa approval create-instance,oa,mcp,write,high,available,Pinned public structured command
+oa approval template update,oa,mcp,write,medium,available,Pinned public structured command
+pat chmod,pat,local_workflow,write,high,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+pat browser-policy,pat,local_workflow,write,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+pat +authorize,pat,unavailable,write,high,unavailable,Official fixed-version Schema marks this command unavailable or retired
+pat +browser-policy,pat,local_workflow,write,medium,available,"Credential, delegated authorization, dynamic executor or local Agent channel lifecycle; use the documented local CLI workflow"
+report entry submit,report,mcp,write,medium,available,Pinned public structured command
+report template list,report,mcp,read,low,available,Pinned public structured command
+report inbox list,report,mcp,read,low,available,Pinned public structured command
+report entry get,report,mcp,read,low,available,Pinned public structured command
+report entry stats,report,mcp,read,low,available,Pinned public structured command
+report outbox list,report,mcp,read,low,available,Pinned public structured command
+report template get,report,mcp,read,low,available,Pinned public structured command
+report +inbox-list,report,mcp,read,low,available,Pinned public structured command
+report +outbox-list,report,mcp,read,low,available,Pinned public structured command
+report +report-latest,report,mcp,read,low,available,Pinned public structured command
+report +template-search,report,mcp,read,low,available,Pinned public structured command
+sheet add-dimension,sheet,mcp,write,medium,available,Pinned public structured command
+sheet append,sheet,mcp,write,medium,available,Pinned public structured command
+sheet comment batch-query,sheet,mcp,read,low,available,Pinned public structured command
+sheet batch-update,sheet,mcp,write,medium,available,Pinned public structured command
+sheet chart create,sheet,mcp,write,medium,available,Pinned public structured command
+sheet chart delete,sheet,mcp,write,medium,available,Pinned public structured command
+sheet chart list,sheet,mcp,read,low,available,Pinned public structured command
+sheet chart update,sheet,mcp,write,medium,available,Pinned public structured command
+sheet range clear,sheet,mcp,write,medium,available,Pinned public structured command
+sheet copy,sheet,mcp,write,medium,available,Pinned public structured command
+sheet cond-format create,sheet,mcp,write,medium,available,Pinned public structured command
+sheet filter create,sheet,mcp,write,medium,available,Pinned public structured command
+sheet filter-view create,sheet,mcp,write,medium,available,Pinned public structured command
+sheet create-float-image,sheet,mcp,write,medium,available,Pinned public structured command
+sheet pivot-table create,sheet,mcp,write,medium,available,Pinned public structured command
+sheet new,sheet,mcp,write,medium,available,Pinned public structured command
+sheet comment create,sheet,mcp,write,low,available,Pinned public structured command
+sheet create-with-data,sheet,mcp,write,medium,available,Pinned public structured command
+sheet create,sheet,mcp,write,medium,available,Pinned public structured command
+sheet cond-format delete,sheet,mcp,destructive,high,available,Pinned public structured command
+sheet delete-dimension,sheet,mcp,write,medium,available,Pinned public structured command
+sheet delete-dropdown,sheet,mcp,write,medium,available,Pinned public structured command
+sheet filter delete,sheet,mcp,write,medium,available,Pinned public structured command
+sheet filter-view delete,sheet,mcp,write,medium,available,Pinned public structured command
+sheet delete-float-image,sheet,mcp,write,medium,available,Pinned public structured command
+sheet pivot-table delete,sheet,mcp,write,medium,available,Pinned public structured command
+sheet delete-sheet,sheet,mcp,write,medium,available,Pinned public structured command
+sheet comment delete,sheet,mcp,write,medium,available,Pinned public structured command
+sheet export-csv,sheet,mcp,read,low,available,Pinned public structured command
+sheet range fill,sheet,mcp,write,medium,available,Pinned public structured command
+sheet filter clear-criteria,sheet,mcp,write,medium,available,Pinned public structured command
+sheet filter-view delete-criteria,sheet,mcp,write,medium,available,Pinned public structured command
+sheet filter-view get-criteria,sheet,mcp,read,low,available,Pinned public structured command
+sheet filter-view info,sheet,mcp,read,low,available,Pinned public structured command
+sheet filter-view list-criteria,sheet,mcp,read,low,available,Pinned public structured command
+sheet filter-view update-criteria,sheet,mcp,write,medium,available,Pinned public structured command
+sheet find,sheet,mcp,read,low,available,Pinned public structured command
+sheet formula-verify,sheet,mcp,read,low,available,Pinned public structured command
+sheet list,sheet,mcp,read,low,available,Pinned public structured command
+sheet cond-format list,sheet,mcp,read,low,available,Pinned public structured command
+sheet get-dropdown,sheet,mcp,read,low,available,Pinned public structured command
+sheet filter get,sheet,mcp,read,low,available,Pinned public structured command
+sheet filter-view list,sheet,mcp,read,low,available,Pinned public structured command
+sheet get-float-image,sheet,mcp,read,low,available,Pinned public structured command
+sheet csv-get,sheet,mcp,read,low,available,Pinned public structured command
+sheet changeset-get,sheet,mcp,read,low,available,Pinned public structured command
+sheet revision-get,sheet,mcp,read,low,available,Pinned public structured command
+sheet group-dimension,sheet,mcp,write,medium,available,Pinned public structured command
+sheet hide-gridline,sheet,mcp,write,medium,available,Pinned public structured command
+sheet import create,sheet,mcp,write,medium,available,Pinned public structured command
+sheet import get,sheet,mcp,read,low,available,Pinned public structured command
+sheet info,sheet,mcp,read,low,available,Pinned public structured command
+sheet insert-dimension,sheet,mcp,write,medium,available,Pinned public structured command
+sheet list-float-images,sheet,mcp,read,low,available,Pinned public structured command
+sheet pivot-table list,sheet,mcp,read,low,available,Pinned public structured command
+sheet comment list-replies,sheet,mcp,read,low,available,Pinned public structured command
+sheet comment list,sheet,mcp,read,low,available,Pinned public structured command
+sheet media-upload,sheet,mcp,write,medium,available,Pinned public structured command
+sheet merge-cells,sheet,mcp,write,medium,available,Pinned public structured command
+sheet move-dimension,sheet,mcp,write,medium,available,Pinned public structured command
+sheet range batch-clear,sheet,mcp,write,medium,available,Pinned public structured command
+sheet range batch-set-style,sheet,mcp,write,medium,available,Pinned public structured command
+sheet range copy-to,sheet,mcp,write,medium,available,Pinned public structured command
+sheet range move-to,sheet,mcp,write,medium,available,Pinned public structured command
+sheet range read,sheet,mcp,read,low,available,Pinned public structured command
+sheet range set-style,sheet,mcp,write,medium,available,Pinned public structured command
+sheet range update,sheet,mcp,write,medium,available,Pinned public structured command
+sheet comment react-reply,sheet,mcp,write,low,available,Pinned public structured command
+sheet replace,sheet,mcp,write,medium,available,Pinned public structured command
+sheet comment reply,sheet,mcp,write,low,available,Pinned public structured command
+sheet comment resolve,sheet,mcp,write,low,available,Pinned public structured command
+sheet comment restore,sheet,mcp,write,low,available,Pinned public structured command
+sheet set-dropdown,sheet,mcp,write,medium,available,Pinned public structured command
+sheet csv-put,sheet,mcp,write,medium,available,Pinned public structured command
+sheet +list-sheets,sheet,mcp,read,low,available,Pinned public structured command
+sheet +read,sheet,mcp,read,low,available,Pinned public structured command
+sheet show-gridline,sheet,mcp,write,medium,available,Pinned public structured command
+sheet filter sort,sheet,mcp,write,medium,available,Pinned public structured command
+sheet range sort,sheet,mcp,write,medium,available,Pinned public structured command
+sheet export,sheet,mcp,read,low,available,Pinned public structured command
+sheet table-get,sheet,mcp,read,low,available,Pinned public structured command
+sheet table-put,sheet,mcp,write,medium,available,Pinned public structured command
+sheet template apply,sheet,mcp,write,medium,available,Pinned public structured command
+sheet template list,sheet,mcp,read,low,available,Pinned public structured command
+sheet template search,sheet,mcp,read,low,available,Pinned public structured command
+sheet ungroup-dimension,sheet,mcp,write,medium,available,Pinned public structured command
+sheet unmerge-cells,sheet,mcp,write,medium,available,Pinned public structured command
+sheet cond-format update,sheet,mcp,write,medium,available,Pinned public structured command
+sheet update-dimension,sheet,mcp,write,medium,available,Pinned public structured command
+sheet filter update,sheet,mcp,write,medium,available,Pinned public structured command
+sheet filter-view update,sheet,mcp,write,medium,available,Pinned public structured command
+sheet update-float-image,sheet,mcp,write,medium,available,Pinned public structured command
+sheet pivot-table update,sheet,mcp,write,medium,available,Pinned public structured command
+sheet update,sheet,mcp,write,medium,available,Pinned public structured command
+sheet comment update,sheet,mcp,write,low,available,Pinned public structured command
+sheet version list,sheet,mcp,read,low,available,Pinned public structured command
+sheet version revert,sheet,mcp,write,medium,available,Pinned public structured command
+sheet version save,sheet,mcp,write,low,available,Pinned public structured command
+sheet write-image,sheet,mcp,write,medium,available,Pinned public structured command
+todo task add-executor,todo,mcp,write,medium,available,Pinned public structured command
+todo task add-participant,todo,mcp,write,medium,available,Pinned public structured command
+todo task add-attachment,todo,mcp,write,medium,available,Pinned public structured command
+todo comment add,todo,mcp,write,medium,available,Pinned public structured command
+todo task add-reminder,todo,mcp,write,medium,available,Pinned public structured command
+todo task create-sub,todo,mcp,write,medium,available,Pinned public structured command
+todo task create,todo,mcp,write,medium,available,Pinned public structured command
+todo tag create,todo,mcp,write,medium,available,Pinned public structured command
+todo task delete,todo,mcp,destructive,high,available,Pinned public structured command
+todo comment delete,todo,mcp,destructive,high,available,Pinned public structured command
+todo tag delete,todo,mcp,destructive,high,available,Pinned public structured command
+todo task get,todo,mcp,read,low,available,Pinned public structured command
+todo task list,todo,mcp,read,low,available,Pinned public structured command
+todo task list-attachment,todo,mcp,read,low,available,Pinned public structured command
+todo comment list,todo,mcp,read,low,available,Pinned public structured command
+todo tag list,todo,mcp,read,low,available,Pinned public structured command
+todo task remove-executor,todo,mcp,write,medium,available,Pinned public structured command
+todo task remove-participant,todo,mcp,write,medium,available,Pinned public structured command
+todo task reset-reminder,todo,mcp,write,medium,available,Pinned public structured command
+todo +assign,todo,mcp,write,medium,available,Pinned public structured command
+todo +assign-multi,todo,mcp,write,medium,available,Pinned public structured command
+todo +comment,todo,mcp,write,medium,available,Pinned public structured command
+todo +complete,todo,mcp,write,medium,available,Pinned public structured command
+todo +create,todo,mcp,write,medium,available,Pinned public structured command
+todo +created-todos,todo,mcp,read,low,available,Pinned public structured command
+todo +due-today,todo,mcp,read,low,available,Pinned public structured command
+todo +get,todo,mcp,read,low,available,Pinned public structured command
+todo +get-my-tasks,todo,mcp,read,low,available,Pinned public structured command
+todo +get-related-tasks,todo,mcp,read,low,available,Pinned public structured command
+todo +list-attachment,todo,mcp,read,low,available,Pinned public structured command
+todo +list-comment,todo,mcp,read,low,available,Pinned public structured command
+todo +list-sub,todo,mcp,read,low,available,Pinned public structured command
+todo +overdue,todo,mcp,read,low,available,Pinned public structured command
+todo +remind,todo,mcp,write,medium,available,Pinned public structured command
+todo +reminder,todo,mcp,write,medium,available,Pinned public structured command
+todo +reopen,todo,mcp,write,medium,available,Pinned public structured command
+todo +search,todo,mcp,read,low,available,Pinned public structured command
+todo +todo-done,todo,mcp,write,medium,available,Pinned public structured command
+todo +update,todo,mcp,write,medium,available,Pinned public structured command
+todo +upload-attachment,todo,mcp,write,medium,available,Pinned public structured command
+todo tag add,todo,mcp,write,medium,available,Pinned public structured command
+todo task done,todo,mcp,write,medium,available,Pinned public structured command
+todo tag update,todo,mcp,write,medium,available,Pinned public structured command
+todo task update,todo,mcp,write,medium,available,Pinned public structured command
+whiteboard template personal create,whiteboard,mcp,write,medium,available,Pinned public structured command
+whiteboard template public create,whiteboard,mcp,write,medium,available,Pinned public structured command
+whiteboard template team create,whiteboard,mcp,write,medium,available,Pinned public structured command
+whiteboard create-with-content,whiteboard,mcp,write,medium,available,Pinned public structured command
+whiteboard export,whiteboard,mcp,read,low,available,Pinned public structured command
+whiteboard template personal list,whiteboard,mcp,read,low,available,Pinned public structured command
+whiteboard template public list,whiteboard,mcp,read,low,available,Pinned public structured command
+whiteboard template team list,whiteboard,mcp,read,low,available,Pinned public structured command
+whiteboard query,whiteboard,mcp,read,low,available,Pinned public structured command
+whiteboard export-get,whiteboard,mcp,read,low,available,Pinned public structured command
+whiteboard render,whiteboard,mcp,write,medium,available,Pinned public structured command
+whiteboard template personal save,whiteboard,mcp,write,medium,available,Pinned public structured command
+whiteboard template team save,whiteboard,mcp,write,medium,available,Pinned public structured command
+whiteboard +diff,whiteboard,mcp,read,low,available,Pinned public structured command
+whiteboard +query,whiteboard,mcp,read,low,available,Pinned public structured command
+whiteboard +update,whiteboard,mcp,write,high,available,Pinned public structured command
+whiteboard update,whiteboard,mcp,write,high,available,Pinned public structured command
+wiki member add,wiki,mcp,write,medium,available,Pinned public structured command
+wiki node create,wiki,mcp,write,medium,available,Pinned public structured command
+wiki space create,wiki,mcp,write,medium,available,Pinned public structured command
+wiki node delete,wiki,mcp,destructive,high,available,Pinned public structured command
+wiki space delete,wiki,mcp,destructive,high,available,Pinned public structured command
+wiki space get,wiki,mcp,read,low,available,Pinned public structured command
+wiki member list,wiki,mcp,read,low,available,Pinned public structured command
+wiki node list,wiki,mcp,read,low,available,Pinned public structured command
+wiki space list,wiki,mcp,read,low,available,Pinned public structured command
+wiki feed list,wiki,mcp,read,low,available,Pinned public structured command
+wiki node copy,wiki,mcp,write,medium,available,Pinned public structured command
+wiki node move,wiki,mcp,write,medium,available,Pinned public structured command
+wiki node search,wiki,mcp,read,low,available,Pinned public structured command
+wiki member remove,wiki,mcp,write,medium,available,Pinned public structured command
+wiki space search,wiki,mcp,read,low,available,Pinned public structured command
+wiki permission set-share-scope,wiki,mcp,write,high,available,Pinned public structured command
+wiki +delete-space,wiki,mcp,destructive,high,available,Pinned public structured command
+wiki +feed-list,wiki,mcp,read,low,available,Pinned public structured command
+wiki +member-add,wiki,mcp,write,medium,available,Pinned public structured command
+wiki +member-list,wiki,mcp,read,low,available,Pinned public structured command
+wiki +member-remove,wiki,mcp,write,medium,available,Pinned public structured command
+wiki +member-update,wiki,mcp,write,medium,available,Pinned public structured command
+wiki +move,wiki,mcp,write,medium,available,Pinned public structured command
+wiki +move-to-drive,wiki,mcp,write,medium,available,Pinned public structured command
+wiki +node-copy,wiki,mcp,write,high,available,Pinned public structured command
+wiki +node-create,wiki,mcp,write,medium,available,Pinned public structured command
+wiki +node-delete,wiki,mcp,destructive,high,available,Pinned public structured command
+wiki +node-get,wiki,mcp,read,low,available,Pinned public structured command
+wiki +node-list,wiki,mcp,read,low,available,Pinned public structured command
+wiki +node-search,wiki,mcp,read,low,available,Pinned public structured command
+wiki +resolve-space,wiki,mcp,read,low,available,Pinned public structured command
+wiki +space-create,wiki,mcp,write,medium,available,Pinned public structured command
+wiki +space-get,wiki,mcp,read,low,available,Pinned public structured command
+wiki +space-list,wiki,mcp,read,low,available,Pinned public structured command
+wiki +space-search,wiki,mcp,read,low,available,Pinned public structured command
+wiki +wiki-new-doc,wiki,mcp,write,medium,available,Pinned public structured command
+wiki member update,wiki,mcp,write,medium,available,Pinned public structured command
+upgrade,upgrade,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+doctor,doctor,utility_adapter,local,local,local,Explicit read-only diagnostic adapter
+completion,completion,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+cache,cache,unavailable,local,local,local,Official compatibility placeholder; no current functionality
+recovery,recovery,unavailable,local,local,local,Official compatibility placeholder; no current functionality
+api,api,raw_adapter,local,local,local,Official-domain Raw OpenAPI adapter; requires a separately configured custom app credential pair
+schema,schema,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+version,version,utility_adapter,local,local,local,Explicit read-only diagnostic adapter
+auth exchange,auth,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+auth export,auth,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+auth import,auth,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+auth login,auth,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+auth logout,auth,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+auth reset,auth,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+auth status,auth,utility_adapter,local,local,local,Explicit read-only diagnostic adapter
+config list,config,utility_adapter,local,local,local,Explicit read-only diagnostic adapter
+profile list,profile,utility_adapter,local,local,local,Explicit read-only diagnostic adapter
+profile switch,profile,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+profile use,profile,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin build,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin create,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin dev,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin disable,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin enable,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin info,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin install,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin list,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin remove,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin validate,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+skill get,skill,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+skill install,skill,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+skill search,skill,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+skill setup,skill,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin config get,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin config list,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin config set,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"
+plugin config unset,plugin,local_workflow,local,local,local,"Local authentication, installation, configuration or maintenance workflow; not a remote business API"

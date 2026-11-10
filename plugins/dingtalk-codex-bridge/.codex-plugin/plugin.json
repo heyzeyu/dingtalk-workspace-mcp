@@ -1,0 +1,35 @@
+{
+  "name": "dingtalk-codex-bridge",
+  "version": "0.3.3",
+  "description": "钉钉 Workspace 全业务 MCP：按产品发现、查询和调用官方 CLI，保留在线表格兼容工具。",
+  "author": {
+    "name": "DingTalk Bridge Contributors"
+  },
+  "keywords": [
+    "dingtalk",
+    "sheets",
+    "excel",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "钉钉 Workspace MCP",
+    "shortDescription": "文档、表格、待办、日历、消息、审批等全业务入口。",
+    "longDescription": "基于固定钉钉官方 DWS v1.0.67，索引 33 个业务域及本机命令，提供结构化读写、受控事件流、Raw OpenAPI、已发布 MCP 调用和本机维护指引。区分接入、官方不可用、编译验证与真实验收。",
+    "developerName": "DingTalk Bridge Contributors",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "按业务域查看钉钉 CLI 的完整 MCP 能力。",
+      "读取钉钉文档或表格并完成我指定的修改。",
+      "创建一个只分配给我的待办并回读确认。"
+    ],
+    "brandColor": "#0089FF",
+    "logo": "./assets/dingtalk.png",
+    "composerIcon": "./assets/dingtalk.png"
+  }
+}
