@@ -49,12 +49,16 @@ export function redact(value) {
     .replace(/((?:access[_-]?token|refresh[_-]?token|app[_-]?secret|client[_-]?secret|device[_-]?code)["']?\s*[:=]\s*["']?)[^\s,"'&}]+/giu, "$1[REDACTED]");
 }
 
-export function execCli(executable, argv, { env = process.env, timeout = CLI_TIMEOUT_MS, cwd, input } = {}) {
+export function execCli(executable, argv, { env = process.env, timeout = CLI_TIMEOUT_MS, cwd, input, signal } = {}) {
   return new Promise((resolve, reject) => {
-    const child = execFile(executable, argv, { env, cwd, encoding: "utf8", timeout, killSignal: "SIGKILL", maxBuffer: 2 * 1024 * 1024, windowsHide: true, shell: false }, (error, stdout, stderr) => {
+    if (signal?.aborted) return reject(new BridgeError("CLI_CANCELLED", "The local command was cancelled."));
+    const child = execFile(executable, argv, { env, cwd, signal, encoding: "utf8", timeout, killSignal: "SIGKILL", maxBuffer: 2 * 1024 * 1024, windowsHide: true, shell: false }, (error, stdout, stderr) => {
+      if (error?.name === "AbortError") return reject(new BridgeError("CLI_CANCELLED", "The local command was cancelled."));
       if (error?.code === "ENOENT") return reject(new BridgeError("CLI_MISSING", "Official DWS CLI is missing. In the plugin call connect_dingtalk for guided installation and authorization. Terminal fallback: node scripts/setup.mjs install-cli"));
-      if (error?.killed || error?.code === "ETIMEDOUT") return reject(new BridgeError("CLI_TIMEOUT", "DWS timed out. The result is unknown; retry only a bounded read."));
+      if (["EACCES", "EPERM"].includes(error?.code)) return reject(new BridgeError("CLI_EXECUTION_DENIED", "The operating system denied execution. Check executable permissions and macOS Privacy & Security for the verified official binary."));
       if (error?.code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") return reject(new BridgeError("OUTPUT_LIMIT", "DWS output exceeded the buffer limit. Read a smaller range."));
+      if (error?.killed || error?.code === "ETIMEDOUT") return reject(new BridgeError("CLI_TIMEOUT", "DWS timed out. The result is unknown; retry only a bounded read."));
+      if (error?.signal) return reject(new BridgeError("CLI_PROCESS_INTERRUPTED", "The native process was interrupted. Check login status before retrying authorization; audit submitted writes before any retry."));
       resolve({ code: error ? (typeof error.code === "number" ? error.code : 1) : 0, stdout, stderr });
     });
     child.stdin?.on("error", error => { if (error.code !== "EPIPE") reject(new BridgeError("STDIN_FAILED", "Could not provide explicit stdin content.")); });

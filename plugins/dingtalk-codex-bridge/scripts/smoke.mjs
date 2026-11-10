@@ -39,7 +39,7 @@ async function call(name, args = {}) {
 function payload(value) { for (let i = 0; i < 6 && value && typeof value === "object"; i++) { if (value.sheets || value.cells || value.csv !== undefined) break; value = value.result ?? value.data ?? value; } return value; }
 try {
   console.error("Checking MCP initialization...");
-  const initialized = await request("initialize", { protocolVersion: "2025-11-25", capabilities: {}, clientInfo: { name: "dingtalk-bridge-smoke", version: "0.4.0" } });
+  const initialized = await request("initialize", { protocolVersion: "2025-11-25", capabilities: {}, clientInfo: { name: "dingtalk-bridge-smoke", version: "0.4.1" } });
   child.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n");
   const listed = await request("tools/list");
   if (listed.tools.length !== 20) throw new Error("Expected twenty tools");

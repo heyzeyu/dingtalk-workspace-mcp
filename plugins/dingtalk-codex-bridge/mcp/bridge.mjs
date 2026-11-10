@@ -148,7 +148,7 @@ export function createBridge(runner = createRunner(), { env = process.env, conne
     verifiedResources.set(key, { resource, expires: Date.now() + 120000 });
     return resource;
   }
-  async function call(name, rawArgs) {
+  async function call(name, rawArgs, context) {
     const def = TOOL_DEFINITIONS.find(t => t.name === name);
     if (!def) throw new BridgeError("UNKNOWN_TOOL", "Unknown tool.");
     const args = argsObject(rawArgs, Object.keys(def.inputSchema.properties));
@@ -156,7 +156,7 @@ export function createBridge(runner = createRunner(), { env = process.env, conne
     if (OPERATION_TOOL_DEFINITIONS.some(tool => tool.name === name)) return full.call(name, args);
     if (WORKSPACE_TOOL_DEFINITIONS.some(tool => tool.name === name)) return workspace.call(name, args);
     if (ADAPTER_TOOL_DEFINITIONS.some(tool => tool.name === name)) return adapters.call(name, args);
-    if (CONNECTION_TOOL_DEFINITIONS.some(tool => tool.name === name)) return connection.call(name, args);
+    if (CONNECTION_TOOL_DEFINITIONS.some(tool => tool.name === name)) return connection.call(name, args, context);
     if (name === "get_dingtalk_status") {
       const account = args.profile === undefined ? undefined : validateProfile(args.profile);
       return localStatus(account);

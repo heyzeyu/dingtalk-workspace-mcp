@@ -1,6 +1,6 @@
 {
   "name": "dingtalk-codex-bridge",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "钉钉 Workspace 全业务 MCP：按产品发现、查询和调用官方 CLI，保留在线表格兼容工具。",
   "author": {
     "name": "DingTalk Bridge Contributors"

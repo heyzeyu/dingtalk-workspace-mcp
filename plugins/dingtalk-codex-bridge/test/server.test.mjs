@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { PassThrough } from "node:stream";
 import { startServer } from "../mcp/server.mjs";
-import { BridgeError } from "../mcp/cli.mjs";
+import { BridgeError, execCli } from "../mcp/cli.mjs";
 import { installCli } from "../scripts/setup.mjs";
 import { mkdtemp, writeFile, rm, readdir } from "node:fs/promises";
 import os from "node:os";
@@ -92,4 +92,40 @@ test("oversize write receipts preserve recovery and prohibit repeating the mutat
     assert.equal(result.error.code, "MUTATION_OUTCOME_UNKNOWN");
     assert.ok(result.error.details.recovery.some(item => item.value === "createdNode"));
   } finally { h.close(); }
+});
+
+test("MCP cancellation reaches only the in-flight connection request and suppresses its late reply", async () => {
+  let release, aborted = false;
+  const h = harness({ call: async (name, args, context) => new Promise(resolve => { release = () => resolve({ status: "cancelled" }); context?.signal?.addEventListener("abort", () => { aborted = true; release(); }, { once: true }); }) });
+  try {
+    h.send({ jsonrpc: "2.0", id: 31, method: "tools/call", params: { name: "connect_dingtalk", arguments: {} } }); await tick();
+    h.send({ jsonrpc: "2.0", method: "notifications/cancelled", params: { requestId: 999, reason: "unknown" } }); await tick(); assert.equal(aborted, false);
+    h.send({ jsonrpc: "2.0", method: "notifications/cancelled", params: { requestId: 31, reason: "user stopped setup" } }); await tick();
+    assert.equal(aborted, true); assert.equal(h.messages.length, 0);
+  } finally { release?.(); await tick(); h.close(); }
+});
+
+test("native command cancellation, execution denial and interruption have distinct safe diagnostics", { skip: process.platform === "win32" }, async () => {
+  const controller = new AbortController();
+  const pending = execCli(process.execPath, ["-e", "setInterval(() => {}, 1000)"], { signal: controller.signal });
+  setImmediate(() => controller.abort());
+  await assert.rejects(pending, { code: "CLI_CANCELLED" });
+  await assert.rejects(execCli(process.execPath, ["-e", "process.kill(process.pid, 'SIGTERM')"]), { code: "CLI_PROCESS_INTERRUPTED" });
+  const dir = await mkdtemp(path.join(os.tmpdir(), "dingtalk-denied-"));
+  try {
+    const binary = path.join(dir, "not-executable"); await writeFile(binary, "not executable", { mode: 0o600 });
+    await assert.rejects(execCli(binary, []), { code: "CLI_EXECUTION_DENIED" });
+  } finally { await rm(dir, { recursive: true, force: true }); }
+});
+
+test("missing installer utilities are not misreported as a missing DWS binary", async () => {
+  const commands = [];
+  await assert.rejects(installCli({ execute: async executable => { commands.push(executable); throw new BridgeError("CLI_MISSING", "missing utility"); } }), { code: "SETUP_TOOL_MISSING" });
+  assert.deepEqual(commands, process.platform === "darwin" ? ["curl", "/usr/bin/curl"] : [process.platform === "win32" ? "curl.exe" : "curl"]);
+});
+
+test("macOS installer uses its system downloader with a minimal GUI PATH", { skip: process.platform !== "darwin" }, async () => {
+  const commands = [];
+  await assert.rejects(installCli({ execute: async executable => { commands.push(executable); if (executable === "curl") throw new BridgeError("CLI_MISSING", "missing"); return { code: 1, stdout: "", stderr: "" }; } }), { code: "DOWNLOAD_FAILED" });
+  assert.deepEqual(commands, ["curl", "/usr/bin/curl"]);
 });

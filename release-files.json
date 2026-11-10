@@ -12,6 +12,7 @@
     "plugins/dingtalk-codex-bridge/.codex-plugin/plugin.json",
     "plugins/dingtalk-codex-bridge/.mcp.json",
     "plugins/dingtalk-codex-bridge/LICENSE",
+    "plugins/dingtalk-codex-bridge/LOGIN-TROUBLESHOOTING.md",
     "plugins/dingtalk-codex-bridge/README.md",
     "plugins/dingtalk-codex-bridge/THIRD_PARTY_LICENSES/dws-LICENSE",
     "plugins/dingtalk-codex-bridge/THIRD_PARTY_LICENSES/dws-NOTICE",

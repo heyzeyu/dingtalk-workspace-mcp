@@ -1,4 +1,6 @@
-# 钉钉 Workspace Codex MCP 0.3.1
+# 钉钉 Workspace Codex MCP 0.4.1
+
+0.4.1 加强登录重试、取消、超时、保存确认与状态复查；[登录故障与解决方案](LOGIN-TROUBLESHOOTING.md) 列出验收范围和处理步骤。
 
 0.4.0 新增聊天内首次连接：自动准备官方 CLI、本机打开设备授权页、保持轮询并确认登录结果。
 
@@ -44,16 +46,15 @@ MCP 服务名 `dingtalk_sheets` 为兼容保留。无需注册 1,500 多个工�
 保留完整解压目录，包括隐藏的 `.agents/`，在安装包根目录执行：
 
 ```bash
-node plugins/dingtalk-codex-bridge/scripts/setup.mjs install-cli
 codex plugin marketplace add /absolute/path/to/unpacked-directory
 codex plugin add dingtalk-codex-bridge@dingtalk-local
 ```
 
-升级已有来源时替换保留的源码目录，再执行 plugin add。若解压到新目录且同名 marketplace 仍指向旧目录，先将本地来源指向新目录。确认安装版本 0.3.1，新开聊天加载；必要时重启 Codex。
+升级已有来源时替换保留的源码目录，再执行 plugin add。若解压到新目录且同名 marketplace 仍指向旧目录，先将本地来源指向新目录。确认安装版本 0.4.1，新开聊天加载；必要时重启 Codex。
 
 CLI 保存在 `~/.local/share/dingtalk-codex-bridge/dws/1.0.67/<platform>-<arch>/dws`（Windows 为 dws.exe）。下载按固定官方 SHA-256 校验，运行检查版本并禁用自动更新检查，不覆盖全局 CLI，也不安装上游其他 Skills。
 
-离线安装同版本官方发行包：
+一般无需先运行安装命令，首次聊天连接会自动准备依赖。需要手动准备时运行 `node plugins/dingtalk-codex-bridge/scripts/setup.mjs install-cli`。离线安装同版本官方发行包：
 
 ```bash
 node plugins/dingtalk-codex-bridge/scripts/setup.mjs install-cli --archive /path/to/official-archive.tar.gz
@@ -65,11 +66,11 @@ node plugins/dingtalk-codex-bridge/scripts/setup.mjs install-cli --archive /path
 
 只读快照明确提示本地状态需要初始化时，只有显式连接操作会运行一次官方普通 `auth status` 来初始化/刷新；普通状态与进度查询保持只读。不运行 auth reset、logout 或钥匙串迁移命令。
 
-用户亲自扫码、选择组织并确认。助手每 2–5 秒调用 `get_dingtalk_connection(session_id)` 等待 `status=ready`，然后用返回的 profile 继续原请求。首个工具调用返回后，原登录进程仍持续等待，避免普通终端工具超时和本机回调失联。取消等待只终止本次子进程，不退出、重置或撤销已有凭据。
+用户亲自扫码、选择组织并确认。助手每 2–5 秒调用 `get_dingtalk_connection(session_id)` 等待 `status=ready`，然后用返回的 profile 继续原请求。首个工具调用返回后，原登录进程仍持续等待，避免普通终端工具超时和本机回调失联。扫码确认前取消会停止本次等待子进程；进入官方换取和保存阶段后，取消保留该保存流程并继续确认结果。超时或关闭导致保存结果不明时，先查本机状态再决定重试。不会发出退出、重置或撤销凭据的指令。
 
 原生授权链接含运行时安全上下文，仅交给本机浏览器，不返回给模型、不写日志或源码。需要重新打开页面时用 `connect_dingtalk(reopen_browser=true)`。只有用户明确要求重新授权时才设置 `reauthorize=true`；权限不足不能据此反复登录。MCP 重启后先查本机登录状态，不自动重放业务写入。
 
-本机需要 Node.js 20+，并能运行 curl、tar 和本机浏览器。macOS 为本次真实设备授权启动/取消验收平台；Windows/Linux 浏览器启动参数已做本地替身测试，真实平台仍需验收。无桌面/SSH 环境使用下方终端流程。
+本机需要 Node.js 20+，并能运行 curl、tar 和本机浏览器。macOS 为本次实机验收平台；Windows/Linux 浏览器启动参数已做本地替身测试，真实平台仍需验收。无桌面/SSH 环境使用下方终端流程。
 
 ## 手动登录与配置
 

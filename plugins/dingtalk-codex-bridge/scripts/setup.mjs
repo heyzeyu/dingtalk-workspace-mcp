@@ -16,7 +16,24 @@ export const ARTIFACTS = {
   "win32-x64": ["dws-windows-amd64.zip", "3cb839866497405581c8ba5ef069e635495e9ee8afa8ff736c11f66db726184e"]
 };
 const digest = data => createHash("sha256").update(data).digest("hex");
-export async function installCli({ archive, env = process.env } = {}) {
+export async function installCli({ archive, env = process.env, signal, execute = execCli } = {}) {
+  const checkCancelled = () => { if (signal?.aborted) throw new BridgeError("CLI_CANCELLED", "CLI installation was cancelled."); };
+  async function tool(command, argv, timeout) {
+    checkCancelled();
+    try { return await execute(command, argv, { env, timeout, signal }); }
+    catch (error) {
+      if (error.code !== "CLI_MISSING") throw error;
+      // GUI applications can inherit a minimal PATH. Use only the macOS system
+      // utility as a fallback, never a shell or a separately downloaded helper.
+      if (process.platform === "darwin" && ["curl", "tar"].includes(command)) {
+        checkCancelled();
+        try { return await execute(`/usr/bin/${command}`, argv, { env, timeout, signal }); }
+        catch (fallback) { if (fallback.code !== "CLI_MISSING") throw fallback; }
+      }
+      throw new BridgeError("SETUP_TOOL_MISSING", `The installer requires the system utility ${command}. Restore its PATH or use the verified offline archive installer.`);
+    }
+  }
+  checkCancelled();
   const platform = `${process.platform}-${process.arch}`;
   const artifact = ARTIFACTS[platform];
   if (!artifact) throw new BridgeError("PLATFORM_UNSUPPORTED", `No pinned DWS release for ${platform}.`);
@@ -26,20 +43,23 @@ export async function installCli({ archive, env = process.env } = {}) {
   try {
     const input = archive ? path.resolve(archive) : path.join(temp, file);
     if (!archive) {
-      const dl = await execCli(process.platform === "win32" ? "curl.exe" : "curl", ["--fail", "--location", "--silent", "--show-error", "--proto", "=https", "--proto-redir", "=https", "--max-time", "120", "--output", input, url], { env, timeout: 125000 });
+      const dl = await tool(process.platform === "win32" ? "curl.exe" : "curl", ["--fail", "--location", "--silent", "--show-error", "--proto", "=https", "--proto-redir", "=https", "--max-time", "120", "--output", input, url], 125000);
       if (dl.code !== 0) throw new BridgeError("DOWNLOAD_FAILED", "Could not download the official DWS archive. Check network/proxy settings and retry install-cli.");
     }
+    checkCancelled();
     const bytes = await readFile(input);
     if (bytes.length > 100 * 1024 * 1024 || digest(bytes) !== sha256) throw new BridgeError("CHECKSUM_MISMATCH", "DWS archive SHA-256 does not match the pinned official release. Nothing was installed.");
     const extracted = path.join(temp, "extracted");
     await mkdir(extracted);
-    const result = await execCli("tar", ["-xf", input, "-C", extracted], { env, timeout: 30000 });
+    const result = await tool("tar", ["-xf", input, "-C", extracted], 30000);
     if (result.code !== 0) throw new BridgeError("EXTRACTION_FAILED", "Archive extraction failed. This installer requires curl and tar.");
     const filename = process.platform === "win32" ? "dws.exe" : "dws";
     const binary = path.join(extracted, filename);
     await chmod(binary, 0o755);
-    const check = await execCli(binary, ["--version"], { env: { ...env, DWS_NO_UPDATE_CHECK: "1" }, timeout: 15000 });
+    checkCancelled();
+    const check = await execute(binary, ["--version"], { env: { ...env, DWS_NO_UPDATE_CHECK: "1" }, timeout: 15000, signal });
     if (check.code !== 0 || !check.stdout.includes(`dws version v${DWS_VERSION} `)) throw new BridgeError("CLI_VERSION_MISMATCH", "Downloaded executable did not report the expected version.");
+    checkCancelled();
     const target = managedCliPath(env);
     await mkdir(path.dirname(target), { recursive: true, mode: 0o700 });
     const pending = `${target}.${randomUUID()}.pending`;
