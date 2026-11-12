@@ -6,6 +6,8 @@
 
 将固定版本官方 DWS CLI 整理为可发现、可描述、可调用的 Codex MCP。覆盖 33 个业务域，保留在线电子表格全部 99 项接入。
 
+这是基于官方 CLI 的非官方开源适配插件。插件实现采用 [MIT 许可证](LICENSE)；上游元数据、第三方声明与钉钉品牌资源的来源见 [UPSTREAM.md](plugins/dingtalk-codex-bridge/UPSTREAM.md)。
+
 - 索引 **1,596** 条命令：1,559 条官方 Schema 命令 + 37 条本机工具命令。
 - **1,502** 条业务命令接入统一结构化读写；事件、Raw API、已发布 MCP、只读诊断分别适配。
 - **52** 条登录、凭据、配置与持久 Agent 命令保留本机流程指引；**33** 条官方不可用/兼容占位明确标注。
@@ -17,14 +19,16 @@
 
 本机需要 Node.js 20 或以上。官方 DWS CLI 会在首次连接时由插件下载并校验。
 
-从 Gitee 克隆并安装：
+从 GitHub 克隆并安装：
 
 ```bash
-git clone https://gitee.com/qts_server/dingtalk-workspace-mcp.git
+git clone https://github.com/heyzeyu/dingtalk-workspace-mcp.git
 cd dingtalk-workspace-mcp
 codex plugin marketplace add .
 codex plugin add dingtalk-codex-bridge@dingtalk-local
 ```
+
+也可使用 [Gitee 仓库](https://gitee.com/qts_server/dingtalk-workspace-mcp)，安装步骤相同。
 
 使用 ZIP 时，保留整个解压目录，包括隐藏的 `.agents/`，进入根目录后从添加 marketplace 的命令开始执行。Node.js 要求 20 或以上；Python 仅用于维护与重新打包。
 
